@@ -1,0 +1,233 @@
+<hr-header></hr-header>
+
+<section class="navigate-button-wrapper" *ngIf="isLogged">
+  <ngx-slick-carousel
+    class="carousel"
+    style="width: 80%"
+    [ngClass]="{ d_none: (isRobotOpen$ | async) }"
+    #slickModal="slick-carousel"
+    [config]="slideConfig"
+    (afterChange)="afterChange($event)"
+  >
+    <div ngxSlickItem #slickItem *ngFor="let navigation of navigateButtons$ | async; let i = index" class="slide">
+      <hr-navigate-button
+        *ngLet="notificationCount | async as notificationCount"
+        [notification-count]="navigation.statusType && navigation.id === 5 ? notificationCount : 0"
+        [text]="navigation.text | translate"
+        [isActive]="(robotSettings$ | async)?.navigationItemId === navigation.id ? 'isActive' : 'notActive'"
+        [type]='navigation.statusType'
+        [link]="navigation.link"
+        [icon]="navigation.icon"
+      >
+      </hr-navigate-button>
+    </div>
+  </ngx-slick-carousel>
+
+  <div *ngIf="isRobotOpen$ | async" class="navigate-button-wrapper__web">
+    <div
+      *ngFor="let navigation of navigateButtons$ | async; let i = index"
+      class="navigate-button__web"
+      [style.width.px]="itemWidth - 40"
+    >
+      <hr-navigate-button
+        *ngLet="notificationCount | async as notificationCount"
+        [notification-count]="navigation.statusType && navigation.id === 5 ? notificationCount : 0"
+        [text]="navigation.text | translate"
+        [type]='navigation.statusType'
+        [isActive]="(robotSettings$ | async)?.navigationItemId === navigation.id ? 'isActive' : 'notActive'"
+        [link]="navigation.link"
+        [icon]="navigation.icon"
+      >
+      </hr-navigate-button>
+    </div>
+  </div>
+
+  <div *ngIf="isRobotOpen$ | async" class="navigate-button-wrapper__tablet">
+    <div *ngFor="let navigation of navigateButtons$ | async; let i = index">
+      <ng-container *ngIf="i >= slideActiveId && i < slideActiveId + 3">
+        <div class="navigate-button__tablet" [style.width.px]="itemWidth - 40">
+          <hr-navigate-button
+            *ngLet="notificationCount | async as notificationCount"
+            [notification-count]="navigation.statusType && navigation.id === 5 ? notificationCount : 0"
+            [text]="navigation.text | translate"
+            [type]='navigation.statusType'
+            [isActive]="(robotSettings$ | async)?.navigationItemId === navigation.id ? 'isActive' : 'notActive'"
+            [link]="navigation.link"
+            [icon]="navigation.icon"
+          >
+          </hr-navigate-button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div *ngIf="isRobotOpen$ | async" class="navigate-button-wrapper__mobile">
+    <div *ngFor="let navigation of navigateButtons$ | async; let i = index">
+      <ng-container *ngIf="slideActiveId ? i === slideActiveId : i === 0">
+        <div class="navigate-button__mobile" [style.width.px]="itemWidth - 40">
+          <hr-navigate-button
+            *ngLet="notificationCount | async as notificationCount"
+            [notification-count]="navigation.statusType && navigation.id === 5 ? notificationCount : 0"
+            [text]="navigation.text | translate"
+            [type]='navigation.statusType'
+            [isActive]="(robotSettings$ | async)?.navigationItemId === navigation.id ? 'isActive' : 'notActive'"
+            [link]="navigation.link"
+            [icon]="navigation.icon"
+          >
+          </hr-navigate-button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <hr-robot-map *ngIf="isRobotOpen$ | async">
+    <ng-container *ngIf="robotSettings$ | async as robotSettings">
+      <div [innerHTML]="robotSettings.content"></div>
+    </ng-container>
+  </hr-robot-map>
+</section>
+
+<ng-container *ngLet="isRobotOpen$ | async as isRobotOpen$">
+  <div class="home_robot-info" [hidden]="isRobotOpen$" (click)="openRobot()">
+    <img src="/assets/img/icon/info.svg" alt="info" />
+  </div>
+
+  <ng-container *ngLet="robotSettings$ | async as robotSettings$">
+    <div [ngClass]="{ 'pointer-none': isRobotOpen$, 'content_on_robot-bg': robotSettings$?.isContentActive }">
+      <router-outlet></router-outlet>
+    </div>
+  </ng-container>
+</ng-container>
+
+<hr-footer></hr-footer>
+
+<ng-container *ngIf="modal$ | async as modal">
+  <hr-modal
+    (whenModalClose)="closeModal()"
+    [isOpen]="modal.isOpen"
+    [width]="modal.width || 'auto'"
+    [height]="modal.height || 'auto'"
+  >
+    <div class="image-cropper">
+      <div class="image-cropper--content" [style.height]="heightExceptActions">
+        <div class="image-cropper--image">
+          <ng-container *ngIf="isCropperLoading$ | async">
+            <hr-loader [img]="true"></hr-loader>
+          </ng-container>
+          <image-cropper
+            #imageCropper
+            [format]="'png'"
+            [imageChangedEvent]="modal.image"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="4 / 3"
+            [containWithinAspectRatio]="containWithinAspectRatio"
+            [onlyScaleDown]="true"
+            [roundCropper]="false"
+            [canvasRotation]="canvasRotation"
+            [transform]="transform"
+            [alignImage]="'center'"
+            (loadImageFailed)="loadImageFailed()"
+            (imageCropped)="imageCropped($event)"
+            (imageLoaded)="imageLoaded($event)"
+            (cropperReady)="cropperReady($event)"
+          >
+          </image-cropper>
+        </div>
+      </div>
+
+      <div class="image-cropper-actions-wrapper" #cropperActionsWrapper>
+        <div class="image-cropper-actions">
+          <button
+            [tooltipClass]="'tooltip--new-styles'"
+            [tooltip]="'Сброс настроек'"
+            [placement]="'top'"
+            [showDelay]="300"
+            class="image-cropper-actions__item"
+            (click)="resetImage()"
+          >
+            <img src="\assets\img\image-cropper\refresh.png" alt="Сброс настроек" />
+          </button>
+          <button
+            [tooltipClass]="'tooltip--new-styles'"
+            [tooltip]="'Повернуть против часовой стрелки'"
+            [placement]="'top'"
+            [showDelay]="300"
+            class="image-cropper-actions__item"
+            (click)="rotateLeft()"
+          >
+            <img
+              src="\assets\img\image-cropper\rotating-arrow-to-the-left.png"
+              alt="Повернуть против часовой стрелки"
+            />
+          </button>
+          <button
+            [tooltipClass]="'tooltip--new-styles'"
+            [tooltip]="'Повернуть по часовой стрелке'"
+            [placement]="'top'"
+            [showDelay]="300"
+            class="image-cropper-actions__item"
+            (click)="rotateRight()"
+          >
+            <img src="\assets\img\image-cropper\rotating-arrow-to-the-right.png" alt="Повернуть по часовой стрелке" />
+          </button>
+          <button
+            [tooltipClass]="'tooltip--new-styles'"
+            [tooltip]="'Отразить по горизонтали'"
+            [placement]="'top'"
+            [showDelay]="300"
+            class="image-cropper-actions__item"
+            (click)="flipHorizontal()"
+          >
+            <img src="\assets\img\image-cropper\left-and-right.png" alt="Отразить по горизонтали" />
+          </button>
+          <button
+            [tooltipClass]="'tooltip--new-styles'"
+            [tooltip]="'Отразить по вертикали'"
+            [placement]="'top'"
+            [showDelay]="300"
+            class="image-cropper-actions__item uniq"
+            (click)="flipVertical()"
+          >
+            <img src="\assets\img\image-cropper\up-and-down-arrows.png" alt="Отразить по вертикали" />
+          </button>
+          <button
+            [tooltipClass]="'tooltip--new-styles'"
+            [tooltip]="'Содержать в пределах соотношения сторон'"
+            [placement]="'top'"
+            [showDelay]="300"
+            class="image-cropper-actions__item"
+            (click)="toggleContainWithinAspectRatio()"
+          >
+            <img src="\assets\img\image-cropper\arrows-contain.svg" alt="Содержать в пределах соотношения сторон" />
+          </button>
+          <button
+            [tooltipClass]="'tooltip--new-styles'"
+            [tooltip]="'Уменьшить'"
+            [placement]="'top'"
+            [showDelay]="300"
+            [disabled]="isScaleDownDisabled"
+            class="image-cropper-actions__item"
+            [class.disabled]="isScaleDownDisabled"
+            (click)="zoomOut()"
+          >
+            <img src="\assets\img\image-cropper\minus.png" alt="Уменьшить" />
+          </button>
+          <button
+            [tooltipClass]="'tooltip--new-styles'"
+            [tooltip]="'Увеличить'"
+            [placement]="'top'"
+            [showDelay]="300"
+            class="image-cropper-actions__item"
+            (click)="zoomIn()"
+          >
+            <img src="\assets\img\image-cropper\plus.png" alt="Увеличить" />
+          </button>
+        </div>
+        <div class="image-cropper-actions__save-content">
+          <button class="image-cropper-actions__save" (click)="submitCroppedImage()">Сохранить</button>
+        </div>
+        <br />
+      </div>
+    </div>
+  </hr-modal>
+</ng-container>

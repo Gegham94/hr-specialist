@@ -1,0 +1,321 @@
+@import "src/assets/variables/variables";
+@import "src/assets/mixins/button/button-mixins";
+
+main {
+  overflow: hidden;
+}
+
+::ng-deep .slide {
+  padding: 0 20px;
+}
+
+::ng-deep .slick-prev,
+::ng-deep .slick-next,
+::ng-deep .slick-disabled {
+  width: 50px;
+  height: 120px;
+  padding: 19px;
+}
+
+::ng-deep .slick-next {
+  right: -45px;
+  z-index: 1;
+}
+
+::ng-deep .slick-prev {
+  right: 0;
+  z-index: 1;
+  left: -40px;
+}
+
+::ng-deep .slick-disabled {
+  opacity: 0.5;
+}
+
+.navigate-button {
+  &-wrapper {
+    width: 80%;
+    margin: 33px auto;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    min-height: 120px;
+
+    .carousel {
+      position: absolute;
+      z-index: 1;
+    }
+
+    &__web {
+      display: none;
+      position: absolute;
+      //z-index: 6;
+
+      @media screen and (min-width: 1500px) {
+        // width: 80%;
+        display: flex;
+        justify-content: space-between;
+
+        ::ng-deep .navigate-button__web {
+          margin: 0 19.5px !important;
+        }
+      }
+    }
+
+    &__tablet {
+      display: none;
+
+      @media screen and (min-width: 700px) and (max-width: 1500px) {
+        width: 80%;
+        display: flex;
+        justify-content: center;
+
+        ::ng-deep .navigate-button__tablet {
+          margin: 0 20px !important;
+        }
+      }
+    }
+
+    &__mobile {
+      display: none;
+
+      @media screen and (max-width: 700px) {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+
+  &__carousel--tablet,
+  &__carousel--mobile {
+    width: 100%;
+    display: none;
+    z-index: 6 !important;
+  }
+
+  &__web {
+    //width: 210px;
+  }
+
+  &__tablet-and-mobile {
+    display: none;
+  }
+
+  @media screen and (max-width: 1500px) {
+    &__carousel--tablet {
+      display: block;
+      margin: 0 auto;
+    }
+
+    &__carousel--mobile {
+      display: none;
+    }
+
+    &__web {
+      display: none;
+    }
+
+    &__tablet {
+      //width: 210px;
+      display: block;
+    }
+
+    &__mobile {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 700px) {
+    &__carousel--tablet {
+      display: none;
+    }
+
+    &__carousel--mobile {
+      display: block;
+      margin: 0 auto;
+    }
+
+    &__web {
+      display: none;
+    }
+
+    &__tablet {
+      display: none;
+    }
+
+    &__mobile {
+      //width: 210px;
+      display: block;
+    }
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  ::ng-deep .carousel-arrow-next {
+    right: -30px !important;
+  }
+  ::ng-deep .carousel-arrow-prev {
+    left: -30px !important;
+  }
+  ::ng-deep .carousel-arrow {
+    top: 40% !important;
+  }
+}
+
+.home_robot-info {
+  position: fixed;
+  z-index: 20;
+  top: 220px;
+  right: 0;
+  cursor: pointer;
+}
+
+.d_none {
+  width: 100%;
+  opacity: 0;
+}
+
+.image-cropper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &--params {
+    text-align: center;
+    color: #ccd0db;
+  }
+
+  &--content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  &--image {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    overflow: auto;
+  }
+
+  &-actions-wrapper {
+    min-width: 300px;
+    width: 100%;
+    background-color: white;
+    user-select: none;
+
+    .image-cropper-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid lightgray;
+      padding: 20px 0;
+      margin-bottom: 20px;
+
+      &__item {
+        min-width: 40px;
+        min-height: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: $black;
+        padding: 5px 10px;
+        border: 1px solid lightgray;
+        margin: 5px 10px;
+        border-radius: 5px;
+        background: $light-gray;
+
+        &:hover {
+          background: $very-light-gray;
+        }
+
+        img {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .disabled {
+        cursor: not-allowed;
+        pointer-events: none;
+        background: #88888a;
+      }
+
+      &__save {
+        &-content {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+        }
+
+        @include default-button;
+        user-select: none;
+        height: 40px;
+        padding: 0 30px;
+        background-color: $orange;
+        border: 1px solid $orange;
+        color: $white;
+
+        &:hover {
+          @include button-hover;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .modal {
+  border-radius: 8px;
+  background-color: $white !important;
+
+  &__header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 70px;
+    z-index: 25;
+
+    &--params {
+      text-align: center;
+      color: #ccd0db;
+    }
+  }
+
+  &__content {
+    border-radius: 8px;
+    margin-top: 20px;
+    min-height: auto;
+  }
+
+  &__close-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      width: 11px;
+      height: 11px;
+    }
+  }
+
+  .ngx-ic-source-image {
+    border-radius: 8px;
+  }
+}
+
+::ng-deep image-cropper > div {
+  max-height: 300px;
+}

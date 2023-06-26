@@ -1,0 +1,59 @@
+@import "src/assets/variables/variables";
+@import "src/assets/mixins/util/util";
+
+.chat-input {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  label {
+    width: 100%;
+    margin-right: 15px;
+  }
+  &__button {
+    @include flex-center;
+    min-width: 36px;
+    height: 36px;
+    background: $white;
+    border-radius: 25px;
+    margin-right: 5px;
+    cursor: pointer;
+    svg {
+      transform: rotate(90deg);
+    }
+  }
+
+  &_send-button {
+    border: 1px solid $medium-dark-gray;
+  }
+
+  &_agree-button {
+    border: 1px solid $medium-dark-gray;
+  }
+
+  &__text {
+    background: #F8F9FA;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-style: normal;
+    font-weight: $font-normal;
+    font-size: $text-sm;
+    line-height: 16px;
+    padding: 14px 17px;
+    margin: 0 4px 0 6px;
+    width: 100%;
+    color: $black;
+    &::placeholder {
+      color: $medium-dark-gray;
+    }
+  }
+}
+
+.active {
+  svg {
+    path {
+      stroke: $white;
+    }
+  }
+  background: $green;
+  border-color: $green;
+}

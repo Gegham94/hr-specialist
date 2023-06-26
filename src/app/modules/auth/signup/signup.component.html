@@ -1,0 +1,79 @@
+<hr-loader *ngIf="!!(loader$ | async)"></hr-loader>
+
+<hr-header [header-type]="headerTypeProps"></hr-header>
+<section class="register">
+  <form class="register__form">
+    <div class="register__wrapper">
+      <div class="register__title">
+        {{ "AUTHORIZATION.TITLE" | translate }}
+      </div>
+      <div class="register__description">
+        {{ "AUTHORIZATION.SIGN_UP.SUBTITLE" | translate }}
+      </div>
+      <div class="register__phone-number">
+        <hr-input
+          [phone-input]="true"
+          [input-type]="'tel'"
+          [placeholder-text]="'+7  (_____)  _______ -- _______'"
+          [label-text]="'AUTHORIZATION.PHONE' | translate"
+          [formControl]="signUpPhoneControl"
+          [valid]="signUpPhoneControl.touched ? signUpPhoneControl.valid : undefined"
+        ></hr-input>
+      </div>
+      <div class="register__password">
+        <hr-input
+          [input-type]="inputTypeProps"
+          [label-text]="'AUTHORIZATION.PASSWORD' | translate"
+          [formControl]="signUpPasswordControl"
+          [valid]="signUpPasswordControl.touched ? signUpPasswordControl.valid : undefined"
+          [feedback-text]="
+            !!(userDoesNotExistsError | async)
+              ? ('AUTHORIZATION.SIGN_UP.ERROR' | translate: { prefix: prefix, phone: signUpPhoneControl.value | phone })
+              : signUpPasswordControl.touched
+              ? signUpForm.getError('validPassword') || signUpForm.getError('emptyField')
+              : ' '
+          "
+          [error-status]="
+            signUpPasswordControl.touched &&
+            (!!(userDoesNotExistsError | async) ||
+              signUpForm.getError('validPassword') ||
+              signUpForm.getError('emptyField'))
+              ? inputStatusList.invalid
+              : inputStatusList.valid
+          "
+          [show-password]="true"
+        ></hr-input>
+      </div>
+      <div class="register__privacy-policy">
+        <hr-checkbox
+          [checked]="signUpPrivacyPolicyControl.value"
+          [formControl]="signUpPrivacyPolicyControl"
+        ></hr-checkbox>
+        <span class="register__privacy-policy__checkbox__label-text" (click)="changeSignUpPrivacyPolicy()">
+          Соглашаюсь с
+          <a
+            (click)="changeSignUpPrivacyPolicy($event)"
+            href="https://hrhunt.ru/user-agreement"
+            style="color: green"
+            target="_blank"
+            >пользовательским соглашением
+          </a>
+          об обработке личных данных
+        </span>
+      </div>
+      <div class="register__button">
+        <hr-button
+          [disabled]="signUpForm.invalid || !!(userDoesNotExistsError | async) || !signUpPrivacyPolicyControl.value"
+          [text]="'ACTIONS.REGISTER' | translate"
+          [type]="buttonType.outlineGreen"
+          (clickEvent)="signUpCompleted(signUpForm)"
+        ></hr-button>
+      </div>
+      <div class="register__login-wrapper">
+        {{ "AUTHORIZATION.SIGN_UP.NOTE" | translate }}
+        <a [routerLink]="'/signIn'" class="register__login"> {{ "ACTIONS.SIGN_IN" | translate }}</a>
+      </div>
+    </div>
+  </form>
+</section>
+<hr-footer></hr-footer>

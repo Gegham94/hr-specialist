@@ -1,0 +1,9 @@
+export const SKILLS_ICON = "./../../../assets/img/icon/skills.svg";
+export const EXPERIENCE_ICON = "./../../../assets/img/icon/experience.svg";
+export const EDIT_ICON = "./../../../assets/img/icon/edit.svg";
+export const PROFILE_PLACEHOLDER = "./../../../assets/img/icon/profile-placeholder.svg";
+export const ORANGE_PLUS = "./../../../assets/img/icon/orange-plus.svg";
+export const EDUCATION_ICON = "./../../../assets/img/icon/education.svg";
+export const DELETE_ICON = "./../../../assets/img/icon/delete.svg";
+export const PREV_ICON = "./../../../assets/img/icon/prev-arrow.svg";
+export const NEXT_ICON = "./../../../assets/img/icon/next-arrow.svg";

@@ -1,0 +1,11 @@
+<div class='chat-input'>
+  <label>
+    <input type='text' class='chat-input__text' [(ngModel)]="msg" placeholder='Напишите что нибудь....'>
+  </label>
+  <button class='chat-input__button chat-input_send-button' (click)="chatButton()" [class.active]="!!msgLength()">
+    <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10.5002 17.342L10.5002 3.65783" stroke="#555B66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5.36851 8.7894L10.5001 3.65782L15.6317 8.7894" stroke="#555B66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+</div>

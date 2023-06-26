@@ -1,0 +1,83 @@
+<section class="test-create">
+  <section class="test-create__filter">
+    <hr-filter-test (statusChanged)="searchDate($event)" [testType]="'QUIZ'"></hr-filter-test>
+  </section>
+  <section class="test-create-cart">
+    <section class="test-create__container" *ngIf="getTestItem | async as tests; else loaderTmpl">
+      <ng-container *ngIf="tests.length; else emptyDataModel">
+        <div class="test-create__cart" *ngFor="let item of tests">
+          <div class="test-create__cart-level__icon">
+            <img *ngIf="specialistPosition === positionEnum.SENIOR" src="assets/img/icon/senior.svg"/>
+            <img *ngIf="specialistPosition === positionEnum.MIDDLE" src="assets/img/icon/middle.svg"/>
+            <img *ngIf="specialistPosition === positionEnum.JUNIOR" src="assets/img/icon/junior.svg"/>
+            <img *ngIf="specialistPosition === positionEnum.LEAD" src="assets/img/icon/senior.svg"/>
+          </div>
+          <div class="test-create__cart-level">
+            <span>{{ changeSpecialistPosition(specialistPosition) }}</span>
+          </div>
+
+          <span class="test-create__cart__title"> {{ item.name }} тест </span>
+          <div class="test-create__cart__content">
+            <div class="test-create__cart__round">
+              <img src="assets/img/icon/timer.svg"/>
+            </div>
+            <span class="test-create__cart__description"
+            >Время прохожденя теста:
+              <span class="test-create__cart__description__different-color"
+              >
+              {{ convertTaskFullTime(600000) }}
+              <!-- {{ convertTaskFullTime(item.taskFullTime) }} -->
+              </span>
+            </span>
+          </div>
+          <div class="test-create__cart__content">
+            <div class="test-create__cart__round">
+              <img src="assets/img/icon/question-count.svg"/>
+            </div>
+            <span class="test-create__cart__description"
+            >Количество вопросов:
+              <span class="test-create__cart__description__different-color">{{ item.questions.length }}</span>
+            </span>
+          </div>
+          <button class="test-create__cart__content-button" (click)="opentStartTestsModal(item)">Начать тест</button>
+        </div>
+      </ng-container>
+      <ng-template #emptyDataModel>
+        <div class="empty_wrapper">
+          <hr-empty-content></hr-empty-content>
+        </div>
+      </ng-template>
+
+      <section class="pagination" *ngIf="testsCount > 1 && tests.length>12">
+        <hr-pagination
+          [total-page-count]="testsCount"
+          (selectPagination)="getSelectedPaginationValue($event)"
+        ></hr-pagination>
+      </section>
+    </section>
+    <ng-template #loaderTmpl>
+      <div class="loader_content">
+        <div class="loader"></div>
+      </div>
+    </ng-template>
+
+  </section>
+</section>
+
+<hr-modal
+  [isOpen]="(isModalOpen | async) ?? false"
+  (whenModalClose)='modalToggle($event)'
+>
+  <div class="tests-wrapper">
+    <h3>Внимание, правила тестов:</h3>
+    <ul>
+      <li>При нажатии <strong><i>ДА</i></strong> откроется страница тестов и начнется обратный отсчет времени.</li>
+      <li>При навигации на другие страницы в вашем профиле вы получите уведомление о действии тестов.</li>
+    </ul>
+    <h4>Готовы начать ?</h4>
+    <div class="actions">
+      <button class="actionbtn cancel" (click)="confirmStartTest(false)">Отмена</button>
+      <button class="actionbtn ok" (click)="confirmStartTest(true)">Да</button>
+    </div>
+  </div>
+</hr-modal>

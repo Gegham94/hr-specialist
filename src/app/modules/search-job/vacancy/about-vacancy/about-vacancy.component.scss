@@ -1,0 +1,193 @@
+@import '/src/assets/variables/variables';
+@import 'src/assets/mixins/util/util';
+
+.about_vacancy {
+  @include responsive-container;
+  height: fit-content;
+
+  display: flex;
+
+  @media screen and (max-width: 500px) {
+    padding: 15px;
+  }
+
+  @media screen and (max-width: 1100px) {
+    flex-wrap: wrap;
+  }
+
+  &__card {
+    width: 400px;
+    min-width: 400px;
+    height: max-content;
+    background: $white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    padding: 28px;
+    margin-bottom: 32px;
+
+    &:hover {
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    &__title {
+      text-decoration: underline;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 26px;
+      color: $green;
+      margin-bottom: 22px;
+    }
+
+    &__salary {
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
+      color: $black;
+      margin-bottom: 28px;
+    }
+
+    &__info {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 21px;
+      color: $black;
+      margin-bottom: 8px;
+
+      span {
+        color: $light-gray;
+      }
+
+      :last-child {
+        margin-bottom: 20px;
+      }
+    }
+
+    &__apply {
+      button {
+        background: $green;
+        border: 1px solid $green;
+        border-radius: 3px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 16px;
+        text-align: center;
+        color: $white;
+        padding: 12px 0;
+        width: 200px;
+        cursor: pointer;
+
+        &.about_vacancy__card__apply--disabled {
+          background: $light-gray;
+          border: 1px solid $light-gray;
+          pointer-events: none;
+        }
+
+        &:hover {
+          background: $white;
+          color: $green;
+        }
+      }
+    }
+  }
+
+  &__description {
+    max-width: 545px;
+    margin-left: 30px;
+
+    @media screen and (max-width: 1100px) {
+      margin-left: 0;
+      max-width: 100%;
+    }
+
+    .block {
+      &__title,
+      &__text {
+        font-style: normal;
+        font-size: 14px;
+        line-height: 21px;
+      }
+
+      &__title {
+        font-weight: 600;
+        color: $green;
+        margin-bottom: 16px;
+        font-size: 16px;
+        text-indent: 1rem;
+      }
+
+      &__text {
+        color: $black;
+        margin-bottom: 32px;
+      }
+    }
+  }
+}
+
+
+.apply {
+  width: 78.6%;
+  max-width: 1132px;
+  margin: 0 auto 20px;
+  display: flex;
+  justify-content: end;
+
+  button {
+    background: $green;
+    border: 1px solid $green;
+    border-radius: 3px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    text-align: center;
+    color: $white;
+    padding: 12px 0;
+    width: 200px;
+    cursor: pointer;
+
+    &:hover {
+      background: $white;
+      color: $green;
+    }
+  }
+
+  &-modal {
+
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+
+    &__title {
+      color: #08A652;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    &__button {
+      display: flex;
+      justify-content: center;
+
+      &__cancel {
+        background: white;
+        color: #08A652;
+        margin-right: 10px;
+      }
+
+      &__pass {
+        background: #08A652;
+        color: white;
+
+      }
+
+      &__cancel, &__pass {
+        padding: 12px 59px;
+        border: 1px solid green;
+        border-radius: 8px;
+        font-size: 17px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+    }
+  }
+}

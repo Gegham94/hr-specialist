@@ -1,0 +1,30 @@
+<div class="specialist-test" *ngIf="quizTests$ | async as quizTests; else quizResultPageLoaderModel">
+  <div class="content-wrapper">
+      <div class="specialist-test__question" *ngFor="let test of quizTests; let i = index">
+          <p class="specialist-test__question__number">{{i +1}}/<span>{{quizTests.length}}</span></p>
+          <p class="specialist-test__question__text">{{test.question}}</p>
+        <div class="specialist-test__answer">
+  
+          <div *ngFor="let answer of test.answers">
+            <!-- <div [ngClass]="{'wrong':answer.displayStatus === false,'right':answer.displayStatus === true}">
+              <div class="specialist-test__answer-block">
+                <ng-container >
+                  <img *ngIf="answer.displayStatus === true" src="/assets/img/icon/right.svg" alt="right">
+                  <img *ngIf="answer.displayStatus === false" src="/assets/img/icon/wrong.svg" alt="wrong">
+                  <span *ngIf="answer.displayStatus === null" class="empty-circle"></span>
+                </ng-container>
+                <p>{{answer.answer}}</p>
+              </div>
+            </div> -->
+          </div>
+  
+        </div>
+      </div>
+  </div>
+</div>
+
+<ng-template #quizResultPageLoaderModel>
+  <div class="quiz-loader-container">
+    <div class="quiz-loader"></div>
+  </div>
+</ng-template>

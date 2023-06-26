@@ -1,0 +1,220 @@
+<div class="padding-wrapper">
+  <div class="content-wrapper" #contentWrapper>
+    <div class="experience-header">
+      <img [src]="EXPERIENCE_ICON"/>
+      <h3>{{ "PROFILE.WORK_EXPERIENCE.WORK_EXPERIENCE" | translate }}</h3>
+    </div>
+    <div class="experience-content">
+      <form [formGroup]="experienceForm">
+        <div *ngIf="!savedExperiences?.length || addMoreActive" [@slideInOut]>
+          <div class="form"
+               [ngClass]="{'experience-content--disable': !this.savedExperiences.length
+               && !!getFormControlByName('hasNoExperience').value}">
+            <div>
+              <hr-input
+                [label-text]="'PROFILE.WORK_EXPERIENCE.COMPANY' | translate"
+                [placeholder-text]="''"
+                [feedback-text]="''"
+                [formControlName]="'company'"
+                [valid]="
+                    getFormControlByName('company').touched
+                      ? getFormControlByName('company').valid
+                      : undefined
+                  "
+              >
+              </hr-input>
+            </div>
+            <div>
+              <hr-input
+                [label-text]="'PROFILE.WORK_EXPERIENCE.POSITION' | translate"
+                [only-letters]="true"
+                [placeholder-text]="''"
+                [feedback-text]="''"
+                [formControlName]="'position'"
+                [valid]="
+                    getFormControlByName('position').touched
+                      ? getFormControlByName('position').valid
+                      : undefined
+                  "
+              >
+              </hr-input>
+            </div>
+            <div class="dates">
+              <div class="date-to">
+                <div>
+                  <label class="datepicker_label"> {{ "PROFILE.WORK_EXPERIENCE.ACCEPT_DATE" | translate }} </label>
+                  <hr-datepicker
+                    [default_date]="getFormControlByName('accept_date').value"
+                    (selectDate)="selectDateByControlName($event, 'accept_date')"
+                    [endDate]="formatToNgbDate(getFormControlByName('quit_date').value) ?? {year: 3000, month:12, day: 1}"
+                    [valid]="acceptDateValidity"
+                  ></hr-datepicker>
+                </div>
+              </div>
+              <div class="date-to">
+                <div>
+                  <label class="datepicker_label"> {{ "PROFILE.WORK_EXPERIENCE.QUIT_DATE" | translate }} </label>
+                  <hr-datepicker
+                    [default_date]="getFormControlByName('quit_date').value"
+                    (selectDate)="selectDateByControlName($event, 'quit_date')"
+                    [disabled]="!!getFormControlByName('stillWorking').value"
+                    [minDate]="formatToNgbDate(getFormControlByName('accept_date').value) ?? {year: 1960, month:12, day: 1}"
+                    [valid]="quitDateValidity"
+                  ></hr-datepicker>
+                </div>
+                <div class="checkbox">
+                  <hr-checkbox
+                    [checked]="getFormControlByName('stillWorking').value"
+                    [label-text]="'PROFILE.WORK_EXPERIENCE.WORK_YET' | translate"
+                    (changes)="setStillWorking($event)"
+                  ></hr-checkbox>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="checkbox experience-content__wrapper-checkbox"
+               [ngClass]="{'experience-content--able': getFormControlByName('hasNoExperience').value}"
+               *ngIf="!savedExperiences.length">
+            <hr-checkbox
+              [label-text]="'Не имеет опыта'"
+              [checked]="getFormControlByName('hasNoExperience').value"
+              [formControl]="getFormControlByName('hasNoExperience')"
+              (changes)="updateHasNoExperience($event)"
+            ></hr-checkbox>
+          </div>
+          <div class="submit">
+            <button class="cancel" *ngIf="savedExperiences.length" (click)="cancelAddition()">
+              {{ "Cancel" | translate }}
+            </button>
+            <ng-container *ngIf="!isActivatedEditMode; else editModeTpl">
+              <button
+                class="save-btn pointer"
+                [disabled]="!experienceForm.valid || getFormControlByName('hasNoExperience').value"
+                (click)="saveExperience()"
+              >
+                <img [src]="ORANGE_PLUS"/>
+                {{ "Add to resume" | translate }}
+              </button>
+            </ng-container>
+            <ng-template #editModeTpl>
+              <button
+                class="save-btn pointer"
+                [disabled]="!experienceForm.valid"
+                (click)="saveEditedExperience()"
+              >
+                {{ "Save changes" | translate }}
+              </button>
+            </ng-template>
+          </div>
+        </div>
+      </form>
+
+      <div class="add-more" *ngIf="!addMoreActive && savedExperiences?.length">
+        <button class="add-more-btn pointer" (click)="activateAddMore()">
+          <span class="label">{{ "Add more" | translate }}</span>
+          <span class="img">
+            <img [src]="ORANGE_PLUS"/>
+          </span>
+        </button>
+      </div>
+
+      <ng-container *ngIf="savedExperiences?.length">
+        <div class="save-container" *ngFor="let experience of savedExperiences; let i = index">
+          <div class="saved-item">
+            <ng-container *ngIf="screenSize !== 'EXTRA_SMALL'; else smallScreenTpl">
+              <ng-container
+                *ngTemplateOutlet="addedExperienceTableTpl; context: { $implicit: experience }"
+              ></ng-container>
+            </ng-container>
+            <ng-template #smallScreenTpl>
+              <ng-container
+                *ngTemplateOutlet="addedExperienceCardTpl; context: { $implicit: experience }"
+              ></ng-container>
+            </ng-template>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="bottom_buttons">
+      <div class="prev">
+        <p (click)="goToUrl(ResumeRoutesEnum.EDUCATION)">
+          <img [src]="PREV_ICON" alt="prev">
+          назад
+        </p>
+      </div>
+      <div class="next"
+           [ngClass]="{'disable':(!savedExperiences.length && !getFormControlByName('hasNoExperience').value)}">
+        <p (click)="goToUrl(ResumeRoutesEnum.SKILLS)">
+          далее
+          <img [src]="NEXT_ICON" alt="next">
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #addedExperienceTableTpl let-experience>
+  <div class="table">
+    <div class="table-header">
+      <div class="actions">
+        <img [src]="EDIT_ICON" alt="edit" (click)="edit(experience.id)">
+        <img [src]="DELETE_ICON" alt="delete" (click)="delete(experience.id)">
+      </div>
+    </div>
+    <div class="table-content">
+      <div class="table-cell">
+        <div class="label">{{ "PROFILE.WORK_EXPERIENCE.COMPANY" | translate }}</div>
+        <div class="value">{{ experience.company }}</div>
+      </div>
+      <div class="table-cell">
+        <div class="label">{{ "PROFILE.WORK_EXPERIENCE.POSITION" | translate }}</div>
+        <div class="value">{{ experience.position }}</div>
+      </div>
+      <div class="table-cell">
+        <div class="label">{{ "PROFILE.WORK_EXPERIENCE.DURATION" | translate }}</div>
+        <div class="value">
+          {{ formatToString(experience.accept_date) | date: 'dd-MM-YYYY' }} -
+          <ng-container *ngIf="experience.stillWorking; else hasEndDate">
+            {{ "PROFILE.WORK_EXPERIENCE.STILL_WORKING" | translate }}
+          </ng-container>
+          <ng-template #hasEndDate>
+            {{ formatToString(experience.quit_date) | date: 'dd-MM-YYYY' }}
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #addedExperienceCardTpl let-experience>
+  <div class="card">
+    <div class="card-header">
+      <div class="actions">
+        <img [src]="EDIT_ICON" alt="edit" (click)="edit(experience.id)">
+        <img [src]="DELETE_ICON" alt="delete" (click)="delete(experience.id)">
+      </div>
+    </div>
+    <div class="card-content">
+      <div class="row">
+        <div class="label">{{ "PROFILE.WORK_EXPERIENCE.COMPANY" | translate }}:</div>
+        <div class="value">{{ experience.company }}</div>
+      </div>
+      <div class="row">
+        <div class="label">{{ "PROFILE.WORK_EXPERIENCE.POSITION" | translate }}:</div>
+        <div class="value">{{ experience.position }}</div>
+      </div>
+      <div class="row">
+        <div class="label">{{ "PROFILE.WORK_EXPERIENCE.DURATION" | translate }}:</div>
+        <div class="value">
+          {{ formatToString(experience.accept_date) | date: 'dd-MM-YYYY' }} -
+          <ng-container *ngIf="experience.stillWorking; else hasEndDate">
+            {{ "PROFILE.WORK_EXPERIENCE.STILL_WORKING" | translate }}
+          </ng-container>
+          <ng-template #hasEndDate>
+            {{ formatToString(experience.quit_date) | date: 'dd-MM-YYYY' }}
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

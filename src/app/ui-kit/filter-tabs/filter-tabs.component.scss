@@ -1,0 +1,35 @@
+@import 'src/assets/variables/variables';
+@import 'src/assets/mixins/util/util';
+
+.tabs {
+  @include flex-start;
+  margin-bottom: 50px;
+  width: 100%;
+
+  &_item {
+    height: 40px;
+    width: calc(100% / 2 - 20px);
+    border-bottom: 4px solid $light-gray;
+    font-size: 18px;
+    line-height: 21px;
+    color: black;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .active {
+    color: $green;
+    border-bottom: 4px solid $green;
+  }
+
+}
+
+@media screen and (max-width: 750px) {
+  .tabs {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .tabs_item {
+    width: 100%;
+  }
+}

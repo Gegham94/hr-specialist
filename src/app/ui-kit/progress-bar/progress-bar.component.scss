@@ -1,0 +1,52 @@
+@import "src/assets/mixins/input/input-mixins";
+@import "src/assets/variables/variables.scss";
+
+.progress{
+  &__bar{
+    width: 484px;
+    height: 33px;
+    background: #E0E0E0;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    &_small {
+      width: 106px;
+      background: 0;
+    }
+
+  }
+
+  &__value{
+    position: absolute;
+    height: 100%;
+    width: 0;
+    background: #26A0FC;
+    &_small {
+      height: 4px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+    }
+  }
+
+  &__count{
+    position: absolute;
+    right: 21px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-style: normal;
+    font-weight: $font-bold;
+    font-size: 12px;
+    line-height: 14px;
+    color: #26A0FC;
+    &_small {
+      line-height: 18px;
+      color: #4FD1C5;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: $font-bold;
+    }
+  }
+}

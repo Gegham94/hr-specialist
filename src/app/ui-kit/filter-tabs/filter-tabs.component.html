@@ -1,0 +1,10 @@
+<div class="tabs">
+  <ng-container *ngFor="let tab of tabs">
+    <div class="tabs_item"
+         [ngClass]="{'active': activeTab.value === tab.value}"
+         (click)="changeTab(tab.value)"
+    >
+      {{tab.displayName}}
+    </div>
+  </ng-container>
+</div>

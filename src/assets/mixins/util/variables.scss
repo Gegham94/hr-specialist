@@ -1,0 +1,24 @@
+:root {
+  --bgColor: #ffffff;
+  --bgGreyColor: #c4c4c4;
+  --textSwitchColorLight: #000000;
+  --textSwitchColorDark: #999999;
+  --bgTimerColor: #dfdfdf;
+  --textColor: #000000;
+  --bgHeadLineColor: #f1f1f1;
+  --editorContentBorderColor: 1px solid #dfdfdf;
+  --textPreviewNextColor: #2d2d2d;
+  --bodyBgColor: #ffffff;
+}
+[data-theme="dark"] {
+  --bgColor: #2d2d2d;
+  --bgGreyColor: #6d6d6d;
+  --textSwitchColorLight: #999999;
+  --textSwitchColorDark: #ffffff;
+  --bgTimerColor: #6d6d6d;
+  --textColor: #ffffff;
+  --bgHeadLineColor: #222222;
+  --editorContentBorderColor: 1px solid #4b4b4b;
+  --textPreviewNextColor: #2d2d2d;
+  --bodyBgColor: #1E1E1E;
+}

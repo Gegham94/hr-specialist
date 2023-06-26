@@ -1,0 +1,6 @@
+<div class="search">
+  <hr-go-back></hr-go-back>
+  <hr-filter-tabs [defaultActiveTab]="activeTab | async" [localSaveName]="localSaveName" [tabs]="tabs"
+                  (selectedTab)="changeTab($event)"></hr-filter-tabs>
+  <router-outlet></router-outlet>
+</div>

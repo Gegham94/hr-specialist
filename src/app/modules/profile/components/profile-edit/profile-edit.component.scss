@@ -1,0 +1,60 @@
+@import "src/assets/mixins/input/input-mixins";
+@import "src/assets/mixins/util/util";
+
+.wrap {
+  position: relative;
+  width: 100%;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  @include scrollbar-green;
+}
+
+:host::ng-deep .input_removeBlock {
+  ::ng-deep .input_removeInputValue {
+    top: 40px !important;
+  }
+}
+
+.progress {
+  width: 88.6%;
+  margin: auto;
+}
+
+:host::ng-deep .bottom_buttons {
+  width: 100%;
+  @include flex-space-between;
+  padding-top: 20px;
+
+  .prev,
+  .next {
+    width: 50%;
+    @include flex-center;
+    color: $green;
+    cursor: pointer;
+    p {
+      @include flex-end;
+      padding: 0 20px;
+    }
+  }
+
+  .prev {
+    justify-content: start;
+  }
+
+  .next {
+    justify-content: flex-end;
+  }
+
+  .disable > p {
+    opacity: 0.5;
+    @include flex-end;
+    cursor: default;
+  }
+}
+
+:host::ng-deep .save_button {
+  @include content-wrapper;
+  @include flex-end;
+  border: none;
+  padding-right: 0;
+}

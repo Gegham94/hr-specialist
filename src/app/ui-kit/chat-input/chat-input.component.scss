@@ -1,0 +1,86 @@
+@import "src/assets/variables/variables";
+@import "src/assets/mixins/util/util";
+
+.chat-input {
+  display: flex;
+  width: 484px;
+  align-items: center;
+
+  &__button {
+    @include flex-center;
+    min-width: 36px;
+    height: 36px;
+    background: $white;
+    border-radius: 25px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+
+  &_send-button {
+    border: 1px solid $medium-dark-gray;
+
+    &:hover {
+      border-color: $green;
+
+      svg {
+        path {
+          stroke: $green;
+        }
+      }
+    }
+  }
+
+  &_send-button-active {
+    background: $green;
+    outline: none;
+    border: 0;
+
+    svg {
+      path {
+        stroke: $white;
+      }
+    }
+  }
+
+  &_refuse-button {
+    border: 1px solid $medium-dark-gray;
+
+    &:hover {
+      border-color: $red;
+
+      svg {
+        path {
+          fill: $red;
+        }
+      }
+    }
+  }
+
+  &_agree-button {
+    border: 1px solid $medium-dark-gray;
+
+    &:hover {
+      border-color: $green;
+
+      svg {
+        path {
+          stroke: $green;
+        }
+      }
+    }
+  }
+
+  &__text {
+    background: #e2e8f0;
+    border-radius: 15px;
+    font-style: normal;
+    font-weight: $font-normal;
+    font-size: $text-sm;
+    line-height: 16px;
+    color: $medium-dark-gray;
+    padding: 14px 17px;
+    margin: 0 4px 0 6px;
+    width: 357px;
+    border: 1px solid #E2E8F0;
+  }
+}

@@ -1,0 +1,81 @@
+<div class="padding-wrapper">
+  <div class="content-wrapper" #contentWrapper>
+    <div class="skills-header">
+      <img [src]="SKILLS_ICON" />
+      <h3>{{ "PROFILE.SKILLS_LANGUAGES.SKILLS" | translate }}</h3>
+    </div>
+    <div class="skills-content">
+      <form [formGroup]="skillsForm">
+        <div class="container">
+          <div class="skills">
+            <span class="section-label">{{ "PROFILE.SKILLS_LANGUAGES.SKILLS" | translate }}</span>
+            <div class="programming-container">
+              <div>
+                <hr-search-select
+                  [label]="'PROFILE.SKILLS_LANGUAGES.PROGRAMMING_LANGUAGES' | translate"
+                  [options]="programmingLanguageOptions$ | async"
+                  [formControlName]="'programmingLanguages'"
+                  [isMultiSelect]="true"
+                  [isLoading]="(programmingLanguageLoader$ | async) ?? false"
+                  [valid]="
+                    getFormControlByName('programmingLanguages').touched
+                      ? getFormControlByName('programmingLanguages').valid
+                      : undefined
+                  "
+                ></hr-search-select>
+              </div>
+              <div>
+                <hr-search-select
+                  [isInputDisabled]="isFrameworkSelectDisabled"
+                  [updateEveryTime]="true"
+                  [label]="'PROFILE.SKILLS_LANGUAGES.FRAMEWORKS' | translate"
+                  [options]="frameworkOptions$ | async"
+                  [isInputReadOnly]="false"
+                  [isMultiSelect]="true"
+                  [formControlName]="'programmingFrameworks'"
+                  [isLoading]="(frameworkLoader$ | async) ?? false"
+                  [valid]="
+                    getFormControlByName('programmingFrameworks').touched
+                      ? getFormControlByName('programmingFrameworks').valid
+                      : undefined
+                  "
+                ></hr-search-select>
+              </div>
+            </div>
+          </div>
+          <div class="languages">
+            <span class="section-label">{{ "PROFILE.SKILLS_LANGUAGES.LANGUAGES" | translate }}</span>
+            <div class="languages_container">
+              <div>
+                <hr-search-select
+                  [options]="languages"
+                  [isMultiSelect]="true"
+                  [formControlName]="'languages'"
+                  [valid]="
+                    getFormControlByName('languages').touched ? getFormControlByName('languages').valid : undefined
+                  "
+                ></hr-search-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="bottom_buttons">
+      <div class="prev">
+        <p (click)="goToUrl(ResumeRoutesEnum.EXPERIENCE)">
+          <img [src]="PREV_ICON" alt="prev" />
+          назад
+        </p>
+      </div>
+      <div class="next"></div>
+    </div>
+    <div class="save_button">
+      <hr-button
+        [disabled]="skillsForm.invalid"
+        [text]="'PROFILE.SAVE' | translate"
+        (clickEvent)="onFormSubmit()"
+      ></hr-button>
+    </div>
+  </div>
+</div>

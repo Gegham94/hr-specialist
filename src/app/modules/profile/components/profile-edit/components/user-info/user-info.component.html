@@ -1,0 +1,240 @@
+<ng-container *ngLet="(robotSettings$ | async) as robotSettings$">
+  <div [ngClass]="{'pointer-none': isRobotOpen$ | async, 'content_on_robot-bg': robotSettings$?.isContentActive}">
+<div class="padding-wrapper">
+  <div class="content-wrapper" #contentWrapper>
+    <div class="info-header"></div>
+    <div class="info-content">
+      <form [formGroup]="infoForm">
+        <div class="container">
+          <div class="image"
+               [ngClass]="{ 'image--invalid': isLogo.value !== undefined && !isLogo.value }"
+          >
+            <hr-file-input
+              [logo]="getFormControlByName('image').value"
+              [formControl]="getFormControlByName('image')"
+              [feedback-text]="isLogo.value !== undefined && !isLogo.value ? 'Логотип обязательное' : ''"
+              [error-status]="isLogo.value !== undefined && !isLogo.value ? inputStatusList.invalid : inputStatusList.valid"
+            ></hr-file-input>
+          </div>
+          <div class="form">
+            <div class="row">
+              <div>
+                <hr-input
+                  [label-text]="'PROFILE.SURNAME' | translate"
+                  [placeholder-text]="''"
+                  [feedback-text]="''"
+                  [formControlName]="'surname'"
+                  [valid]="
+                    getFormControlByName('surname').touched
+                      ? getFormControlByName('surname').valid
+                      : undefined
+                  "
+                >
+                </hr-input>
+              </div>
+              <div>
+                <hr-input
+                  [label-text]="'PROFILE.NAME' | translate"
+                  [placeholder-text]="''"
+                  [feedback-text]="''"
+                  [formControlName]="'name'"
+                  [valid]="
+                    getFormControlByName('name').touched
+                      ? getFormControlByName('name').valid
+                      : undefined
+                  "
+                >
+                </hr-input>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <hr-input
+                  [input-disabled]="true"
+                  [label-text]="'PROFILE.PHONE' | translate"
+                  [placeholder-text]="'(_____)  _______ -- _______'"
+                  [feedback-text]="''"
+                  [formControlName]="'phone'"
+                  [phone-input]="true"
+                  [prefix]="'+7'"
+                  [valid]="
+                    getFormControlByName('phone').touched
+                      ? getFormControlByName('phone').valid
+                      : undefined
+                  "
+                >
+                </hr-input>
+              </div>
+              <div>
+                <hr-input
+                  [label-text]="'PROFILE.EMAIL' | translate"
+                  [placeholder-text]="''"
+                  [feedback-text]="''"
+                  [formControlName]="'email'"
+                  [valid]="
+                    getFormControlByName('email').touched
+                      ? getFormControlByName('email').valid
+                      : undefined
+                  "
+                >
+                </hr-input>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <hr-search-select
+                  [label]="'PROFILE.COUNTRY' | translate"
+                  [options]="searchListCountry$ | async"
+                  [formControlName]="'country'"
+                  [dataInputAsString]="true"
+                  [isLoading]="(countryLoader$ | async) ?? false"
+                  [valid]="
+                  getFormControlByName('country').touched
+                      ? getFormControlByName('country').valid
+                      : undefined
+                  "
+                ></hr-search-select>
+              </div>
+              <div>
+                <hr-search-select
+                  [isInputDisabled]="!getFormControlByName('country').value || getFormControlByName('country').value.length === 0"
+                  [label]="'PROFILE.CITY' | translate"
+                  [options]="searchListCity$ | async"
+                  [formControlName]="'city'"
+                  [dataInputAsString]="true"
+                  [isLoading]="(cityLoader$ | async) ?? false"
+                  [valid]="
+                    getFormControlByName('city').touched
+                      ? getFormControlByName('city').valid
+                      : undefined
+                  "
+                ></hr-search-select>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label class="datepicker_label">{{ "PROFILE.BIRTHDATE" | translate }} </label>
+                <hr-datepicker
+                  [default_date]="getFormControlByName('dateOfBirth').value"
+                  [endDate]="endDate"
+                  [isDateOfBirth]="true"
+                  (selectDate)="selectBirthday($event)"
+                  [valid]="datepickerValidity"
+                ></hr-datepicker>
+              </div>
+              <div>
+                <hr-search-select
+                  [label]="'PROFILE.GENDER' | translate"
+                  [options]="genders"
+                  [formControlName]="'gender'"
+                  [valid]="
+                    getFormControlByName('gender').touched
+                      ? getFormControlByName('gender').valid
+                      : undefined
+                  "
+                >
+                </hr-search-select>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <hr-search-select
+                  [label]="'PROFILE.CITIZENSHIP' | translate"
+                  [options]="citizenShips"
+                  [formControlName]="'citizenship'"
+                  [valid]="
+                    getFormControlByName('citizenship').touched
+                      ? getFormControlByName('citizenship').valid
+                      : undefined
+                  "
+                >
+                </hr-search-select>
+              </div>
+              <div>
+                <hr-search-select
+                  [label]="'PROFILE.EMPLOYMENT' | translate"
+                  [options]="employments"
+                  [formControlName]="'employment'"
+                  [valid]="
+                    getFormControlByName('employment').touched
+                      ? getFormControlByName('employment').valid
+                      : undefined
+                  "
+                >
+                </hr-search-select>
+              </div>
+            </div>
+            <div class="row row--last">
+              <!-- <div class="payment">
+              <div>
+                <hr-search-select [label]="' '" [options]="price"> </hr-search-select>
+              </div>
+              <div>
+                <hr-input [label-text]="'PROFILE.PRICE' | translate" [input-type]="'number'">
+                </hr-input>
+              </div>
+            </div> -->
+              <div>
+                <hr-search-select
+                  [label]="'PROFILE.SPECIALIST_POSITION' | translate"
+                  [options]="specialistPosition"
+                  [formControlName]="'position'"
+                  [valid]="
+                    getFormControlByName('position').touched
+                      ? getFormControlByName('position').valid
+                      : undefined
+                  "
+                >
+                </hr-search-select>
+              </div>
+              <div class="monthly-income--content">
+                <div class='monthly-income'>
+                  <p class="monthly-income--label">Дохода в месяц</p>
+                  <div class='monthly-income--block'>
+                    <div class='monthly-income--block-item salaryCount'>
+                      <hr-input
+                        [placeholder-text]="'от'"
+                        [currency-input]="true"
+                        [formControlName]='"salary"'
+                        [valid]="
+                      getFormControlByName('salary').touched
+                      ? getFormControlByName('salary').valid
+                      : undefined
+                      ">
+                      </hr-input>
+                    </div>
+                  </div>
+                </div>
+                <div class='monthly-income--block-item salary'>
+                  <p class="monthly-income--label">Валюта</p>
+                  <hr-search-select
+                    [options]="salary"
+                    [formControlName]='"currency"'
+                    [dataInputAsString]="true"
+                    [valid]="
+                      getFormControlByName('currency').touched
+                      ? getFormControlByName('currency').valid
+                      : undefined
+                      ">
+                  </hr-search-select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="bottom_buttons">
+      <div class="prev"></div>
+      <div class="next" [ngClass]="{'disable': infoForm.invalid}">
+        <p (click)="goToUrl(ResumeRoutesEnum.EDUCATION)">
+          далее
+          <img [src]="NEXT_ICON" alt="next">
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+</ng-container>

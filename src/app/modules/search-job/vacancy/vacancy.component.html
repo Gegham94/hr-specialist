@@ -1,0 +1,55 @@
+<div class="search-vacancy">
+  <div class="search-vacancy-content">
+    <div>
+      <div class="search-vacancy__title">Поиск вакансии</div>
+    </div>
+    <div>
+      <hr-vacancy-filters
+        (statusChanged)='searchDate($event)'
+      >
+      </hr-vacancy-filters>
+    </div>
+    <div class="search-vacancy__info-content">
+      <section *ngIf="(countVacancies$ | async) === 0 && !(loader$ | async)">
+        <hr-empty-content></hr-empty-content>
+      </section>
+      <div class="search-vacancy__info" *ngIf="!(loader$ | async); else loaderTmpl">
+        <ng-container *ngFor="let vacancy of vacancies$ | async">
+          <div class="search-vacancy__item-info">
+            <div class="search-vacancy__wrapper">
+              <div class="d-flex">
+                <div class="search-vacancy__item-img">
+                  <img [src]="getCompanyLogo(vacancy.companyLogo) || 'assets/img/icon/companyIcon.svg'" alt="logo">
+                </div>
+                <div class="search-vacancy__head">
+                  <div class="search-vacancy__head-title" (click)="navigate(vacancy.companyUuid, vacancy.uuid)">{{vacancy.name}}</div>
+                  <div class="search-vacancy__head-address">{{vacancy.country}}, {{vacancy.city}}</div>
+                  <div class="search-vacancy__head-address">{{vacancy.companyAddress}}</div>
+                </div>
+              </div>
+              <div class="search-vacancy__item-actions">
+                <div class="search-vacancy__head-info"> {{vacancy.deadlineDate | date: "dd/MM/YYYY"}} </div>
+                <div class="search-vacancy__item-actions--link"> {{vacancy.salary}} </div>
+                <div class="search-vacancy__body-button">
+                  <button (click)="navigate(vacancy.companyUuid, vacancy.uuid)">Подробнее о вакансии</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="search-vacancy__pagination">
+        <hr-pagination
+          *ngIf="pagesCount > 1 && !(loader$ | async)"
+          [total-page-count]='pagesCount'
+          [currentPage]="currentPage"
+          (selectPagination)="getSelectedPaginationValue($event)"
+        ></hr-pagination>
+      </div>
+    </div>
+    <ng-template #loaderTmpl>
+      <div class="loader"></div>
+    </ng-template>
+  </div>
+</div>
+

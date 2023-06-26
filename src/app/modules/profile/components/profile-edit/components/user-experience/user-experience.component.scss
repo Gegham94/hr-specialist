@@ -1,0 +1,306 @@
+@import "src/assets/variables/variables";
+@import "src/assets/mixins/util/util";
+
+:host {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.padding-wrapper {
+  padding-bottom: 32px;
+
+  .content-wrapper {
+    @include content-wrapper;
+    @include flex-center;
+    flex-direction: column;
+    gap: 12px;
+
+    .experience-header {
+      @include flex-start;
+      gap: 10px;
+      width: 90%;
+      margin: auto;
+      @media screen and (max-width: 750px) {
+        justify-content: center;
+      }
+
+      h3 {
+        @include content-header;
+      }
+    }
+
+    .experience-content {
+      width: calc(90% - 29 * 2px);
+      margin: auto;
+      margin-top: 24px;
+      @media screen and (max-width: 750px) {
+        width: 100%;
+      }
+
+      &--disable {
+        opacity: 0.5;
+        pointer-events: none;
+
+        .experience-content--able {
+          opacity: 1;
+          pointer-events: auto;
+        }
+      }
+      &__wrapper-checkbox{
+        max-width: 160px;
+      }
+
+      .form {
+        width: 100%;
+        @include flex-center;
+        flex-direction: column;
+        padding-bottom: 24px;
+        gap: 16px;
+
+        & > div {
+          width: 100%;
+        }
+
+        .dates {
+          @include flex-space-between;
+          align-items: flex-start;
+          flex-direction: row;
+          gap: 24px;
+
+          & > div {
+            width: 100%;
+          }
+
+          .checkbox {
+            display: inline-flex;
+          }
+
+          .date-to {
+            @include flex-start;
+            flex-direction: column;
+            gap: 16px;
+
+            & > div {
+              width: 100%;
+            }
+          }
+
+          @media screen and (max-width: 750px) {
+            flex-direction: column;
+          }
+        }
+      }
+
+      .submit {
+        width: 100%;
+        height: 32px;
+        margin: 24px 0;
+        @include flex-end;
+        gap: 16px;
+
+        .save-btn {
+          padding: 8px 16px;
+          border: 1px solid $green;
+          border-radius: 8px;
+          background-color: $green;
+          color: $white;
+          @include flex-center;
+          gap: 8px;
+          transition: all 0.3s ease-out;
+
+          &:hover {
+            color: $green;
+            background-color: $white;
+          }
+
+          &:hover > img {
+            transition: all 0.3s ease-out;
+            filter: brightness(0) invert(1);
+            transform: rotate(90deg);
+          }
+
+          &:disabled {
+            color: $gray;
+            pointer-events: none;
+            border: 1px solid $gray;
+            background-color: white;
+
+            & > img {
+              filter: brightness(0) invert(0.8) grayscale(1);
+            }
+          }
+        }
+
+        .cancel {
+          padding: 8px 16px;
+          border: 1px solid $green;
+          border-radius: 8px;
+          color: $green;
+          background-color: $white;
+          transition: all 0.3s ease-out;
+
+          &:hover {
+            background-color: $green;
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+}
+
+.table {
+  width: 100%;
+  @include flex-center;
+  flex-direction: column;
+
+  &-header {
+    width: 100%;
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      padding-bottom: 16px;
+
+      img {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &-content {
+    width: 100%;
+    @include flex-space-between;
+
+    .table-cell {
+      @include flex-start;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      .label {
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: $black;
+      }
+
+      .value {
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: $medium-dark-gray;
+      }
+    }
+  }
+}
+
+.card {
+  width: 100%;
+  @include flex-center;
+  flex-direction: column;
+
+  &-header {
+    width: 100%;
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      padding-bottom: 16px;
+
+      img {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &-content {
+    width: 100%;
+    @include flex-center;
+    flex-direction: column;
+
+    .row {
+      width: 100%;
+      @include flex-space-between;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      .label {
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: $black;
+      }
+
+      .value {
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: $medium-dark-gray;
+      }
+    }
+  }
+}
+
+.add-more {
+  @include flex-end;
+  margin-bottom: 24px;
+
+  &-btn {
+    border: none;
+    background-color: $white;
+    @include flex-end;
+    gap: 8px;
+    transition: all 0.3s ease-out;
+
+    .label {
+      font-family: "Roboto";
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .img {
+      width: 26px;
+      height: 26px;
+      border: 0.3px solid $green;
+      @include flex-center;
+      border-radius: 8px;
+    }
+
+    &:hover .img {
+      background-color: $green;
+      color: $white;
+    }
+
+    &:hover .img > img {
+      transition: all 0.3s ease-out;
+      filter: brightness(0) invert(1);
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.save-container {
+  .saved-item {
+    border-top: 1px solid $light-gray;
+    padding-top: 16px;
+    padding-bottom: 24px;
+  }
+
+  .saved-item:last-child {
+    border-bottom: 1px solid $light-gray;
+  }
+}

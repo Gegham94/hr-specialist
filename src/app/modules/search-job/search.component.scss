@@ -1,0 +1,11 @@
+@import '/src/assets/variables/variables';
+@import 'src/assets/mixins/util/util';
+
+.search {
+  @include responsive-container;
+  height: fit-content;
+
+  @media screen and (max-width: 500px) {
+    padding: 15px;
+  }
+}

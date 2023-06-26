@@ -1,0 +1,151 @@
+<div class='wrapper' *ngLet="employee$ | async as employee">
+  <div class='side-menu' [class.side-menu__open]='isMenuOpen' (click)='dropMenuToggle()'>
+    <div *ngIf="isMenuOpen" class='side-menu__overlay' (click)='isMenuOpenHandler()'></div>
+    <div class='side-menu__content'>
+      <div class='side-menu__content-employe'>
+        <div class="side-menu__content-employe__header-block">
+          <div class="side-menu__content-employe__header">
+            <div class="side-menu__content-employe--icons-content">
+              <div class='side-menu__content-employe-icon'>
+                <hr-book-interview-notification [isMenuOpen]='isMenuOpen'></hr-book-interview-notification>
+              </div>
+              <div class='side-menu__content-employe-icon'>
+                <hr-notification [isMenuOpen]='isMenuOpen'></hr-notification>
+              </div>
+            </div>
+
+            <div (click)='isMenuOpenHandler()'>
+              <img
+                src='./assets/img/icon/cross.svg'
+                alt='cross'
+              />
+            </div>
+          </div>
+          <div class="side-menu__content-employe__image">
+            <div class="side-menu__header-content">
+              <div class="side-menu-img" *ngIf='!employee?.image' (click)='isMenuOpenHandler()'>
+                <img src="/assets/img/avatar/avatar-menu.jpg">
+              </div>
+              <div>
+                <div class="side-menu-img">
+                  <img
+                    *ngIf='!!employee?.image'
+                    [src]='employee?.image'
+                    class='header__employe-logo-img'
+                    alt='employe logo'
+                  />
+                </div>
+
+                <div class='side-menu__content-employe-title' *ngIf='employee?.name'>
+                  {{employee?.name }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='side-menu__content-links'>
+          <div class='side-menu__content-element' (click)="goToProfile()">
+            <img [src]='"assets/img/header-images/"+ "my-profile" +".svg"' alt='icon'
+                 class='side-menu__content-element-img'>
+            <div class='side-menu__content-element-name'>{{'HEADER.DROPDOWN.MY_PROFILE' | translate}}</div>
+          </div>
+          <div class='side-menu__content-element' (click)='navigate("/employee/chat")'>
+            <img [src]='"assets/img/header-images/"+ "message" +".svg"' alt='icon'
+                 class='side-menu__content-element-img'>
+            <div class='side-menu__content-element-name'>{{'HEADER.DROPDOWN.MY_CHAT' | translate}}</div>
+          </div>
+          <div class='side-menu__content-element' (click)='navigate("/employee/search/company")'>
+            <img [src]='"assets/img/header-images/"+ "search-company" +".svg"' alt='icon'
+                 class='side-menu__content-element-img'>
+            <div class='side-menu__content-element-name'>{{'HEADER.DROPDOWN.SEARCH_COMPANY' | translate}}</div>
+          </div>
+
+          <div class='side-menu__content-element' (click)='navigate("/employee/create-test/quiz")'>
+            <img [src]='"assets/img/header-images/"+ "test" +".svg"' alt='icon'
+                 class='side-menu__content-element-img'>
+            <div class='side-menu__content-element-name'>{{'HEADER.DROPDOWN.PASS_TESTS' | translate}}</div>
+          </div>
+
+
+          <div class='side-menu__content-element' (click)='logOut()'>
+            <img [src]='"assets/img/header-images/"+ "log-out" +".svg"' alt='icon'
+                 class='side-menu__content-element-img'>
+            <div class='side-menu__content-element-name'>{{'HEADER.DROPDOWN.LOGOUT' | translate}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header class='header'>
+    <h1 class='header__logo' (click)="goToProfile()">HR-Hunt</h1>
+    <div class='header__right-side--reverse'>
+      <div class='header__right-side'>
+        <div class='header__navigate web' *ngIf='isLogged'>
+          <hr-book-interview-notification></hr-book-interview-notification>
+          <hr-notification></hr-notification>
+          <div class='header__employee-info' (click)='dropMenuToggle()' (clickOutside)="dropMenuToggle(true)">
+            <div class='header__employee-title' *ngIf='employee?.name'>{{employee?.name }}</div>
+            <div class='header__employee-logo'>
+              <svg *ngIf='!employee?.image' width='47' height='41' viewBox='0 0 47 41' fill='none'
+                   xmlns='http://www.w3.org/2000/svg'>
+                <rect width='47' height='41' rx='5' fill='white'/>
+              </svg>
+              <img *ngIf='!!employee?.image'
+                   [src]='employee?.image'
+                   class='header__employee-logo-img'
+                   alt='Company logo'
+              />
+            </div>
+            <div class='header__list-menu'>
+              <button class='header__list-menu-button'>
+                <img src='./assets/img/header-images/white-arrow-icon.svg' alt='icon' id='hide'>
+              </button>
+              <div class='header__drop-menu' *ngIf='isDropdownOpen$ | async'>
+                <div class='header__drop-menu-element' (click)="goToProfile()">
+                  <img [src]='"assets/img/header-images/"+ "build-icon" +".svg"' alt='icon'
+                       class='header__drop-menu-img'>
+                  <div class='header__drop-menu-element-name'>{{'HEADER.DROPDOWN.MY_PROFILE' | translate}}</div>
+                </div>
+                <div class='header__drop-menu-element' (click)='logOut()'>
+                  <img [src]='"assets/img/header-images/"+ "log-out-icon" +".svg"' alt='icon'
+                       class='header__drop-menu-img'>
+                  <div class='header__drop-menu-element-name'>{{'HEADER.DROPDOWN.LOGOUT' | translate}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='header__navigate mobile' *ngIf='isLogged && !isMenuOpen'>
+          <div class='header__navigate-menu' (click)='isMenuOpenHandler()'
+               [class.header__navigate-menu-open]='isMenuOpen'>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class='header__auth' *ngIf='!isLogged'>
+        <div class='header__auth-text'>
+          <a [routerLink]='"/signIn"' [routerLinkActive]='"active"'> {{"ACTIONS.LOGIN" | translate}} </a>
+        </div>
+        <div class='header__auth-text'>
+          <a [routerLink]='"/signUp"' [routerLinkActive]='"active"'> {{"ACTIONS.REGISTER" | translate}} </a>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<hr-modal [isOpen]="(isModalOpen | async) ?? false" (whenModalClose)="modalToggle($event)">
+  <div class="lose-tests-wrapper">
+    <p>Тесты, которые вы не прошли будут провалены.</p>
+    <br/>
+    <p>Bы уверены, что хотите выйти ?</p>
+    <div class="lose-actions">
+      <button class="loseBtn lose-ok" (click)="confirmNavigation(true)">Да</button>
+      <button class="loseBtn lose-cancel" (click)="cancelNavigation(false)">Отмена</button>
+    </div>
+  </div>
+</hr-modal>

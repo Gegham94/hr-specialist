@@ -1,0 +1,19 @@
+<div class="select-box" (click)="toggleDropdown()">
+  <div id="dropdown" class="dropdown" [ngClass]="{ bottom: !options.isReversed, top: options.isReversed }">
+    <input class="dropbtn" type="button" [value]="options.label" />
+    <div class="dropdown-content" #dropdownMenu [ngClass]="{ show: options.isOpen }">
+      <div class="option-wrapper" *ngFor="let item of items" [class.checked]="item.index === defaultSelectedTestIndex">
+        <input
+          class="option"
+          type="button"
+          value="{{ options.optionsLabel }} {{ ' ' }} {{ item.index + 1 }}"
+          (click)="emitSelectedTest(item.index)"
+        />
+      </div>
+    </div>
+    <img
+      class="select-arrow"
+      [src]="options.isOpen ? 'assets/img/icon/chevron-down-light.svg' : 'assets/img/icon/chevron-up-light.svg'"
+    />
+  </div>
+</div>

@@ -1,0 +1,114 @@
+@import "src/assets/mixins/util/util";
+@import "src/assets/mixins/util/variables";
+@import "src/assets/variables/variables";
+
+.select-box {
+  border-radius: 3px;
+  position: relative;
+  min-width: 80px;
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    border-radius: 3px;
+    width: 100%;
+  }
+  .dropbtn {
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    padding: 6px 15px 6px 0;
+    width: 100%;
+    background: #F28A1A;
+    color: $white;
+    cursor: pointer;
+    border-radius: 3px;
+    box-shadow: 0px 2.95154px 7.37885px rgba(0, 0, 0, 0.25);
+  }
+  .dropdown-content {
+    @include scrollbar-compiler;
+    display: none;
+    animation: show-select 0.3s forwards;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    max-height: 150px;
+    border-radius: 3.5px;
+    overflow-y: auto;
+    border: none;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    background: $white;
+    .option-wrapper {
+      position: relative;
+      &:hover {
+        background: rgba(224, 224, 224, 0.7);
+      }
+      .option {
+        padding: 3px;
+        width: 100%;
+        background: transparent;
+        border: none;
+        color: var(--textPreviewNextColor);
+        text-align: left;
+        padding-left: 7px;
+        cursor: pointer;
+      }
+    }
+    .checked {
+      background: #08A652;
+      .option {
+        color: $white;
+      }
+      &:hover {
+        background: #08A652 !important;
+      }
+    }
+    .checked::after {
+      content: "\2713";
+      position: absolute;
+      right: 3px;
+      top: 0;
+      display: inline-block;
+      color: $white;
+      padding: 0 6px 0 0;
+    }
+  }
+  @keyframes show-select {
+    from {
+      display: none;
+      opacity: 0;
+      transform: translateY(0);
+    }
+    to {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .dropdown-content:not(:last-child) {
+    border-bottom: none;
+  }
+  .dropdown-content input {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  .show {
+    display: block;
+  }
+  .bottom .dropdown-content {
+    top: calc(100% + 5px);
+  }
+  .top .dropdown-content {
+    bottom: calc(100% + 5px);
+  }
+  .select-arrow{
+    position: absolute;
+    right: 8px;
+    top: 33%;
+    width: 11px;
+    height: 11px;
+    pointer-events: none;
+  }
+}

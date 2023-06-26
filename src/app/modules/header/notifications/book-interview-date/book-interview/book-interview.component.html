@@ -1,0 +1,49 @@
+<div class="book-interview-date__modal">
+  <div class="book-interview-date__modal-title">
+    <span>Внимание!</span>
+  </div>
+  <div class="book-interview-date__modal--wrapper">
+    <div class='book-interview-date__modal-description'>
+      <p>Забронируйте дату для собеседования</p>
+    </div>
+    <ng-container>
+      <div class="book-interview-date__modal--content">
+        <div class="datepicker date-pickers_block"
+             [formGroup]="dateForm">
+          <ngb-datepicker
+            [dayTemplate]="customDay"
+            [formControlName]="'date'"
+            [minDate]="calendar.getToday()"
+            (dateSelect)="selectedDate($event);"
+            [maxDate]="maxDate"
+            [markDisabled]="isBooked"
+          >
+          </ngb-datepicker>
+          <ng-template #customDay let-date="date" let-currentMonth="currentMonth" let-disabled="disabled"
+                       let-selected="selected">
+            <div class="custom-day"
+                 [class.disabled]="disabled || isBooked(date)"
+                 [attr.readonly]="isBooked(date) ? true : null"
+                 [class.selected]="selected"
+            >
+              {{ date.day }}
+            </div>
+          </ng-template>
+        </div>
+        <hr-book-interview-date-hours
+          *ngIf="interviewHours | async as hours"
+          [hours]="hours"
+          (selectedHour)="setHour($event)"
+        ></hr-book-interview-date-hours>
+      </div>
+
+      <div class="book-interview-date__modal-button-content">
+        <button class="book-interview-date__modal-field" (click)="cancel()">НЕТ</button>
+        <button class="book-interview-date__modal-accept"
+                [ngClass]="{'disabled': dateForm.invalid}"
+                (click)="bookInterview()">ДА
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</div>

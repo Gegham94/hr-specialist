@@ -1,0 +1,378 @@
+@import '/src/assets/variables/variables';
+@import 'src/assets/mixins/util/util';
+
+.about_company {
+  @include responsive-container;
+
+  &__title {
+    margin-bottom: 25px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    color: $black;
+  }
+
+  &__checkbox {
+    margin-top: 16px;
+
+    label {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+
+      > span {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14px;
+        color: #000000;
+      }
+    }
+
+    &-icon {
+      width: 14px;
+      height: 14px;
+      min-width: 14px;
+      min-height: 14px;
+      background: #FFFFFF;
+      border: 1px solid #CCD0DB;
+      border-radius: 3px;
+      position: relative;
+
+      &:after {
+        content: "";
+        width: 8px;
+        height: 8px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #08A652;
+        border-radius: 2px;
+        position: absolute;
+        display: none;
+      }
+    }
+
+    &-title {
+      margin-left: 8px;
+      display: inline-block;
+    }
+
+    input {
+      display: none;
+
+      &:checked {
+        & ~ .search-company__checkbox-icon {
+          &:after {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+
+  &__found {
+    display: flex;
+    justify-content: flex-end;
+    margin: 55px 0 19px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    color: $black;
+  }
+
+  &__info {
+    margin-bottom: 19px;
+  }
+
+  &-table {
+    @media screen and (max-width: 850px) {
+      overflow-x: scroll;
+    }
+
+  }
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    background: #FCFDFF;
+    box-shadow: 0 4px 15px rgb(0 0 0 / 10%);
+    border-radius: 3px;
+    padding: 34px 69px 45px 25px;
+    margin-bottom: 30px;
+
+    &-info {
+      width: 100%;
+    }
+
+    &-img {
+      display: flex;
+      gap: 20px;
+
+      > img {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  }
+
+  &__head {
+    &-title {
+      text-decoration: underline;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 26px;
+      color: $green;
+    }
+
+    &-address {
+      font-weight: 500;
+      font-size: 13px;
+      line-height: 15px;
+      color: $black;
+      margin-top: 14px;
+    }
+  }
+
+  &__body {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+    color: $black;
+    margin-top: 45px;
+    display: table;
+    width: 100%;
+
+    &-ads {
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 140%;
+      color: $green;
+      display: table-cell;
+      vertical-align: bottom;
+    }
+
+    &-vacancies {
+      display: table-cell;
+      vertical-align: bottom;
+    }
+
+    &-applications {
+      display: table-cell;
+      vertical-align: bottom;
+    }
+
+    &-button {
+      background: $white;
+      border: 1px solid $green;
+      border-radius: 3px;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      text-align: center;
+      color: $green;
+      padding: 12px 0;
+      display: table-cell;
+      width: 200px;
+      cursor: pointer;
+
+      button {
+        background: none;
+        border: none;
+      }
+
+    }
+  }
+
+  &-description {
+
+    &__title {
+      font-size: 16px;
+      font-weight: 500;
+      font-family: 'ROBOTO';
+    }
+
+    &__info {
+      margin-bottom: 70px;
+      margin-top: 35px;
+      color: #555B66;
+      font-size: 16px;
+      font-family: Roboto;
+      line-height: 18.5px;
+      font-weight: 400;
+      word-break: break-all;
+    }
+  }
+
+  &__active__vacancy {
+    color: #08A652;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  &__list {
+    margin-top: 25px;
+
+    &-header {
+      display: flex;
+      max-width: 980px;
+      margin-top: 17px;
+    }
+
+    &-wrapper {
+      margin: 0 auto 5px;
+
+      ::ng-deep .vacancy {
+        padding: 0 24px 0 4px;
+        max-width: 980px;
+        margin: auto;
+        position: relative;
+
+        &:hover {
+          transition: all 0.1s ease;
+          background: #F8F9FA;
+          position: relative;
+        }
+      }
+    }
+
+    @media screen and (max-width: 850px) {
+      width: 650px;
+    }
+  }
+
+  &__element {
+
+    font-style: normal;
+    font-weight: $font-medium;
+    font-size: $text-sm;
+    line-height: 20px;
+    color: $green;
+
+    &_name {
+      width: 28.5%;
+    }
+
+    &_date {
+      width: 18.5%;
+    }
+
+    &_status {
+      width: 19.8%;
+    }
+
+  }
+
+  &__table {
+    background: $white;
+    border: 0.3px solid #E2E8F0;
+    border-radius: 5px;
+    padding: 0 25px 0 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1005px;
+    height: 47px;
+    &__button button {
+      width: 116px;
+      height: 32px;
+      background: #FFFFFF;
+      color: #08A652;
+      border: 1px solid #08A652;
+      cursor: pointer;
+      &:hover {
+        background: #08A652;
+        color: #FFFFFF;
+      }
+    }
+
+    &:hover {
+      background: #F8F9FA;
+
+      &__name,
+      &__status,
+      &__date {
+        font-weight: 500;
+      }
+    }
+
+    &__name,
+    &__status,
+    &__date {
+      font-style: normal;
+      font-weight: $font-normal;
+      font-size: $text-sm;
+      line-height: 20px;
+      color: $black;
+    }
+
+    &__name {
+      width: 29.13%;
+      text-decoration: none;
+      span:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+
+    &__date {
+      width: 19.2%;
+    }
+
+    &__status {
+      width: 36.5%;
+    }
+  }
+
+  ::ng-deep hr-pagination {
+    display: flex;
+    justify-content: end;
+    margin-top: 34px;
+  }
+
+  &-address {
+    &__block {
+      margin-bottom: 13px;
+
+      &-item {
+        display: flex;
+        align-items: center;
+
+        img {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
+  .apply {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      background: $green;
+      border: 1px solid $green;
+      border-radius: 3px;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      text-align: center;
+      color: $white;
+      padding: 12px 0;
+      width: 200px;
+      cursor: pointer;
+
+      &:hover {
+        background: $white;
+        color: $green;
+      }
+    }
+  }
+}
+
+
+
+
+

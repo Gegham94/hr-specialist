@@ -1,0 +1,67 @@
+<div class="search-company">
+  <div class="search-company-content">
+    <div>
+      <div class="search-company__title">Поиск компании</div>
+      <hr-filter [companyFilter]="false" (statusChanged)="searchDate($event)"></hr-filter>
+      <div class="search-company__checkbox">
+        <label for="checkbox">
+          <input type="checkbox" id="checkbox" (change)="showActiveCompany($event)" />
+          <span class="search-company__checkbox-icon"></span>
+          <span class="search-company__checkbox-title">Показать компании, у которых есть открытые вакансии</span>
+        </label>
+      </div>
+      <div class="search-company__found" *ngIf="!(loader$ | async) && (countCompany$ | async)">{{ countCompany$ | async }} компания найдена</div>
+    </div>
+    <div class="search-company__info-content">
+      <section *ngIf="(countCompany$ | async) === 0 && !(loader$ | async)">
+        <hr-empty-content></hr-empty-content>
+      </section>
+      <div *ngIf="!(loader$ | async); else loaderTmpl">
+        <div class="search-company__info" *ngFor="let company of countResult$ | async">
+          <div class="search-company__item">
+            <div class="search-company__item-img" *ngIf="company.logo; else doseNotHaveLogo">
+              <img [src]="getCompanyLogo(company.logo)" alt="companyIcon" />
+            </div>
+            <ng-template #doseNotHaveLogo>
+              <div class="search-company__item-img">
+                <img [src]="" alt="companyIcon" />
+              </div>
+            </ng-template>
+            <div class="search-company__item-info">
+              <div class="search-company__head">
+                <div class="search-company__head-title" (click)="navigate(company.uuid)">{{ company.name }}</div>
+                <div class="search-company__head-address">
+                  {{ company.country }} <br />
+                  {{ company.address }}
+                </div>
+              </div>
+              <div class="search-company__body">
+                <div class="search-company__body-ads">Объявления компании {{ company.vacancyCount }}</div>
+                <div class="search-company__body-vacancies">
+                  Активные вакансии: {{ company.activeVacancyAndSpecialist.activeVacancyCount }}
+                </div>
+                <div class="search-company__body-applications">
+                  Количество заявок: {{ company.activeVacancyAndSpecialist.specialistCount }}
+                </div>
+                <div class="search-company__body-button">
+                  <button (click)="navigate(company.uuid)">Подробнее о компании</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="search-company__pagination">
+          <hr-pagination
+            *ngIf="vacanciesCount > 1 && !(loader$ | async)"
+            [total-page-count]="vacanciesCount"
+            [currentPage]="currentPage"
+            (selectPagination)="getSelectedPaginationValue($event)"
+          ></hr-pagination>
+        </div>
+      </div>
+      <ng-template #loaderTmpl>
+        <div class="loader"></div>
+      </ng-template>
+    </div>
+  </div>
+</div>

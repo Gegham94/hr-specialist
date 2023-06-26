@@ -1,0 +1,161 @@
+<ng-container *ngIf="selectedTest$ | async as selectedTest; else compilerPageLoaderModel">
+  <div class="compile">
+    <div class="wrapper-body">
+      <div class="test-info-wrapper">
+        <span class="testName-style">{{ displayTestName }}</span>
+        <span class="remainingFixedTime-style">{{ displayRemainingFixedTime | date: "HHч: mmм :ssс" }}</span>
+      </div>
+      <div class="compile-body">
+        <div class="compile-body__theme">
+          <div class="compiler-editor">
+            <span class="theme-text light">Светлый</span>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="selectLightMode" (click)="toggleThemeMode()" />
+              <div class="slider">
+                <div class="theme-icon-keeper">
+                  <img
+                    class="theme-icon"
+                    [src]="selectLightMode ? '/assets/img/icon/night-moon.svg' : '/assets/img/icon/day-sun.svg'"
+                  />
+                </div>
+              </div>
+            </label>
+            <span class="theme-text dark">Темный</span>
+          </div>
+            <div class="loader_item">
+              <div class="radial_loader">
+                <div class="underline"></div>
+                <div class="outer seconds_outer"></div>
+                <div class="inner seconds_inner" *ngIf="!isAllTestsApplied">Загрузка</div>
+                <div class="inner seconds_inner" *ngIf="isAllTestsApplied || testsLengthCounter === 0">Конец</div>
+              </div>
+            </div>
+          <div class="compiler-actions">
+            <button
+              [ngClass]="isCompileBtnDisable ? 'disableCompileBtn' : ''"
+              (click)="applyTestAnswer(selectedTest.currentExample, selectedTest.uuid)"
+              class="action-icon-keeper"
+              [class.disableCompileBtn]="selectedTest.success != null"
+            >
+              <img src="/assets/img/icon/compiler-run.svg" />
+              Компилировать
+            </button>
+          </div>
+        </div>
+        <div class="compile-body__content">
+          <div class="tabView-content">
+            <input class="radio" id="one" name="group" type="radio" checked />
+            <input class="radio" id="two" name="group" type="radio" />
+            <div class="tabs">
+              <label class="tab" id="one-tab" for="one">Инструкции</label>
+              <label class="tab" id="two-tab" for="two">Образцы тестов</label>
+            </div>
+            <div class="panels">
+              <div class="panel" id="one-panel">
+                <div>
+                  <span [innerHTML]="selectedTest.task"></span>
+                </div>
+                <div class="prev-next" *ngIf="testsLength$ | async as testLenght">
+                  <div class="prev-next-btns">
+                    <button
+                      [disabled]="currentTestIndex === 0"
+                      [class.smooth]="currentTestIndex === 0"
+                      (click)="loadPreviousTest()"
+                    >
+                      <span>&#x3c; Пред.</span>
+                    </button>
+                    <button
+                      [disabled]="currentTestIndex === testLenght - 1"
+                      [class.smooth]="currentTestIndex === testLenght - 1"
+                      (click)="loadNextTest()"
+                    >
+                      <span>След. &#x3e;</span>
+                    </button>
+                  </div>
+
+                  <hr-select-box
+                    *ngIf="compilerTests$ | async as compilerTests"
+                    [items]="compilerTests"
+                    [options]="selectBoxOptions"
+                    [selectLightMode]="selectLightMode"
+                    (setSelectedTestByIndex)="setSelectedTestByIndex($event)"
+                    [defaultSelectedTestIndex]="selectedTest.index"
+                  >
+                  </hr-select-box>
+                </div>
+              </div>
+              <div class="panel" id="two-panel">
+                <pre>{{ selectedTest.test }}</pre>
+              </div>
+            </div>
+          </div>
+          <div class="test-content">
+            <div class="test-content__solution">
+              <div class="header">
+                <p>Код :</p>
+              </div>
+              <div class="body">
+                <ngx-monaco-editor
+                  [options]="editorOptions"
+                  [(ngModel)]="selectedTest.currentExample"
+                ></ngx-monaco-editor>
+              </div>
+            </div>
+            <div class="test-content__tests">
+              <div class="header">
+                <p>Результат :</p>
+              </div>
+              <div class="body">
+                <ng-container *ngIf="isOutputLoader">
+                  <span *ngIf="testOutput$ | async as result; else loaderModel">
+                    <p class="success" [class.error]="!result.success">
+                      <span *ngIf="result.data">{{ result.data }}</span>
+                      <span class="error" *ngIf="!result.data">Закончено !</span>
+                    </p>
+                  </span>
+                  <ng-template #loaderModel>
+                    <div class="loader-container">
+                      <div class="loader"></div>
+                      <p class="loader_text">Загрузка результата...</p>
+                    </div>
+                  </ng-template>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<hr-modal [isOpen]="(isModalOpenFail | async) ?? false" (whenModalClose)="modalToggleFail($event)">
+  <div class="lose-tests-wrapper">
+    <p>Тесты, которые вы не прошли будут провалены.</p>
+    <br />
+    <p>Bы уверены, что хотите выйти ?</p>
+    <div class="lose-actions">
+      <button class="loseBtn lose-ok" (click)="isCanNavigate(true)">Да</button>
+      <button class="loseBtn lose-cancel" (click)="isCanNavigate(false)">Отмена</button>
+    </div>
+  </div>
+</hr-modal>
+
+<hr-modal [isOpen]="(isModalOpenTimeOver | async) ?? false" (whenModalClose)="modalToggleTimeOver($event)">
+  <div *ngIf="testsLength$ | async as testLenght">
+    <div class="info-wrapper">
+      <p>Время истекло !</p>
+      <span>Вы прошли тестов - 
+        <span class="success-test">{{ successTestsCount }}</span> из
+        <span class="all-test">{{ testLenght }}</span>
+      </span>
+      <button class="loseBtn confirm-ok" (click)="confirmTimeOver()">Хорошо</button>
+    </div>
+  </div>
+</hr-modal>
+
+<ng-template #compilerPageLoaderModel>
+  <div class="compiler-loader-container">
+    <div class="compiler-loader"></div>
+  </div>
+</ng-template>

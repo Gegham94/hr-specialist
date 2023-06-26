@@ -1,0 +1,25 @@
+<form class="filter-test" [formGroup]="filterForm">
+  <section class="filter-test__programming">
+    <hr-search-select
+      [label]="'PROFILE.SKILLS_LANGUAGES.PROGRAMMING_LANGUAGES' | translate"
+      [isCross]="true"
+      [options]="searchListProgrammingLanguages$ | async"
+      [isMultiSelect]="true"
+      [formControlName]="'languages'"
+      (selectedOptionsOutput)="emitChange($event, searchType)"
+      [isRequired]="false"
+    ></hr-search-select>
+  </section>
+
+  <section class="filter-test__level">
+    <hr-search-select
+      [label]="'Уровень'"
+      [isCross]="false"
+      [options]="statusListForLevel"
+      [dataInputAsString]="true"
+      [formControlName]="'position'"
+      (selectedOptionOutput)="emitChange($event, filterType.POSITION)"
+      [isRequired]="false"
+    ></hr-search-select>
+  </section>
+</form>

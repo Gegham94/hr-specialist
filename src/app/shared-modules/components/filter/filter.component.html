@@ -1,0 +1,42 @@
+<div class='filter'>
+  <div class="filter__company">
+
+    <hr-input
+      class='filter__status-input'
+      [placeholder-text]="'По имени'"
+      [formControl]='companyFilterNameControl'
+      [class.filter__input_close]='!isOpen'
+      [class.filter__input_open]='isOpen'
+      (textInput)='sendValue($event,filterType.NAME)'
+    >
+    </hr-input>
+
+    <hr-search-select
+      class='filter__status-input'
+      [placeholder]="'По стране'"
+
+      [class.filter_close]='!isOpen'
+      [class.filter_open]='isOpen'
+      [formControl]='companyFilterCountryControl'
+      [options]='searchListCountry$ | async'
+      (selectedOptionOutput)="sendValue($event,filterType.COUNTRY)"
+    >
+    </hr-search-select>
+    <hr-search-select
+      class='filter__status-input'
+      [isInputDisabled]="!companyFilterCountryControl.value"
+      [isMultiSelect]="true"
+      [placeholder]="'По городам'"
+      [class.filter_close]='!isOpen'
+      [class.filter_open]='isOpen'
+      [formControl]='companyFilterCityControl'
+      [options]='searchListCity$ | async'
+      (selectedOptionsOutput)="sendValue($event,filterType.CITY)"
+    >
+    </hr-search-select>
+  </div>
+
+  <button *ngIf="companyFilter" class='filter__open-button' (click)='toggleFilter()'>
+    <img src="assets/img/icon/filter.svg">
+  </button>
+</div>

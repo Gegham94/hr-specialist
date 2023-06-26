@@ -1,0 +1,25 @@
+.filter-test {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  &__programming {
+    margin-right: 10px;
+    width: 260px;
+    @media screen and (max-width: 600px) {
+      width: 100%;
+      margin: 0 0 10px 0;
+    }
+  }
+
+  &__level {
+    @media screen and (max-width: 600px) {
+      width: 100%;
+    }
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: end;
+  margin-top: 60px;
+}

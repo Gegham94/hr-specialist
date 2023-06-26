@@ -1,0 +1,68 @@
+{
+  "navigateButtons": [
+    {
+      "id": 1,
+      "icon": "add-vacancy-icon",
+      "statusType": "default",
+      "text": "Добавить вакансию",
+      "link": "vacancies/add-filter-part"
+    },
+    {
+      "id": 2,
+      "text": "Мои вакансии",
+      "statusType": "default",
+      "icon": "my-vacancy-icon",
+      "link": "vacancies/my"
+    },
+    {
+      "id": 3,
+      "text": "Аналитика",
+      "statusType": "default",
+      "icon": "analytic-icon",
+      "link": "analytic"
+    },
+    {
+      "id": 4,
+      "text": "Специалисты",
+      "statusType": "default",
+      "icon": "specialist-icon"
+    },
+    {
+      "id": 5,
+      "icon": "balance-icon",
+      "statusType": "default",
+      "text": "Баланс",
+      "link": "balance"
+    }
+  ],
+  "addVacancyFilter": {
+    "addVacancyFilter": {
+      "vacancyCountry": "Armenia",
+      "vacancyCity": "Erevan",
+      "vacancyProgrammingLeng": [
+        "Armenia",
+        "Angola"
+      ],
+      "vacancyProgrammingFrame": [
+        "Armenia",
+        "Russia"
+      ],
+      "vacancyLevel": "Armenia",
+      "vacancyEmployment": "Russia",
+      "vacancyLanguage": [
+        "Armenia",
+        "Russia"
+      ],
+      "vacancyTypeEmployment": "Russia",
+      "type": "[AddVacancyFilter] Send vacancy filter part"
+    }
+  },
+  "singIn": {
+    "password": "2342342342334",
+    "phone": "4342342342"
+  },
+  "singUp": {
+    "password": "324234234234",
+    "phone": "3423432423"
+  }
+}

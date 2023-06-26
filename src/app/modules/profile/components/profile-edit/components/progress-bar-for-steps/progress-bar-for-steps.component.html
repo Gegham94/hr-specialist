@@ -1,0 +1,52 @@
+<section class="progress-bar--horizontal">
+  <div class="progress-bar">
+    <div
+      class="progress-bar-circle pointer"
+      (click)="navigateByUrl(ResumeRoutesEnum.INFO)"
+      [class.progress-bar-circle_green]="infoForm.dirty || infoForm.valid"
+    >
+      1
+    </div>
+    <div class="progress-bar-line">
+      <div class="progress-bar-progress" [ngStyle]="{ width: (progressStep1 | async) + '%' }"></div>
+    </div>
+    <div
+      class="progress-bar-circle pointer"
+      (click)="navigateByUrl(ResumeRoutesEnum.EDUCATION)"
+      [class.progress-bar-circle_green]="section2"
+    >
+      2
+    </div>
+    <div class="progress-bar-line">
+      <div class="progress-bar-progress" [ngStyle]="{ width: section2 ? '100%' : '0%' }"></div>
+    </div>
+    <div
+      class="progress-bar-circle pointer"
+      (click)="navigateByUrl(ResumeRoutesEnum.EXPERIENCE)"
+      [class.progress-bar-circle_green]="section3"
+    >
+      3
+    </div>
+    <div class="progress-bar-line">
+      <div class="progress-bar-progress" [ngStyle]="{ width: section3 ? '100%' : '0%' }"></div>
+    </div>
+    <div
+      class="progress-bar-circle pointer"
+      (click)="navigateByUrl(ResumeRoutesEnum.SKILLS)"
+      [class.progress-bar-circle_green]="skillsForm.dirty || skillsForm.valid"
+    >
+      4
+    </div>
+    <div class="progress-bar-line">
+      <div class="progress-bar-progress" [ngStyle]="{ width: (progressStep4 | async) + '%' }"></div>
+    </div>
+    <div class="progress-bar-circle" [class.progress-bar-circle_green]="skillsForm.valid">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M5.99999 13.6133L1.85999 9.47333L3.74665 7.58666L5.99999 9.84666L12.5867 3.25333L14.4733 5.13999L5.99999 13.6133Z"
+          fill="white"
+        />
+      </svg>
+    </div>
+  </div>
+</section>

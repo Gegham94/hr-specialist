@@ -1,0 +1,25 @@
+<div class="file-input">
+  <label class="file-input__label">
+    <span class="file-input__editor">
+      <img [src]="EDIT_ICON" alt="" srcset=""/>
+    </span>
+    <input #fileInput type="file" (change)="fileChangeEvent($event)" class="file-input__input" accept="image/*"/>
+    <div class="cropped-image">
+      <img class="placeholder" *ngIf="!croppedImage" [src]="PROFILE_PLACEHOLDER" alt="Profile picture placeholder"/>
+      <img
+        *ngIf="croppedImage"
+        [src]="croppedImage"
+        (load)="isLoading()"
+        class="file-input__image"
+        alt="Company logo"
+      />
+    </div>
+    <span
+      class="file-input__feedback"
+      *ngIf="feedbackTextProps"
+      [class]="'file-input__feedback_' + errorStatus"
+    >
+    {{ feedbackTextProps }}
+  </span>
+  </label>
+</div>

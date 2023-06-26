@@ -1,0 +1,65 @@
+<ng-container *ngIf="getVacancyInfo$ | async">
+  <section class="about_vacancy" *ngLet="getVacancyInfo$ | async as vacancy">
+    <div class="about_vacancy__card">
+      <div class="about_vacancy__card__title">{{vacancy?.name}}</div>
+      <div class="about_vacancy__card__salary"> От {{vacancy?.salary}} до вычета налогов</div>
+      <div class="about_vacancy__card__info"><span> Полная занятость: </span> {{vacancy?.searchedSettings.wayOfWorking}}
+        <div class="about_vacancy__card__info"><span> Рабочее место: </span> {{vacancy?.searchedSettings.workPlace}}
+        </div>
+        <div class="about_vacancy__card__info"><span> Уровень: </span> {{vacancy?.searchedSettings.vacancyLevel}}</div>
+        <div class="about_vacancy__card__info"><span> Крайний срок: </span>{{vacancy?.deadlineDate}} </div>
+      </div>
+      <div class="about_vacancy__card__apply">
+        <button [ngClass]="{'about_vacancy__card__apply--disabled': isResumeApplied$.value || vacancy?.jobRequestSent}" (click)="applyResume()">Откликнуться</button>
+      </div>
+    </div>
+    <div class="about_vacancy__description">
+      <div class="block">
+        <p class="block__title"> Описание</p>
+        <p class="block__text"> {{vacancy?.description}} </p>
+      </div>
+
+      <div class="block">
+        <p class="block__title"> Обязанности </p>
+        <p class="block__text"> {{vacancy?.responsibility}} </p>
+      </div>
+
+      <div class="block">
+        <p class="block__title"> Условия </p>
+        <p class="block__text"> {{vacancy?.conditions}} </p>
+      </div>
+
+      <div class="block" *ngIf="vacancy?.questions">
+        <p class="block__title"> Вопросы </p>
+        <p class="block__text"> {{vacancy.questions}} </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="apply">
+    <hr-modal
+      [isOpen]="(isModal | async) ?? false"
+    >
+      <div class="apply-modal">
+        <div class="apply-modal__title">
+          <span>Внимание!</span>
+        </div>
+        <div class="apply-modal__description">
+          <span> Lorem Ipsum является текст-заполнитель обычно </span>
+        </div>
+        <div class="apply-modal__button">
+          <button
+            class="apply-modal__button__cancel"
+            (click)="cancel()">Отменить
+          </button>
+
+          <button class="apply-modal__button__pass"
+                  (click)="send()">Отправить
+          </button>
+        </div>
+      </div>
+    </hr-modal>
+  </section>
+</ng-container>
+
+

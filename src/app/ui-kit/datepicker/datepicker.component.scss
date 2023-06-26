@@ -1,0 +1,150 @@
+@import "src/assets/mixins/input/input-mixins";
+@import '/src/assets/variables/variables';
+@import 'src/assets/mixins/util/util';
+
+
+.datepicker {
+  position: relative;
+  margin-top: 3px;
+  border-radius: 8px;
+
+  &__img {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 15px;
+    height: 15px
+  }
+}
+
+.input-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  &__text {
+    @include input-label-text;
+    font-size: 14px;
+  }
+
+  &__input {
+    padding-right: 46px;
+    text-overflow: ellipsis;
+    outline: none;
+    @include input-placeholder;
+
+    &_default {
+      width: 100%;
+      outline: none;
+      @include input;
+
+      &:hover {
+        @include input-hover;
+      }
+    }
+
+    &_valid {
+      @include input-valid;
+    }
+
+    &_invalid {
+      @include input-invalid;
+    }
+
+    &:not(&_invalid):focus {
+      border: 1px solid $green;
+    }
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
+
+  &__btn {
+    background-color: $green;
+    color: $white;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+
+}
+
+:host::ng-deep .input-wrapper__input_default {
+  font-size: 12px !important;
+}
+
+::ng-deep ngb-datepicker {
+  z-index: 1;
+  background: white;
+}
+
+::ng-deep .bg-primary {
+  background-color: $green !important;
+  color: white;
+  border-radius: 5px !important;
+}
+
+::ng-deep .ngb-dp-today {
+  background-color: $light-gray !important;
+  color: white;
+  border-radius: 5px !important;
+}
+
+::ng-deep .ngb-dp-navigation-select {
+  gap: 8px;
+
+  ::ng-deep .custom-select {
+    border: none !important;
+    outline: none;
+  }
+}
+
+
+::ng-deep .ngb-dp-navigation-chevron {
+  color: $medium-dark-gray;
+}
+
+::ng-deep .ngb-dp-weekday {
+  font-style: initial !important;
+  color: $dark-gray !important;
+}
+
+::ng-deep .ngb-dp-weekdays {
+  margin-bottom: 10px;
+}
+
+:host ::ng-deep::placeholder {
+  color: black;
+  opacity: 1;
+}
+
+:host :-ms-input-placeholder {
+  color: black;
+}
+
+:host ::-ms-input-placeholder {
+  color: black;
+}
+
+.datepicker_removeBlock {
+  .datepicker_removeInputValue {
+    margin-right: 5px;
+    position: absolute;
+    top: 20px;
+    right: 7px;
+    cursor: pointer;
+  }
+}
+
+::ng-deep .high-light {
+  background-color: #c9c6bd;
+  border-radius: 5px;
+}
+

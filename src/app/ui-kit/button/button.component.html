@@ -1,0 +1,10 @@
+<div class="button-wrapper">
+  <button
+    [ngClass]="{'button-wrapper__button':!prevBtn , 'prev__button':prevBtn}"
+    [class]="!disabledProps ? 'button-wrapper__button_' + typeProps : 'button-wrapper__button_disabled'"
+    [disabled]='disabledProps'
+    (click)='clickEvent.emit()'
+  >
+    {{textProps}}
+  </button>
+</div>

@@ -1,0 +1,209 @@
+<div class="padding-wrapper">
+  <div class="content-wrapper" #contentWrapper>
+    <div class="education-header">
+      <img [src]="EDUCATION_ICON"/>
+      <h3>{{ "PROFILE.EDUCATION.EDUCATION" | translate }}</h3>
+    </div>
+    <div class="education-content">
+      <form [formGroup]="educationForm">
+        <div *ngIf="!savedEducation?.length || addMoreActive" [@slideInOut]>
+            <div class="form"
+                 [ngClass]="{'education-content--disable': !this.savedEducation.length &&
+                 getFormControlByName('hasNoEducation').value}">
+              <div>
+                <hr-search-select
+                  [dataInputAsString]="true"
+                  [label]="'PROFILE.EDUCATION.EDUCATION_INSTITUTION' | translate"
+                  [options]="universities$ | async"
+                  [formControlName]="'education_id'"
+                  [valid]="
+                    getFormControlByName('education_id').touched
+                      ? getFormControlByName('education_id').valid
+                      : undefined
+                  "
+                >
+                </hr-search-select>
+              </div>
+              <div>
+                <hr-search-select
+                  [dataInputAsString]="true"
+                  [label]="'PROFILE.EDUCATION.FACULTY' | translate"
+                  [options]="faculties"
+                  [formControlName]="'faculty'"
+                  [valid]="
+                    getFormControlByName('faculty').touched
+                      ? getFormControlByName('faculty').valid
+                      : undefined
+                  "
+                >
+                </hr-search-select>
+              </div>
+              <div>
+                <hr-search-select
+                  [label]="'PROFILE.EDUCATION.FORM_OF_STUDY' | translate"
+                  [options]="educationFormats"
+                  [formControlName]="'trainingFormat'"
+                  [valid]="
+                    getFormControlByName('trainingFormat').touched
+                      ? getFormControlByName('trainingFormat').valid
+                      : undefined
+                  "
+                >
+                </hr-search-select>
+              </div>
+              <div>
+                <label class="datepicker_label">{{ "PROFILE.EDUCATION.GRADUATED_DATE" | translate }} </label>
+                <hr-datepicker
+                  [default_date]="getFormControlByName('graduate_date').value"
+                  (selectDate)="selectDateByControlName($event, 'graduate_date')"
+                  [valid]="dateValidity"
+                >
+                </hr-datepicker>
+              </div>
+            </div>
+            <div class="education-content__wrapper-checkbox" *ngIf="!savedEducation.length">
+              <hr-checkbox
+                [label-text]="'Не имеет образования'"
+                [checked]="getFormControlByName('hasNoEducation').value"
+                [formControl]="getFormControlByName('hasNoEducation')"
+                (changes)="updateHasNoEducation($event)"
+              ></hr-checkbox>
+            </div>
+            <div class="submit">
+              <button class="cancel" *ngIf="savedEducation.length" (click)="cancelAddition()">
+                {{ "Cancel" | translate }}
+              </button>
+              <ng-container *ngIf="!isActivatedEditMode.value; else editModeTpl">
+                <button
+                  class="save-btn pointer"
+                  [disabled]="!educationForm.valid || getFormControlByName('hasNoEducation').value"
+                  (click)="saveEducation()"
+                >
+                  <img [src]="ORANGE_PLUS"/>
+                  {{ "Add to resume" | translate }}
+                </button>
+              </ng-container>
+              <ng-template #editModeTpl>
+                <button
+                  class="save-btn pointer"
+                  [disabled]="!educationForm.valid"
+                  (click)="saveEditedEducation()"
+                >
+                  {{ "Save changes" | translate }}
+                </button>
+              </ng-template>
+            </div>
+        </div>
+      </form>
+
+      <div class="add-more" *ngIf="!addMoreActive && savedEducation?.length">
+        <button class="add-more-btn pointer" (click)="activateAddMore()">
+          <span class="label">{{ "Add more" | translate }}</span>
+          <span class="img">
+            <img [src]="ORANGE_PLUS"/>
+          </span>
+        </button>
+      </div>
+
+      <ng-container *ngIf="savedEducation?.length">
+        <div class="save-container" *ngFor="let experience of savedEducation; let i = index">
+          <div class="saved-item">
+            <ng-container *ngIf="screenSize === 'DESKTOP'; else smallScreenTpl">
+              <ng-container
+                *ngTemplateOutlet="addedEducationTableTpl; context: { $implicit: experience }"
+              ></ng-container>
+            </ng-container>
+            <ng-template #smallScreenTpl>
+              <ng-container
+                *ngTemplateOutlet="addedEducationCardTpl; context: { $implicit: experience }"
+              ></ng-container>
+            </ng-template>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="bottom_buttons">
+      <div class="prev">
+        <p (click)="goToUrl(ResumeRoutesEnum.INFO)">
+          <img [src]="PREV_ICON" alt="prev">
+          назад
+        </p>
+      </div>
+      <div class="next"
+           [ngClass]="{'disable':(!savedEducation.length && !getFormControlByName('hasNoEducation').value)}">
+        <p (click)="goToUrl(ResumeRoutesEnum.EXPERIENCE)" >
+          далее
+          <img [src]="NEXT_ICON" alt="next">
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #addedEducationTableTpl let-education>
+  <div class="table">
+    <div class="table-header">
+      <div class="actions">
+        <img [src]="EDIT_ICON" alt="edit" (click)="edit(education.id)">
+        <img [src]="DELETE_ICON" alt="delete" (click)="delete(education.id)">
+      </div>
+    </div>
+    <div class="table-content">
+      <div class="table-cell">
+        <div class="label">{{ "PROFILE.EDUCATION.EDUCATION_INSTITUTION" | translate }}</div>
+        <div class="value">
+          {{ education.education_id[0].displayName || education.education_id }}
+        </div>
+      </div>
+      <div class="table-cell">
+        <div class="label">{{ "PROFILE.EDUCATION.FACULTY" | translate }}</div>
+        <div class="value">{{ education.faculty[0].displayName || education.faculty }}</div>
+      </div>
+      <div class="table-cell">
+        <div class="label">{{ "PROFILE.EDUCATION.FORM_OF_STUDY" | translate }}</div>
+        <div class="value">
+          {{ education.trainingFormat[0].displayName || education.trainingFormat }}
+        </div>
+      </div>
+      <div class="table-cell">
+        <div class="label">{{ "PROFILE.EDUCATION.GRADUATED_DATE" | translate }}</div>
+        <div class="value">
+          {{ formatToString(education.graduate_date) | date : "dd-MM-YYYY" }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #addedEducationCardTpl let-education>
+  <div class="card">
+    <div class="card-header">
+      <div class="actions">
+        <img [src]="EDIT_ICON" alt="edit" (click)="edit(education.id)">
+        <img [src]="DELETE_ICON" alt="delete" (click)="delete(education.id)">
+      </div>
+    </div>
+    <div class="card-content">
+      <div class="row">
+        <div class="label">{{ "PROFILE.EDUCATION.EDUCATION_INSTITUTION" | translate }}:</div>
+        <div class="value">
+          {{ education.education_id[0].displayName || education.education_id }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">{{ "PROFILE.EDUCATION.FACULTY" | translate }}:</div>
+        <div class="value">{{ education.faculty[0].displayName || education.faculty }}</div>
+      </div>
+      <div class="row">
+        <div class="label">{{ "PROFILE.EDUCATION.FORM_OF_STUDY" | translate }}:</div>
+        <div class="value">{{ education.faculty[0].displayName || education.faculty }}</div>
+      </div>
+      <div class="row">
+        <div class="label">{{ "PROFILE.EDUCATION.GRADUATED_DATE" | translate }}:</div>
+        <div class="value">
+          {{ formatToString(education.graduate_date) | date : "dd-MM-YYYY" }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,273 @@
+{
+  "ACTIONS": {
+    "NEXT": "Далее",
+    "PREV": "",
+    "BACK": "Назад",
+    "SAVE": "Сохранить",
+    "SEND": "Отправить",
+    "SEARCH": "Поиск",
+    "CONFIRM": "Подтвердить",
+    "POSTPONE": "Отложить",
+    "LOGIN": "Вход",
+    "REGISTER": "Регистрация",
+    "SIGN_IN": "Войти",
+    "LOGOUT": "Выйти",
+    "REFRESH": "Обновить",
+    "ADD": "Добавить",
+    "PAY": "Оплатить"
+  },
+  "SERVICE_PAGES": {
+    "NOT_FOUND": {
+      "TITLE": "Не найден",
+      "SUBTITLE": "Запрошенный ресурс не может быть найден на этом сервере!",
+      "LINK": "Назад"
+    },
+    "NO_ACCESS": {
+      "TITLE": "Запрещено",
+      "SUBTITLE": "Извините, вам запрещено заходить на эту страницу!",
+      "LINK": "Назад"
+    }
+  },
+  "NOTIFICATIONS": {
+    "EMPLOYEE": "Уведомления",
+    "CHAT": "Чаты",
+    "DATE_HOURS": "{hour} ч {minute} мин назад",
+    "DATE_MINUTES": "{minute} мин",
+    "YESTERDAY": "вчера"
+  },
+  "VALIDATION_ERROR": {
+    "REQUIRED": "Это поле обязательно для заполнения",
+    "PATTERN": "Введите действительные данные"
+  },
+  "ROBOT": {
+    "TEXT": "<div class='robot-info-title'> Привет! </div> <p> Я  помогу тебе быстро освоиться и начать работу на нашей системе! </p> <p> Чтобы продолжить общаться с компанией, которая заинтересована вами , пожалуйста  перейдите  в Личный кабинет и заполните информацию.</p> <p> После заполнения вашей личной информации, вам будут  доступны разделы Добавить резюме, Искать компанию и Тесты.</p>"
+  },
+  "HEADER": {
+    "DROPDOWN": {
+      "MY_PROFILE": "Мой профиль",
+      "SEARCH_COMPANY": "Искать работу",
+      "ANALYTICS": "Аналитика",
+      "MY_CHAT": "Мои чаты",
+      "PASS_TESTS": "Пройти тесты",
+      "LOGOUT": "Выйти"
+    }
+  },
+  "AUTHORIZATION": {
+    "TITLE": "Добро пожаловать",
+    "PHONE": "Номер телефона",
+    "PASSWORD": "Пароль",
+    "REMEMBER_ME": "Запомнить меня",
+    "FORGOT_PASSWORD": "Забыли пароль?",
+    "SIGN_IN": {
+      "SUBTITLE": "Введите свой телефон и пароль для того ,что бы зайти",
+      "NOTE": "Еще нет аккаунта?",
+      "ERROR": "Пользователь {{ prefix }} {{ phone }} не существует",
+      "INVALID_PASSWORD": "Вы ввели неверный логин или пароль. Проверьте пароль и попробуйте ещё раз.",
+      "ERROR_SEND_PHONE": "{{ prefix }} {{ phone }} номер не существует"
+    },
+    "SIGN_UP": {
+      "SUBTITLE": "Зарегистрируйтесь и начните работу",
+      "NOTE": "Уже есть аккаунт?",
+      "ERROR": "Пользователь {{ prefix }} {{ phone }} существует",
+      "PRIVACY_POLICY": "Соглашаюсь с пользовательским соглашением об обработке личных данных",
+      "SUCCESS_MESSAGE": {
+        "1" : "Спасибо за регистрацию!",
+        "2" : "Вы успешно зарегистрированы на нашей платформе.",
+        "3" : " Пожалуйста, войдите в свою учетную запись.",
+        "4" : "Желаем вам удачи!"
+      }
+    },
+    "RESET_PASSWORD": {
+      "TITLE": "Восстановление пароля",
+      "TEXT": "Пожалуйста введите ваш номер телефона и мы отправим ссылку для восстановления пароля.",
+      "PLACEHOLDER": "Номер телефона",
+      "SECURITY_CODE": "Введите код безопасности",
+      "CONFIRM": "Подтвердить",
+      "PLACEHOLDER_PASSWORD": "Пароль",
+      "NEW_PASSWORD": "Новый пароль",
+      "REPEAT_PASSWORD": "Повторите пароль",
+      "ERROR_CODE": "Неправильный код подтверждения"
+    }
+  },
+  "NAVIGATION": {
+    "ADD_VACANCY": "Добавить вакансию",
+    "MY_VACANCY": "Мои вакансии",
+    "ANALYTICS": "Аналитика",
+    "SPECIALISTS": "Специалисты",
+    "BALANCE": "Баланс"
+  },
+  "VACANCY": {
+    "SEARCH_SPECIALIST": {
+      "TITLE": {
+        "STEP_1": "Поиск сотрудника",
+        "STEP_2": "Поиск сотрудника ШАГ 2"
+      },
+      "ACCORDION": {
+        "TITLE": "Используемые  фильтры для данной вакансии"
+      },
+      "FILTER": {
+        "COUNTRY": "Страна",
+        "CITY": "Город",
+        "VACANCY_LEVEL": "Уровень",
+        "EMPLOYMENT": "Занятость",
+        "VACANCY_LANGUAGE": "Язык программирования",
+        "FRAMEWORKS": "Фреймворк",
+        "NATIVE_LANGUAGE": "Языки",
+        "WAY_OF_WORKS": "Тип занятости",
+        "TAGS": "Теги к фильтру",
+        "NAME": "Название вакансии",
+        "COMPLETION_DATE": "Дата завершения",
+        "COMPANY_DESCRIPTION": "Описание компании",
+        "RESPONSIBILITIES": "Обязанности",
+        "TERMS": "Условия"
+      }
+    }
+  },
+  "PROFILE": {
+    "SAVE": "Сохранить",
+    "PREV": "Назад",
+    "TITLE": "Заполните информацию о вас",
+    "ADD_AGAIN": "Добавить",
+    "NAME": "Имя",
+    "SURNAME": "Фамилия ",
+    "PHONE": "Номер телефона",
+    "EMAIL": "Эл. почта",
+    "ADDRESS": "Адрес",
+    "BIRTHDATE": "Дата рождения",
+    "COUNTRY": "Страна",
+    "GENDER": "Пол",
+    "CITIZENSHIP": "Гражданство",
+    "SPECIALIST_POSITION": "Уровень",
+    "PRICE": "Вознаграждение",
+    "CITY": "Город",
+    "EMPLOYMENT": "Занятость",
+    "PLACEHOLDER": "Заполните поле",
+    "WORK_EXPERIENCE": {
+      "WORK_EXPERIENCE": "Опыт работы",
+      "COMPANY": "Компания",
+      "POSITION": "Должность",
+      "ACCEPT_DATE": "Устроился",
+      "QUIT_DATE": "Уволился",
+      "WORK_YET": "Еще работаю",
+      "PERIOD": "Период",
+      "DURATION": "Продолжительность",
+      "STILL_WORKING": "Еще работаю"
+    },
+    "EDUCATION": {
+      "EDUCATION": "Образование",
+      "EDUCATION_INSTITUTION": "Учебное заведение",
+      "FACULTY": "Факультет",
+      "GRADUATED_DATE": "Год окончания",
+      "FORM_OF_STUDY": "Форма обучения"
+    },
+    "SKILLS_LANGUAGES": {
+      "SKILLS_LANGUAGES": "Навыки и Языки",
+      "SKILLS": "Навыки",
+      "LANGUAGES": "Языки",
+      "PROGRAMMING_LANGUAGES": "Язык программирования",
+      "FRAMEWORKS": "Фреймворк"
+    },
+    "EDIT": {
+      "EDIT": "Редактировать",
+      "BASIC_INFORMATION": "Основная информация",
+      "WORK_EXPERIENCE": "Опыт работы",
+      "SKILLS_LANGUAGES": "Навыки и Языки",
+      "EDUCATION": "Образование",
+      "DOWNLOAD_PDF": "Загрузить PDF"
+    }
+  },
+  "MY_VACANCY": {
+    "TITLE": "Мои вакансии",
+    "NAME": "Название вакансии",
+    "DATE": "Дата",
+    "STATUS": {
+      "TEXT": "Статус",
+      "COMPLETED": "Завершено",
+      "NOT_PAYED": "Не оплачено"
+    },
+    "END_DATE": "До завершения",
+    "ANALYTICS": "Aналитика",
+    "SEARCH": {
+      "STATUS": {
+        "COMPLETED": "Завершено",
+        "NOT_PAYED": "Не оплачено",
+        "ALL": "Все"
+      },
+      "BY_NAME": "По название ",
+      "BY_STATUS": "По статусу",
+      "FROM": "От",
+      "TO": "До"
+    }
+  },
+  "ANALYTICS": {
+    "TITLE": "Подробная статистика вакансии",
+    "PASSED_TESTS": "Количество пройденных тестов",
+    "RESULT": "Результаты",
+    "WORK": {
+      "DESCRIPTION": "Angular  Developer",
+      "DATE": "22/07/2021",
+      "STATUS": "Завершен"
+    },
+    "DIAGRAM": "Диаграмма",
+    "PERCENTAGE": {
+      "TITLE": "По процентам",
+      "SEARCH_MATCHING": "Совпадают по поиску",
+      "ACCEPTED_INVITED": "Принятые приглашения",
+      "PASSED_INTERVIEW": "Прошли собеседование",
+      "WAITING_FOR_ANSWER": "Ожидаем ответа",
+      "REJECTED": "Откланенные"
+    },
+    "ALL": {
+      "TEXT": "Всего",
+      "CANDIDATES": "Всего кандидатов",
+      "CANDIDATE": "кандидата"
+    }
+  },
+  "BALANCE": {
+    "PAYMENT_HISTORY": "История платежей",
+    "VIEW_ALL": "Посмотреть все",
+    "DATE": "Дата",
+    "PRICE": "Цена",
+    "STATUS": "Статус",
+    "RUB": "руб",
+    "PDF": "PDF",
+    "UNPAID_VACANCIES": "Неоплаченные вакансии",
+    "AMOUNT_PAYABLE": "Сумма к оплате",
+    "VACANCY_NAME": "Название вакансии",
+    "NOTE": "Вы хотите удалить эту вакансию?"
+  },
+  "SPECIALISTS": {
+    "PROFESSION": "Angular Developer",
+    "VIEW_ALL": "Посмотреть всех",
+    "PERSONAL_INFORMATION": {
+      "TITLE": "Личная информация",
+      "FULL_NAME": "",
+      "PHONE": "",
+      "EMAIL": "",
+      "COUNTRY": "",
+      "CITY": "",
+      "SKILLS": "",
+      "SOCIAL_MEDIA": ""
+    },
+    "INTERVIEW_RESULTS": {
+      "TITLE": "Результаты собеседования",
+      "NOTE_DATE": "Время прохождения  45 мин.",
+      "POSITIVE_REVIEWS": "Положительные отзывы",
+      "NEGATIVE_REVIEWS": "Отрицательные отзывы",
+      "INVITE_TO_CHAT": "Пригласить в Чат",
+      "TEST": {
+        "TITLE": "Результаты психологического теста",
+        "VIEW_TEST": "Посмотреть тест",
+        "PSYCHOLOGICAL": "STRESS_RESISTANCE",
+        "PERSONALITY": "Личностный тест",
+        "INTELLECT": "Тест на интеллект",
+        "PASSING_BY": "Тестирование  { PROGRAMMING_LANGUAGE }"
+      }
+    }
+  },
+  "Add to resume": "Добавить к резюме",
+  "Save changes": "Сохранить изменения",
+  "Add more": "Добавить еще",
+  "Cancel": "Отменить"
+}
+

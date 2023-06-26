@@ -1,0 +1,39 @@
+<div class='navigate-button__link'>
+  <a [routerLink]='typeProps === "disabled" ? null : linkProps' class='navigate-button'>
+    <div class='navigate-button'>
+      <button
+        class='navigate-button__button'
+        [class]="['navigate-button__button_' + isActive, 'navigate-button__button_' + typeProps]"
+        [routerLinkActive]="(isRobotOpen$ | async) ? '': 'active'"
+      >
+        <div class='navigate-button__icon'>
+          <hr-add-vacancy-icon *ngIf='iconProps === "add-vacancy-icon"'>
+          </hr-add-vacancy-icon>
+          <hr-my-vacancy-icon *ngIf='iconProps === "my-vacancy-icon"'>
+          </hr-my-vacancy-icon>
+          <hr-analytic-icon *ngIf='iconProps === "analytic-icon"'>
+          </hr-analytic-icon>
+          <hr-specialist-icon *ngIf='iconProps === "specialist-icon"'>
+          </hr-specialist-icon>
+          <hr-balance-icon *ngIf='iconProps === "balance-icon"'>
+          </hr-balance-icon>
+          <hr-analytic-icon *ngIf='iconProps === "analytics"'>
+          </hr-analytic-icon>
+          <hr-find-vacancy-icon *ngIf='iconProps === "find-vacancy"'>
+          </hr-find-vacancy-icon>
+        </div>
+
+        <span *ngIf='notificationCountProps || typeProps === navigateButtonTypesList.disabled'
+              class='navigate-button__notification'
+              [class]="'navigate-button__notification_' + typeProps"
+        >
+     <span
+       *ngIf="notificationCountProps">
+       {{ notificationCountProps > 99 ? 99 + "+" : notificationCountProps }}
+     </span>
+    </span>
+        {{ textProps }}
+      </button>
+    </div>
+  </a>
+</div>

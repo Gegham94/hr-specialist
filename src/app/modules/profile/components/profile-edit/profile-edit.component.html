@@ -1,0 +1,16 @@
+<hr-toasts></hr-toasts>
+
+<div class="progress">
+  <hr-progress-bar-for-steps [infoForm]="infoForm" [skillsForm]="skillsForm" [edit]="false"></hr-progress-bar-for-steps>
+</div>
+<ng-container *ngIf="robotHelperService.routerAnimation$ | async as animation">
+  <div
+    class="wrap"
+    [style.height.px]="layoutHeight"
+    [@moveNoAnimation]="animation === 'NO' && getState(o)"
+    [@moveFromLeftFade]="animation === 'YES' && getState(o)"
+    [@moveFromRightFade]="animation === 'YES' && getState(o)"
+  >
+    <router-outlet #o="outlet"></router-outlet>
+  </div>
+</ng-container>

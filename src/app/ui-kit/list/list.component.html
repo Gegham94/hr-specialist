@@ -1,0 +1,31 @@
+<div class='list'
+     [class]='"list_"+typeProps'
+>
+  <div class='list__avatar'>
+<!--    avatar image-->
+<!--    <img src='assets\img\avatar\list-man-avatar.svg' alt='avatar' class='list__avatar-image'>-->
+  </div>
+  <div class='list__person-name'>
+    {{personName}}
+    <div class='list__person-email'>
+      {{personEmail}}
+    </div>
+  </div>
+  <div class='list__person-post'>
+    Должность
+    <div class='list__person-profession'>
+      {{personPosition}}
+    </div>
+  </div>
+  <div class='list__employment-date'>
+    Дата приема на работу
+    <div class='list__date'>
+      {{personWorkDate}}
+    </div>
+  </div>
+  <hr-button
+    class='list__button'
+    [text]="'Посмотреть профиль'"
+    [type]='buttonTypesList.outline'
+  ></hr-button>
+</div>
