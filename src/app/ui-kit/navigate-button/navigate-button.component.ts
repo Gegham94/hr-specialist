@@ -1,8 +1,8 @@
 import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
-import { NavigateButtonTypesEnum } from "../../root-modules/app/constants/navigate-button-types.enum";
-import {RobotHelperService} from "../../root-modules/app/services/robot-helper.service";
-import {Observable} from "rxjs";
-import {RobotHelper} from "../../root-modules/app/interfaces/robot-helper.interface";
+import { RobotHelperService } from "../../shared/services/robot-helper.service";
+import { Observable } from "rxjs";
+import { NavigateButtonTypesEnum } from "src/app/shared/constants/navigate-button-types.enum";
+import { RobotHelper } from "src/app/shared/interfaces/robot-helper.interface";
 
 @Component({
   selector: "hr-navigate-button",

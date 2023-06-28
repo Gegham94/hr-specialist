@@ -1,4 +1,4 @@
-import {ObjectType} from "../../../shared-modules/types/object.type";
+import {ObjectType} from "../../../shared/types/object.type";
 
 export interface SpecialistTestInterface {
   specialist: SpecialistListsInterface;

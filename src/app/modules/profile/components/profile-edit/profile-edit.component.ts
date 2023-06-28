@@ -1,14 +1,18 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from "@angular/core";
-import {Router, RouterOutlet} from "@angular/router";
-import {FormGroup} from "@angular/forms";
-import { Subject, takeUntil} from "rxjs";
-import {moveBackWithNoAnimation, moveFromLeftAnimation, moveFromRightAnimation} from "../utils/profile-form-animation.constant";
-import {ScreenSizeService} from "src/app/root-modules/app/services/screen-size.service";
-import {Unsubscribe} from "src/app/shared-modules/unsubscriber/unsubscribe";
-import {ProfileFormControlService} from "./profile-form-control.service";
-import {ResumeRoutesEnum} from "../utils/resume-routes.constant";
-import {EmployeeInfoFacade} from "../utils/employee-info.facade";
-import { RobotHelperService } from "src/app/root-modules/app/services/robot-helper.service";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { Router, RouterOutlet } from "@angular/router";
+import { FormGroup } from "@angular/forms";
+import { takeUntil } from "rxjs";
+import {
+  moveBackWithNoAnimation,
+  moveFromLeftAnimation,
+  moveFromRightAnimation,
+} from "../../constants/profile-form-animation.constant";
+import { ScreenSizeService } from "src/app/shared/services/screen-size.service";
+import { Unsubscribe } from "src/app/shared/unsubscriber/unsubscribe";
+import { ResumeRoutesEnum } from "../../constants/resume-routes.constant";
+import { EmployeeInfoFacade } from "../../services/employee-info.facade";
+import { RobotHelperService } from "src/app/shared/services/robot-helper.service";
+import { ProfileEditFacade } from "./service/profile-edit.facade";
 
 @Component({
   selector: "app-profile-edit",
@@ -18,10 +22,14 @@ import { RobotHelperService } from "src/app/root-modules/app/services/robot-help
   animations: [moveFromLeftAnimation, moveFromRightAnimation, moveBackWithNoAnimation],
 })
 export class ProfileEditComponent extends Unsubscribe implements OnInit, OnDestroy {
-  public updateProgressBar: Subject<boolean | null> = new Subject<boolean | null>();
-  public ResumeRoutesEnum = ResumeRoutesEnum;
-  private _layoutHeight: number = this.screenSizeService.layoutHeight;
+  public get infoForm(): FormGroup {
+    return this._profileEditFacade.getInfoForm();
+  }
+  public get skillsForm(): FormGroup {
+    return this._profileEditFacade.getSkillsForm();
+  }
 
+  private _layoutHeight: number = this._screenSizeService.layoutHeight;
   public get layoutHeight(): number {
     return this._layoutHeight;
   }
@@ -31,48 +39,41 @@ export class ProfileEditComponent extends Unsubscribe implements OnInit, OnDestr
   }
 
   constructor(
-    public robotHelperService: RobotHelperService,
-    private formControlService: ProfileFormControlService,
-    private screenSizeService: ScreenSizeService,
-    private employeeFacade: EmployeeInfoFacade,
-    private cdr: ChangeDetectorRef,
-    private router: Router
+    public _robotHelperService: RobotHelperService,
+    private _profileEditFacade: ProfileEditFacade,
+    private _screenSizeService: ScreenSizeService,
+    private _employeeFacade: EmployeeInfoFacade,
+    private _cdr: ChangeDetectorRef,
+    private _router: Router
   ) {
     super();
   }
 
-  get infoForm(): FormGroup {
-    return this.formControlService.infoForm;
-  }
-
-  get skillsForm(): FormGroup {
-    return this.formControlService.skillsForm;
-  }
-
   ngOnInit(): void {
-    this.screenSizeService.profilEditLayoutSize$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((height) => {
+    this._screenSizeService.profilEditLayoutSize$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((height) => {
       this.layoutHeight = height;
-      this.cdr.detectChanges();
+      this._cdr.markForCheck();
     });
 
-    this.employeeFacade.getSelectedContentReference()
+    this._employeeFacade
+      .getSelectedContentReference()
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((data) => {
         switch (data) {
           case "step1": {
-            this.router.navigateByUrl(ResumeRoutesEnum.INFO);
+            this._router.navigateByUrl(ResumeRoutesEnum.INFO);
             break;
           }
           case "step2": {
-            this.router.navigateByUrl(ResumeRoutesEnum.EDUCATION);
+            this._router.navigateByUrl(ResumeRoutesEnum.EDUCATION);
             break;
           }
           case "step3": {
-            this.router.navigateByUrl(ResumeRoutesEnum.EXPERIENCE);
+            this._router.navigateByUrl(ResumeRoutesEnum.EXPERIENCE);
             break;
           }
           case "step4": {
-            this.router.navigateByUrl(ResumeRoutesEnum.SKILLS);
+            this._router.navigateByUrl(ResumeRoutesEnum.SKILLS);
             break;
           }
           default: {
@@ -81,7 +82,7 @@ export class ProfileEditComponent extends Unsubscribe implements OnInit, OnDestr
       });
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.unsubscribe();
   }
 

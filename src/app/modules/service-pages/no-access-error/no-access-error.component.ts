@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
-import { Location } from "@angular/common";
 import { Router } from "@angular/router";
-import {ButtonTypeEnum} from "../../../root-modules/app/constants/button-type.enum";
+import {ButtonTypeEnum} from "../../../shared/constants/button-type.enum";
 
 @Component({
   selector: "hr-no-access-error",
@@ -11,8 +10,7 @@ import {ButtonTypeEnum} from "../../../root-modules/app/constants/button-type.en
 export class NoAccessErrorComponent {
   public buttonTypesList = ButtonTypeEnum;
 
-  constructor(private readonly _location: Location,
-              private readonly _router: Router) {
+  constructor(private readonly _router: Router) {
   }
 
   public goBack(): void {

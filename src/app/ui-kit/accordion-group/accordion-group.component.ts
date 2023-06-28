@@ -15,7 +15,7 @@ import {
 } from "@angular/core";
 import { Observable, takeUntil } from "rxjs";
 import { AccordionComponent } from "../accordion/accordion.component";
-import { Unsubscribe } from "src/app/shared-modules/unsubscriber/unsubscribe";
+import { Unsubscribe } from "src/app/shared/unsubscriber/unsubscribe";
 
 @Component({
   selector: "hr-accordion-group",

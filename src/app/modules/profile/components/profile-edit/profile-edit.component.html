@@ -3,7 +3,7 @@
 <div class="progress">
   <hr-progress-bar-for-steps [infoForm]="infoForm" [skillsForm]="skillsForm" [edit]="false"></hr-progress-bar-for-steps>
 </div>
-<ng-container *ngIf="robotHelperService.routerAnimation$ | async as animation">
+<ng-container *ngIf="_robotHelperService.routerAnimation$ | async as animation">
   <div
     class="wrap"
     [style.height.px]="layoutHeight"

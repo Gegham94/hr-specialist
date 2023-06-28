@@ -6,6 +6,7 @@
   height: fit-content;
 
   @media screen and (max-width: 500px) {
-    padding: 15px;
+    padding: 0;
+    border: none;
   }
 }

@@ -1,6 +1,6 @@
 <hr-header></hr-header>
 
-<section class="navigate-button-wrapper" *ngIf="isLogged">
+<section class="navigate-button-wrapper" *ngIf="isLogged && !mobileCompilerPage">
   <ngx-slick-carousel
     class="carousel"
     style="width: 80%"
@@ -11,11 +11,10 @@
   >
     <div ngxSlickItem #slickItem *ngFor="let navigation of navigateButtons$ | async; let i = index" class="slide">
       <hr-navigate-button
-        *ngLet="notificationCount | async as notificationCount"
         [notification-count]="navigation.statusType && navigation.id === 5 ? notificationCount : 0"
         [text]="navigation.text | translate"
         [isActive]="(robotSettings$ | async)?.navigationItemId === navigation.id ? 'isActive' : 'notActive'"
-        [type]='navigation.statusType'
+        [type]="navigation.statusType"
         [link]="navigation.link"
         [icon]="navigation.icon"
       >
@@ -30,10 +29,9 @@
       [style.width.px]="itemWidth - 40"
     >
       <hr-navigate-button
-        *ngLet="notificationCount | async as notificationCount"
         [notification-count]="navigation.statusType && navigation.id === 5 ? notificationCount : 0"
         [text]="navigation.text | translate"
-        [type]='navigation.statusType'
+        [type]="navigation.statusType"
         [isActive]="(robotSettings$ | async)?.navigationItemId === navigation.id ? 'isActive' : 'notActive'"
         [link]="navigation.link"
         [icon]="navigation.icon"
@@ -47,10 +45,9 @@
       <ng-container *ngIf="i >= slideActiveId && i < slideActiveId + 3">
         <div class="navigate-button__tablet" [style.width.px]="itemWidth - 40">
           <hr-navigate-button
-            *ngLet="notificationCount | async as notificationCount"
             [notification-count]="navigation.statusType && navigation.id === 5 ? notificationCount : 0"
             [text]="navigation.text | translate"
-            [type]='navigation.statusType'
+            [type]="navigation.statusType"
             [isActive]="(robotSettings$ | async)?.navigationItemId === navigation.id ? 'isActive' : 'notActive'"
             [link]="navigation.link"
             [icon]="navigation.icon"
@@ -66,10 +63,9 @@
       <ng-container *ngIf="slideActiveId ? i === slideActiveId : i === 0">
         <div class="navigate-button__mobile" [style.width.px]="itemWidth - 40">
           <hr-navigate-button
-            *ngLet="notificationCount | async as notificationCount"
             [notification-count]="navigation.statusType && navigation.id === 5 ? notificationCount : 0"
             [text]="navigation.text | translate"
-            [type]='navigation.statusType'
+            [type]="navigation.statusType"
             [isActive]="(robotSettings$ | async)?.navigationItemId === navigation.id ? 'isActive' : 'notActive'"
             [link]="navigation.link"
             [icon]="navigation.icon"
@@ -88,7 +84,7 @@
 </section>
 
 <ng-container *ngLet="isRobotOpen$ | async as isRobotOpen$">
-  <div class="home_robot-info" [hidden]="isRobotOpen$" (click)="openRobot()">
+  <div *ngIf="!mobileCompilerPage" class="home_robot-info" [hidden]="isRobotOpen$" (click)="openRobot()">
     <img src="/assets/img/icon/info.svg" alt="info" />
   </div>
 
@@ -99,7 +95,7 @@
   </ng-container>
 </ng-container>
 
-<hr-footer></hr-footer>
+<hr-footer *ngIf="!mobileCompilerPage"></hr-footer>
 
 <ng-container *ngIf="modal$ | async as modal">
   <hr-modal

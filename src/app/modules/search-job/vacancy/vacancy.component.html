@@ -1,7 +1,7 @@
 <div class="search-vacancy">
   <div class="search-vacancy-content">
     <div>
-      <div class="search-vacancy__title">Поиск вакансии</div>
+      <div class="search-vacancy__title">{{"SEARCH_JOB.VACANCY.SEARCH_VACANCY" | translate}}</div>
     </div>
     <div>
       <hr-vacancy-filters
@@ -28,10 +28,10 @@
                 </div>
               </div>
               <div class="search-vacancy__item-actions">
-                <div class="search-vacancy__head-info"> {{vacancy.deadlineDate | date: "dd/MM/YYYY"}} </div>
+                <div class="search-vacancy__head-info"> {{vacancy.deadlineDate | date: DateFormatEnum.dateForHtml}} </div>
                 <div class="search-vacancy__item-actions--link"> {{vacancy.salary}} </div>
                 <div class="search-vacancy__body-button">
-                  <button (click)="navigate(vacancy.companyUuid, vacancy.uuid)">Подробнее о вакансии</button>
+                  <button (click)="navigate(vacancy.companyUuid, vacancy.uuid)">{{"SEARCH_JOB.VACANCY.ABOUT_VACANCY" | translate}}</button>
                 </div>
               </div>
             </div>

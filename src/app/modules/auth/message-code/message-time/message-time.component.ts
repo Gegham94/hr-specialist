@@ -8,8 +8,8 @@ import {
 import {MessageTimeService} from "./message-time.service";
 import {filter, takeUntil} from "rxjs";
 import Timeout = NodeJS.Timeout;
-import {Unsubscribe} from "../../../../shared-modules/unsubscriber/unsubscribe";
-import {SignInFacade} from "../../signin/signin.facade";
+import {Unsubscribe} from "../../../../shared/unsubscriber/unsubscribe";
+import {SignInFacade} from "../../signin/services/signin.facade";
 
 @Component({
   selector: "hr-message-time",
@@ -23,15 +23,15 @@ export class MessageTimeComponent extends Unsubscribe implements OnInit, OnDestr
 
   @Input() disabled: boolean = true;
   @Output() getTimeFinish: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public timeNumber!: number;
   private interval: number = 0;
   private codeTime: number = 180;
-  public timeNumber!: number;
   private step: number = this.codeTime;
   private timeout!: Timeout;
 
   constructor(
-    private messageTimeService: MessageTimeService,
-    private signInFacade: SignInFacade) {
+    private _messageTimeService: MessageTimeService,
+    private _signInFacade: SignInFacade) {
     super();
   }
 
@@ -42,7 +42,7 @@ export class MessageTimeComponent extends Unsubscribe implements OnInit, OnDestr
   }
 
   private getError(): void {
-    this.signInFacade.getErrorMessage()
+    this._signInFacade.getErrorMessage()
       .pipe(
         filter((err) => !!err),
         takeUntil(this.ngUnsubscribe))
@@ -53,8 +53,8 @@ export class MessageTimeComponent extends Unsubscribe implements OnInit, OnDestr
   }
 
   private sendCodeAgain(): void {
-    this.messageTimeService.getNewCode().pipe(
-      filter((s) => !!s),
+    this._messageTimeService.getNewCode().pipe(
+      filter((code) => !!code),
       takeUntil(this.ngUnsubscribe))
       .subscribe(() => {
         this.svg.nativeElement.style.display = "block";

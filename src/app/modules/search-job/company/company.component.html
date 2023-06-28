@@ -1,16 +1,16 @@
 <div class="search-company">
   <div class="search-company-content">
     <div>
-      <div class="search-company__title">Поиск компании</div>
+      <div class="search-company__title">{{"SEARCH_JOB.COMPANY.SEARCH_COMPANY" | translate}}</div>
       <hr-filter [companyFilter]="false" (statusChanged)="searchDate($event)"></hr-filter>
       <div class="search-company__checkbox">
         <label for="checkbox">
           <input type="checkbox" id="checkbox" (change)="showActiveCompany($event)" />
           <span class="search-company__checkbox-icon"></span>
-          <span class="search-company__checkbox-title">Показать компании, у которых есть открытые вакансии</span>
+          <span class="search-company__checkbox-title">{{"SEARCH_JOB.COMPANY.SHOW_COMPANY" | translate}}</span>
         </label>
       </div>
-      <div class="search-company__found" *ngIf="!(loader$ | async) && (countCompany$ | async)">{{ countCompany$ | async }} компания найдена</div>
+      <div class="search-company__found" *ngIf="!(loader$ | async) && (countCompany$ | async)">{{ countCompany$ | async }} {{"SEARCH_JOB.COMPANY.FOUND_COMPANY" | translate}}</div>
     </div>
     <div class="search-company__info-content">
       <section *ngIf="(countCompany$ | async) === 0 && !(loader$ | async)">
@@ -36,21 +36,17 @@
                 </div>
               </div>
               <div class="search-company__body">
-                <div class="search-company__body-ads">Объявления компании {{ company.vacancyCount }}</div>
-                <div class="search-company__body-vacancies">
-                  Активные вакансии: {{ company.activeVacancyAndSpecialist.activeVacancyCount }}
-                </div>
-                <div class="search-company__body-applications">
-                  Количество заявок: {{ company.activeVacancyAndSpecialist.specialistCount }}
+                <div class="search-company__body-ads">
+                  {{"SEARCH_JOB.COMPANY.ACTIVE_VACANCIES" | translate}}: {{ company.activeVacancyAndSpecialist.activeVacancyCount }}
                 </div>
                 <div class="search-company__body-button">
-                  <button (click)="navigate(company.uuid)">Подробнее о компании</button>
+                  <button (click)="navigate(company.uuid)">{{"SEARCH_JOB.COMPANY.ABOUT_COMPANY" | translate}}</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="search-company__pagination">
+        <div class="search-company__pagination" *ngIf="vacanciesCount > 1 && !(loader$ | async)">
           <hr-pagination
             *ngIf="vacanciesCount > 1 && !(loader$ | async)"
             [total-page-count]="vacanciesCount"
@@ -60,7 +56,9 @@
         </div>
       </div>
       <ng-template #loaderTmpl>
-        <div class="loader"></div>
+        <div class="loader-content">
+          <div class="loader"></div>
+        </div>
       </ng-template>
     </div>
   </div>

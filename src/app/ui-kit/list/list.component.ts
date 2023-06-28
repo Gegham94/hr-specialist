@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { ButtonTypeEnum } from "../../root-modules/app/constants/button-type.enum";
-import { ListTypesEnum } from "../../root-modules/app/constants/list-types.enum";
+import { ButtonTypeEnum } from "../../shared/constants/button-type.enum";
+import { ListTypesEnum } from "src/app/shared/constants/list-types.enum";
 
 @Component({
   selector: "hr-list",
   templateUrl: "./list.component.html",
-  styleUrls: ["./list.component.scss"]
+  styleUrls: ["./list.component.scss"],
 })
 export class ListComponent implements OnInit {
   public buttonTypesList = ButtonTypeEnum;
@@ -16,7 +16,5 @@ export class ListComponent implements OnInit {
   @Input("person-position") personPosition: string = "";
   @Input("person-work-date") personWorkDate: string = "";
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

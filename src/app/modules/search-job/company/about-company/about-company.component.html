@@ -1,69 +1,75 @@
-<section class="about_company" *ngLet=" getCompanyInfo$ | async as company">
-
-  <div class="about_company__item">
-    <div class="about_company__item-img">
-      <img [src]="getCompanyLogo(company?.logo)" alt="companyIcon">
-
-      <div class="about_company__head">
-        <div class="about_company__head-title">{{company?.name}}</div>
-        <div class="about_company__head-address">{{company?.country}},{{company?.city}}<br/></div>
-      </div>
-    </div>
-    <div class="about_company__item-info">
-      <div class="about_company-address">
-        <div class="about_company-address__block">
-          <div class="about_company-address__block-item">
-            <img src="../../../../assets/img/icon/address.svg">
-            <span>{{company?.address}}</span>
-          </div>
-        </div>
-        <div class="about_company-address__block">
-          <div class="about_company-address__block-item">
-            <img src="../../../../assets/img/icon/phone.svg">
-            <span>{{company?.phone}}</span>
-          </div>
-        </div>
-        <div class="about_company-address__block">
-          <div class="about_company-address__block-item">
-            <img src="../../../../assets/img/icon/word.svg">
-            <span><a [href]="company?.webSiteLink">{{company?.webSiteLink}}</a> </span>
+<ng-container *ngIf="(companyInfo$ | async); else loaderModel">
+  <section class="about_company" *ngLet="companyInfo$ | async as company">
+    <div class="about_company__item">
+      <div class="about_company__item-img">
+        <img [src]="getCompanyLogo(company?.logo)" alt="companyIcon">
+        <div class="about_company__head">
+          <div class="about_company__head-title">{{company?.name}}</div>
+          <div class="about_company__head-address"
+          *ngIf="company?.country && company?.city"
+          >
+            {{company.country}},{{company.city}}
+            <br/>
           </div>
         </div>
       </div>
-    </div>
+      <div class="about_company__item-info">
+        <div class="about_company-address">
+          <div class="about_company-address__block">
+            <div class="about_company-address__block-item">
+              <img src="../../../../assets/img/icon/address.svg">
+              <span>{{company?.address}}</span>
+            </div>
+          </div>
+          <div class="about_company-address__block">
+            <div class="about_company-address__block-item">
+              <img src="../../../../assets/img/icon/phone.svg">
+              <span>{{company?.phone}}</span>
+            </div>
+          </div>
+          <div class="about_company-address__block">
+            <div class="about_company-address__block-item">
+              <img src="../../../../assets/img/icon/word.svg">
+              <span><a [href]="company?.webSiteLink">{{company?.webSiteLink}}</a> </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  </div>
-  <section class="about_company-description">
-    <div class="about_company-description__title">
-      <span>Описание компнаии</span>
     </div>
-    <div class="about_company-description__info">
-      <p>{{company?.description | removeTag}} </p>
-    </div>
+    <section class="about_company-description">
+      <div class="about_company-description__title">
+        <span>{{"SEARCH_JOB.COMPANY.COMPANY_DESCRIPTION" | translate}}</span>
+      </div>
+      <div class="about_company-description__info">
+        <p>{{company?.description | removeTag}} </p>
+      </div>
+    </section>
+    <span class="about_company__active__vacancy">{{"SEARCH_JOB.COMPANY.ACTIVE_VACANCIES_COMPANY" | translate}} </span>
+    <div class="about_company-table scrollbar-green">
+      <div class='about_company__list' *ngFor="let vacancy of companyAllVacancy$ | async">
+        <div class='about_company__list-wrapper'>
+          <div class='about_company__table'>
+            <div class='about_company__table__name'><span (click)="navigate(vacancy?.companyUuid,vacancy?.uuid)">{{vacancy.name}}</span></div>
+            <div class='about_company__table__date'>{{vacancy.deadlineDate}}</div>
+            <div class='about_company__table__button'>
+              <button (click)="navigate(vacancy?.companyUuid,vacancy?.uuid)">{{"SEARCH_JOB.COMPANY.MORE" | translate}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+    <hr-pagination
+      *ngIf="vacanciesCount > 1"
+      (selectPagination)="getSelectedPaginationValue($event)"
+      [total-page-count]='vacanciesCount'>
+    </hr-pagination>
   </section>
-  <span class="about_company__active__vacancy">Активные вакансии компании </span>
-  <div class="about_company-table">
-    <div class='about_company__list-header'>
-      <div class='about_company__element about_company__element_name'>Название вакансии</div>
-      <div class='about_company__element about_company__element_date'>Дата</div>
-    </div>
-    <div class='about_company__list' *ngFor="let vacancy of getCompanyAllVacancy$ | async">
-      <div class='about_company__list-wrapper'>
-        <div class='about_company__table'>
-          <div class='about_company__table__name'><span (click)="navigate(vacancy?.companyUuid,vacancy?.uuid)">{{vacancy.name}}</span></div>
-          <div class='about_company__table__date'>{{vacancy.deadlineDate}}</div>
-          <div class='about_company__table__button'>
-            <button (click)="navigate(vacancy?.companyUuid,vacancy?.uuid)">Подробнее</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
+</ng-container>
 
-  <hr-pagination
-    *ngIf="vacanciesCount > 1"
-    (selectPagination)="getSelectedPaginationValue($event)"
-    [total-page-count]='vacanciesCount'>
-  </hr-pagination>
-
-</section>
+<ng-template #loaderModel>
+  <div class="loader-wrapper">
+    <div class="loader"></div>
+  </div>
+</ng-template>

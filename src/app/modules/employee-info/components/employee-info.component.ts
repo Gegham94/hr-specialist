@@ -14,7 +14,7 @@ import {
 } from "rxjs";
 import { EmployeeInfoFacade } from "../../profile/components/utils/employee-info.facade";
 import { TagTypesEnum } from "../../../root-modules/app/constants/tag-types.enum";
-import { EmployeeInterface } from "../../../root-modules/app/interfaces/employee.interface";
+import { EmployeeInterface } from "../../../shared/interfaces/employee.interface";
 import { EmployeeSkillsEnum } from "../enums/specialist-skils.enum";
 import {
   citizenShips,
@@ -28,17 +28,17 @@ import {
 } from "../mock/specialist-mock";
 import { DateFormatEnum } from "../enums/date-format.enum";
 import {
-  SearchableSelectDataInterface,
-  StringOrNumber,
+  ISearchableSelectData,
+  StringOrNumberType,
 } from "../../../root-modules/app/interfaces/searchable-select-data.interface";
 import { SendFormService } from "../../service/send-form.service";
 import { HelperService } from "../../service/helper.service";
 import { HomeLayoutState } from "../../home-layout/home-layout.state";
 import { SearchParams } from "../interface/search-params";
-import { PatternModel } from "../../auth/enum/pattern.model";
-import { LocalStorageService } from "../../../root-modules/app/services/local-storage.service";
-import { Unsubscribe } from "../../../shared-modules/unsubscriber/unsubscribe";
-import { RobotHelperService } from "../../../root-modules/app/services/robot-helper.service";
+import { PatternModelEnum } from "../../auth/enum/pattern.model";
+import { LocalStorageService } from "../../../shared/services/local-storage.service";
+import { Unsubscribe } from "../../../shared/unsubscriber/unsubscribe";
+import { RobotHelperService } from "../../../shared/services/robot-helper.service";
 import { SpecialistGenderEnum, SpecialistGenderTypeEnum } from "../enums/specialist-gender.enum";
 
 @Component({

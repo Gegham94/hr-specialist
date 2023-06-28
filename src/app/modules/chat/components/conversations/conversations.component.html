@@ -1,0 +1,105 @@
+<div
+  class="chat-company"
+  #element
+  infinite-scroll
+  [infiniteScrollContainer]="element"
+  [infiniteScrollDistance]="scrollDistance"
+  [infiniteScrollThrottle]="throttle"
+  [scrollWindow]="false"
+  [fromRoot]="true"
+>
+  <ng-container class="chat-wrapper" *ngIf="!isLoading.value; else skeletonTmpl">
+    <div *ngIf="!conversations?.length" class="chat-company__list--no-data">
+      <p> {{"CHAT.TEXT_1" | translate}} <br> {{"CHAT.TEXT_2" | translate}} </p>
+    </div>
+    <div
+      class="chat-company__list"
+      *ngFor="let conversation of conversations; let i = index"
+    >
+      <ng-container *ngLet="selectedConversation">
+        <div
+          class="chat-company__item"
+          [ngClass]="{
+                'chat-company__not-read': !conversation.last_message.messageStatus,
+                'chat-company__isActive':
+                  conversation.last_message.conversationUuid === selectedConversation?.last_message?.conversationUuid
+              }"
+          (click)="showSelectedConversationMessages(conversation)"
+        >
+          <div>
+            <div class="chat-company__info">
+              <img class="chat-company__info--image" [src]="getLogo(conversation.company.image)"
+                   alt="company"/>
+              <div>
+                <p>{{ conversation.company.name}} - {{ conversation.other_info.name}}</p>
+                <span *ngIf="!!conversation.last_message.senderUuid">
+                    {{ conversation.last_message.createdAt | date: "HH:mm" }}
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="conversation.hasUpdate"
+                 class="chat-company__active"></div>
+          </div>
+          <p *ngIf="!!conversation.last_message.senderUuid"
+             [ngClass]="{'chat-company__not-read': conversation.hasUpdate }">
+            {{ conversation.last_message.message }}
+          </p>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #skeletonTmpl>
+  <ng-container *ngFor="let i of [1, 2, 3, 4]">
+    <div class="company-item">
+      <div class="section-wrapper">
+        <div class="gravatar">
+          <ngx-skeleton-loader
+            appearance="circle"
+            animation="progress"
+            [theme]="{
+                width: '41px',
+                height: '41px'
+              }"
+          ></ngx-skeleton-loader>
+        </div>
+        <div class="gravatar-title">
+          <div>
+            <ngx-skeleton-loader
+              animation="progress"
+              [theme]="{
+                  width: '60%',
+                  'border-radius': '0',
+                  height: '15px',
+                  'margin-bottom': '10px'
+                }"
+            ></ngx-skeleton-loader>
+          </div>
+          <div>
+            <ngx-skeleton-loader
+              animation="progress"
+              [theme]="{
+                  width: '20%',
+                  'border-radius': '0',
+                  height: '15px'
+                }"
+            ></ngx-skeleton-loader>
+          </div>
+          <div>
+            <ngx-skeleton-loader
+              animation="progress"
+              [theme]="{
+                  width: '100%',
+                  'border-radius': '0',
+                  height: '15px',
+                  'margin-bottom': '10px'
+                }"
+            ></ngx-skeleton-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+

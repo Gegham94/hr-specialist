@@ -76,7 +76,7 @@
                [ngClass]="{'experience-content--able': getFormControlByName('hasNoExperience').value}"
                *ngIf="!savedExperiences.length">
             <hr-checkbox
-              [label-text]="'Не имеет опыта'"
+              [label-text]="'PROFILE.WORK_EXPERIENCE.NO_EXPERIENCE' | translate"
               [checked]="getFormControlByName('hasNoExperience').value"
               [formControl]="getFormControlByName('hasNoExperience')"
               (changes)="updateHasNoExperience($event)"
@@ -139,13 +139,13 @@
       <div class="prev">
         <p (click)="goToUrl(ResumeRoutesEnum.EDUCATION)">
           <img [src]="PREV_ICON" alt="prev">
-          назад
+          {{ "PROFILE.WORK_EXPERIENCE.BACK" | translate }}
         </p>
       </div>
       <div class="next"
            [ngClass]="{'disable':(!savedExperiences.length && !getFormControlByName('hasNoExperience').value)}">
         <p (click)="goToUrl(ResumeRoutesEnum.SKILLS)">
-          далее
+          {{ "PROFILE.WORK_EXPERIENCE.NEXT" | translate }}
           <img [src]="NEXT_ICON" alt="next">
         </p>
       </div>

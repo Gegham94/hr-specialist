@@ -5,7 +5,7 @@ import { ProfileRoutingModule } from "./profile-routing.module";
 import { ProfileViewComponent } from "./components/profile-view/profile-view.component";
 import { TranslateModule } from "@ngx-translate/core";
 import { UiModule } from "src/app/ui-kit/ui.module";
-import { ProfileEditModule } from "./components/profile-edit/profile-edit.module";
+import { ProfileEditModule } from "./components/profile-edit/modules/profile-edit.module";
 import { SharedModule } from "src/app/shared/shared.module";
 
 @NgModule({

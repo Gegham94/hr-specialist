@@ -4,7 +4,7 @@
          [ngClass]="{'active': activeTab.value === tab.value}"
          (click)="changeTab(tab.value)"
     >
-      {{tab.displayName}}
+      {{tab.displayName | translate}}
     </div>
   </ng-container>
 </div>

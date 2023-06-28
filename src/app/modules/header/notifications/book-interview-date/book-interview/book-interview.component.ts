@@ -1,12 +1,12 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, Output,} from "@angular/core";
-import {HeaderFacade} from "../../../header.facade";
 import {BehaviorSubject} from "rxjs";
-import {Unsubscribe} from "../../../../../shared-modules/unsubscriber/unsubscribe";
+import {Unsubscribe} from "../../../../../shared/unsubscriber/unsubscribe";
 import {FormBuilder, FormGroup, Validators,} from "@angular/forms";
 import {NgbCalendar, NgbDate, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 import {GetInterviewCounts, GetInterviewHours} from "../../../../../shared/constants/book-interview-date.contants";
 import {BookedDates} from "../mock";
-import {BookInterviewInterface} from "../../../interfaces/book-interview.interface";
+import {IBookInterview} from "../../../interfaces/book-interview.interface";
+import {HrModalService} from "../../../../modal/hr-modal.service";
 
 @Component({
   selector: "hr-book-interview",
@@ -17,27 +17,27 @@ import {BookInterviewInterface} from "../../../interfaces/book-interview.interfa
 export class BookInterviewComponent extends Unsubscribe implements OnDestroy {
   @Output("close") close: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  public dateForm: FormGroup = this.formBuilder.group({
+  public dateForm: FormGroup = this._formBuilder.group({
     date: ["", [Validators.required]],
     hour: ["", [Validators.required]],
   });
 
-  public bookedHours: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
-  public scrollToFirstUnbookedHour: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-  public interviewHours: BehaviorSubject<BookInterviewInterface[]> = new BehaviorSubject<BookInterviewInterface[]>([]);
   public maxDate!: NgbDate;
-
+  public todayDate!: NgbDate;
+  public interviewHours: BehaviorSubject<IBookInterview[]> = new BehaviorSubject<IBookInterview[]>([]);
+  private bookedHours: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   constructor(
-    public readonly calendar: NgbCalendar,
-    private readonly formBuilder: FormBuilder,
-    private readonly _headerFacade: HeaderFacade,
+    public readonly _calendar: NgbCalendar,
+    private readonly _formBuilder: FormBuilder,
+    private readonly _modalService: HrModalService,
     private readonly _cdr: ChangeDetectorRef,
   ) {
     super();
-    this.maxDate = calendar.getNext(calendar.getToday(), "m", 1);
+    this.maxDate = _calendar.getNext(_calendar.getToday(), "m", 1);
+    this.todayDate = _calendar.getToday();
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.getStartDate();
   }
 
@@ -55,7 +55,7 @@ export class BookInterviewComponent extends Unsubscribe implements OnDestroy {
     const currentDate = BookedDates.find((booking) => booking.date === dateString);
     const bookedHours = currentDate?.bookedHours.length ?? 0;
     return this.bookedDates().includes(dateString) && bookedHours >= GetInterviewCounts() || day === 0 || day === 6;
-  };
+  }
 
   public setInterviewHours(event: NgbDateStruct): void {
     const dateString = this.formatDate(event);
@@ -101,7 +101,7 @@ export class BookInterviewComponent extends Unsubscribe implements OnDestroy {
   }
 
   private getStartDate(): NgbDateStruct {
-    const today: NgbDateStruct = this.calendar.getToday();
+    const today: NgbDateStruct = this._calendar.getToday();
     if (!this.isBooked(today)) {
       this.dateForm.get("hour")?.reset();
       this.dateForm.get("date")?.setValue(today);
@@ -118,7 +118,7 @@ export class BookInterviewComponent extends Unsubscribe implements OnDestroy {
         return previousAvailableDate;
       }
     }
-    return this.calendar.getToday();
+    return this._calendar.getToday();
   }
 
   private getPreviousAvailableDate(date: NgbDateStruct): NgbDateStruct {
@@ -133,7 +133,7 @@ export class BookInterviewComponent extends Unsubscribe implements OnDestroy {
 
   private addOneDay(date: NgbDateStruct): NgbDateStruct {
     const ngbDate = NgbDate.from(date);
-    const nextDate = this.calendar.getNext(ngbDate, "d", 1);
+    const nextDate = this._calendar.getNext(ngbDate, "d", 1);
     return {year: nextDate.year, month: nextDate.month, day: nextDate.day};
   }
 
@@ -145,6 +145,7 @@ export class BookInterviewComponent extends Unsubscribe implements OnDestroy {
 
   public cancel(): void {
     this.close.emit(true);
+    this._modalService.closeAll();
   }
 
   public ngOnDestroy(): void {

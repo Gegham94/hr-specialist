@@ -1,11 +1,14 @@
 @import '../../notifications';
+@import "src/assets/mixins/util/util";
 
 .book-interview-date__modal {
   display: flex;
   flex-direction: column;
   gap: 33px;
-  overflow-y: auto;
-  height: 100%;
+  @media screen and (max-width: 500px) {
+    height: calc(100vh - 210px);
+    overflow-y: auto;
+  }
 
   &-title, &-description {
     width: 100%;
@@ -95,14 +98,14 @@
   }
 
   &-button-content {
-    justify-content: space-evenly;
+    justify-content: center;
     display: flex;
     flex-wrap: wrap-reverse;
     gap: 20px;
     margin-bottom: 20px;
 
     button {
-      width: 236px;
+      width: 150px;
       height: 36.67px;
       background: #ffffff;
       border: 0.763855px solid #08a652;
@@ -127,10 +130,11 @@
 
 .custom-day {
   padding: 5px;
+  @include flex-center;
 
   &.disabled {
-    background-color: $light-gray;
-    color: white;
+    background-color: white;
+    color: $gray;
     cursor: not-allowed;
     border-radius: 4px;
 
@@ -149,6 +153,13 @@
 ::ng-deep ngb-datepicker-navigation-select > .custom-select {
   border: none;
   outline: none;
+}
+
+::ng-deep .ngb-dp-today {
+  background-color: $white !important;
+  color: $green;
+  border-radius: 8px;
+  font-weight: 800;
 }
 
 .disabled {

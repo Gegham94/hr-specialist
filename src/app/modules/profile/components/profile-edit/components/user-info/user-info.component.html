@@ -165,15 +165,6 @@
               </div>
             </div>
             <div class="row row--last">
-              <!-- <div class="payment">
-              <div>
-                <hr-search-select [label]="' '" [options]="price"> </hr-search-select>
-              </div>
-              <div>
-                <hr-input [label-text]="'PROFILE.PRICE' | translate" [input-type]="'number'">
-                </hr-input>
-              </div>
-            </div> -->
               <div>
                 <hr-search-select
                   [label]="'PROFILE.SPECIALIST_POSITION' | translate"
@@ -189,7 +180,7 @@
               </div>
               <div class="monthly-income--content">
                 <div class='monthly-income'>
-                  <p class="monthly-income--label">Дохода в месяц</p>
+                  <p class="monthly-income--label">{{"PROFILE.INCOME_PER_MONTH" | translate}}</p>
                   <div class='monthly-income--block'>
                     <div class='monthly-income--block-item salaryCount'>
                       <hr-input
@@ -206,7 +197,7 @@
                   </div>
                 </div>
                 <div class='monthly-income--block-item salary'>
-                  <p class="monthly-income--label">Валюта</p>
+                  <p class="monthly-income--label">{{"PROFILE.CURRENCY" | translate}}</p>
                   <hr-search-select
                     [options]="salary"
                     [formControlName]='"currency"'
@@ -229,7 +220,7 @@
       <div class="prev"></div>
       <div class="next" [ngClass]="{'disable': infoForm.invalid}">
         <p (click)="goToUrl(ResumeRoutesEnum.EDUCATION)">
-          далее
+          {{"PROFILE.NEXT" | translate}}
           <img [src]="NEXT_ICON" alt="next">
         </p>
       </div>

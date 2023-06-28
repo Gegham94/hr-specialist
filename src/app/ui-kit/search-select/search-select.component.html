@@ -29,6 +29,7 @@
       #select
       class="searchable-select__input--content" [ngClass]="{'select-with-green-border': !isBorderGreen}"
       [class.searchable-select__input--content_active]="isDropdownOpen"
+      [class.searchable-select__input--content_mobile]="isDropdownOpen && screenSize !== ScreenSizeEnum.DESKTOP"
       [class.searchable-select__input--content_disabled]="isInputDisabled"
       [class.searchable-select__input--content_valid]='valid !== undefined && valid'
       [class.searchable-select__input--content_invalid]='valid !== undefined && !valid'
@@ -133,6 +134,7 @@
       [class.searchable-select__search-list--isLoading]="isLoading"
       [class.searchable-select__search-list_active]="isDropdownOpen"
       [class.searchable-select__search-list_notItems]="dropdownOptions && !dropdownOptions.length && !isLoading"
+      [style.top]="screenSize !== ScreenSizeEnum.DESKTOP ? '-' + (dropdownHeight - 17) + 'px': '100%'"
       [style.height.px]="dropdownHeight"
       [style.width.px]="selectWidth"
     >

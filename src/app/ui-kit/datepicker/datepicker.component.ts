@@ -18,9 +18,9 @@ import {
 } from "@ng-bootstrap/ng-bootstrap";
 import { CustomDatepickerI18n } from "./datepicker-i18n";
 import { CustomDateParserFormatter } from "./datepicker-formatter";
-import { DateParserService } from "../../root-modules/app/services/date-parser.service";
+import { DateParserService } from "../../shared/services/date-parser.service";
 import { map, take, takeUntil, timer } from "rxjs";
-import { Unsubscribe } from "src/app/shared-modules/unsubscriber/unsubscribe";
+import { Unsubscribe } from "src/app/shared/unsubscriber/unsubscribe";
 
 @Component({
   selector: "hr-datepicker",
@@ -45,7 +45,7 @@ export class DatepickerComponent extends Unsubscribe implements OnDestroy {
 
   public currentDate!: NgbDateStruct | undefined;
   @Input() disabled: boolean = false;
-  @Input() minDate: NgbDateStruct = { year: 1960, month: 12, day: 1 };
+  @Input() minDate: NgbDateStruct = { year: 1960, month: 1, day: 1 };
   @Input() endDate: NgbDateStruct = { year: 3000, month: 12, day: 1 };
   @Input() isDateOfBirth: boolean = false;
   @Input() valid: boolean | undefined;

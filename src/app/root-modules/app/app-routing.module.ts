@@ -17,12 +17,12 @@ const routes: Routes = [
       },
       {
         path: "",
-        loadChildren: () => import("../../modules/auth/auth.module").then((m) => m.AuthModule),
+        loadChildren: () => import("../../modules/auth/modules/auth.module").then((m) => m.AuthModule),
       },
       {
         path: "",
         loadChildren: () =>
-          import("../../modules/service-pages/service-pages.module").then((module) => module.ServicePagesModule),
+          import("../../modules/service-pages/modules/service-pages.module").then((module) => module.ServicePagesModule),
       },
       {
         path: "",

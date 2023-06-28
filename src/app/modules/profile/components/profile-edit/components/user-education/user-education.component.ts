@@ -7,8 +7,8 @@ import {
   ElementRef,
   AfterViewInit,
 } from "@angular/core";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Component} from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Component } from "@angular/core";
 import {
   DELETE_ICON,
   EDIT_ICON,
@@ -17,21 +17,20 @@ import {
   ORANGE_PLUS,
   PREV_ICON,
 } from "../../../../../../shared/constants/images.constant";
-import {ProfileFormControlService} from "../../profile-form-control.service";
-import {ScreenSizeService} from "src/app/root-modules/app/services/screen-size.service";
-import {DateFormatEnum} from "src/app/modules/employee-info/enums/date-format.enum";
-import {IEducationItem} from "../../../utils/profile-form.interface";
-import {ScreenSizeType} from "src/app/root-modules/app/interfaces/screen-size.type";
-import {BehaviorSubject, Observable, switchMap, takeUntil} from "rxjs";
-import {Unsubscribe} from "src/app/shared-modules/unsubscriber/unsubscribe";
-import {SearchableSelectDataInterface} from "src/app/root-modules/app/interfaces/searchable-select-data.interface";
-import {educations, faculties} from "src/app/modules/employee-info/mock/specialist-mock";
-import {EmployeeInfoFacade} from "../../../utils/employee-info.facade";
-import {slideInOutAnimation} from "../../../utils/profile-form-animation.constant";
-import {Router} from "@angular/router";
-import {ResumeRoutesEnum} from "../../../utils/resume-routes.constant";
-import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
-import {DateParserService} from "../../../../../../root-modules/app/services/date-parser.service";
+import { ScreenSizeService } from "src/app/shared/services/screen-size.service";
+import { IEducationItem } from "../../../../interfaces/profile-form.interface";
+import { BehaviorSubject, Observable, switchMap, takeUntil } from "rxjs";
+import { Unsubscribe } from "src/app/shared/unsubscriber/unsubscribe";
+import { educations, faculties } from "src/app/modules/profile/mock/specialist-mock";
+import { EmployeeInfoFacade } from "../../../../services/employee-info.facade";
+import { slideInOutAnimation } from "../../../../constants/profile-form-animation.constant";
+import { Router } from "@angular/router";
+import { ResumeRoutesEnum } from "../../../../constants/resume-routes.constant";
+import { NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
+import { DateParserService } from "../../../../../../shared/services/date-parser.service";
+import { ProfileEditFacade } from "../../service/profile-edit.facade";
+import { ISearchableSelectData } from "src/app/shared/interfaces/searchable-select-data.interface";
+import { ScreenSizeType } from "src/app/shared/interfaces/screen-size.type";
 
 @Component({
   selector: "app-user-education",
@@ -41,69 +40,58 @@ import {DateParserService} from "../../../../../../root-modules/app/services/dat
   animations: [slideInOutAnimation],
 })
 export class UserEducationComponent extends Unsubscribe implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild("contentWrapper") contentWrapper!: ElementRef<HTMLDivElement>;
+
   public EDUCATION_ICON = EDUCATION_ICON;
-  public dateFormat = DateFormatEnum;
   public ORANGE_PLUS = ORANGE_PLUS;
   public EDIT_ICON = EDIT_ICON;
   public DELETE_ICON = DELETE_ICON;
   public isActivatedEditMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public addMoreActive: boolean = false;
-  public faculties: SearchableSelectDataInterface[] = faculties;
-  public educationFormats: SearchableSelectDataInterface[] = educations;
-  public universities$: Observable<SearchableSelectDataInterface[]> = this.employeeFacade.getUniversityRequest$();
+  public faculties: ISearchableSelectData[] = faculties;
+  public educationFormats: ISearchableSelectData[] = educations;
+  public universities$: Observable<ISearchableSelectData[]> = this._employeeFacade.getUniversityRequest$();
 
   public dateValidity: boolean | undefined;
   public ResumeRoutesEnum = ResumeRoutesEnum;
   public PREV_ICON = PREV_ICON;
   public NEXT_ICON = NEXT_ICON;
+
   private resizeObserver!: ResizeObserver;
 
-  @ViewChild("contentWrapper") contentWrapper!: ElementRef<HTMLDivElement>;
-
   public get educationForm(): FormGroup {
-    return this.profileFormControlService.educationForm;
+    return this._profileEditFacade.getEducationForm();
   }
 
   public get savedEducation(): IEducationItem[] {
-    return this.profileFormControlService.savedEducation;
+    return this._profileEditFacade.getSavedEducation();
   }
 
-  public updateHasNoEducation(state: boolean) {
-    this.getFormControlByName("hasNoEducation").updateValueAndValidity({emitEvent: true});
+  public updateHasNoEducation() {
+    this.getFormControlByName("hasNoEducation").updateValueAndValidity({ emitEvent: true });
   }
 
   public get screenSize(): ScreenSizeType {
-    return this.screenSizeService.calcScreenSize;
+    return this._screenSizeService.calcScreenSize;
   }
 
   constructor(
-    private profileFormControlService: ProfileFormControlService,
-    private screenSizeService: ScreenSizeService,
-    private employeeFacade: EmployeeInfoFacade,
-    private router: Router,
-    private cdr: ChangeDetectorRef,
-    private dateParserService: DateParserService
+    private _profileEditFacade: ProfileEditFacade,
+    private _screenSizeService: ScreenSizeService,
+    private _employeeFacade: EmployeeInfoFacade,
+    private _router: Router,
+    private _cdr: ChangeDetectorRef,
+    private _dateParserService: DateParserService
   ) {
     super();
   }
 
-  ngOnInit(): void {
-    // this.profileFormControlService
-    //   .initEducationForm()
-    //   .pipe(takeUntil(this.ngUnsubscribe))
-    //   .subscribe(() => {
-    //     // const form = this.educationForm.value;
-    //     // if (form.id !== null) {
-    //     //   this.educationForm.reset();
-    //     // }
-    //     this.cdr.detectChanges();
-    //   });
-
+  public ngOnInit(): void {
     this.educationForm.valueChanges
       .pipe(
         takeUntil(this.ngUnsubscribe),
         switchMap((form) => {
-          return this.profileFormControlService.storeEducationForm({
+          return this._profileEditFacade.storeEducationForm({
             id: 2,
             form,
             savedEducation: this.savedEducation,
@@ -112,7 +100,7 @@ export class UserEducationComponent extends Unsubscribe implements OnInit, OnDes
       )
       .subscribe();
 
-    this.employeeFacade.setUniversitiesRequest$().pipe(takeUntil(this.ngUnsubscribe)).subscribe();
+    this._employeeFacade.setUniversitiesRequest$().pipe(takeUntil(this.ngUnsubscribe)).subscribe();
 
     this.getFormControlByName("hasNoEducation")
       .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
@@ -129,27 +117,27 @@ export class UserEducationComponent extends Unsubscribe implements OnInit, OnDes
       });
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     this.initContentSizeObserver();
   }
 
+  public ngOnDestroy(): void {
+    this.unsubscribe();
+    this.resizeObserver.unobserve(this.contentWrapper.nativeElement);
+  }
+
   public goToUrl(url: string): void {
-    if(this.savedEducation.length || this.getFormControlByName("hasNoEducation").value) {
-      this.router.navigateByUrl(url);
+    if (this.savedEducation.length || this.getFormControlByName("hasNoEducation").value) {
+      this._router.navigateByUrl(url);
     }
   }
 
   public formatToNgbDate(date: string): NgbDateStruct | undefined {
-    return !!date ? this.dateParserService.parseDateToNgbDate(date) : undefined;
+    return !!date ? this._dateParserService.parseDateToNgbDate(date) : undefined;
   }
 
   public formatToString(date: string): Date {
     return new Date(date);
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe();
-    this.resizeObserver.unobserve(this.contentWrapper.nativeElement);
   }
 
   public activateAddMore(): void {
@@ -184,7 +172,7 @@ export class UserEducationComponent extends Unsubscribe implements OnInit, OnDes
 
   private updateStoredData(): void {
     const form = this.educationForm.value;
-    this.profileFormControlService
+    this._profileEditFacade
       .storeEducationForm({
         id: 2,
         form,
@@ -195,7 +183,7 @@ export class UserEducationComponent extends Unsubscribe implements OnInit, OnDes
         this.educationForm.reset();
         this.dateValidity = undefined;
         this.addMoreActive = false;
-        this.cdr.detectChanges();
+        this._cdr.markForCheck();
       });
   }
 
@@ -207,10 +195,10 @@ export class UserEducationComponent extends Unsubscribe implements OnInit, OnDes
     });
     this.isActivatedEditMode.next(true);
     this.addMoreActive = true;
-    this.profileFormControlService
+    this._profileEditFacade
       .getEducationById(id)
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(() => this.cdr.detectChanges());
+      .subscribe(() => this._cdr.markForCheck());
   }
 
   public delete(id: number) {
@@ -218,7 +206,7 @@ export class UserEducationComponent extends Unsubscribe implements OnInit, OnDes
     const deletedItemIndex = this.savedEducation.findIndex((item) => item.id === id);
     if (deletedItemIndex > -1) {
       this.savedEducation.splice(deletedItemIndex, 1);
-      this.profileFormControlService
+      this._profileEditFacade
         .storeEducationForm({
           id: 2,
           form,
@@ -228,7 +216,7 @@ export class UserEducationComponent extends Unsubscribe implements OnInit, OnDes
         .subscribe(() => {
           this.educationForm.reset();
           this.addMoreActive = false;
-          this.cdr.detectChanges();
+          this._cdr.markForCheck();
         });
     }
   }
@@ -244,7 +232,7 @@ export class UserEducationComponent extends Unsubscribe implements OnInit, OnDes
     this.resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         const contentRect = entry.contentRect;
-        this.screenSizeService.setProfilEditLayoutSize(contentRect.height + 120);
+        this._screenSizeService.setProfilEditLayoutSize(contentRect.height + 120);
       }
     });
     this.resizeObserver.observe(this.contentWrapper.nativeElement);

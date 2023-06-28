@@ -1,5 +1,5 @@
-export interface ErrorMsgInterface {
+export interface IErrorMsg {
   status: number;
   message: string;
 }
-export type ErrorMsg = ErrorMsgInterface | null;
+export type ErrorMsgType = IErrorMsg | null;

@@ -5,14 +5,14 @@
   <div class='notification-item-logo'> S </div>
   <div class='notification-item-description-content'>
     <div class='notification-item-description'>
-      <p> Создал новую вакансию на позицию... </p>
+      <p> {{notificationItem.info.content}} </p>
     </div>
     <div class='notification-item-date'>
-      <p> Крайний срок: 15.08.2023 </p>
+      <p> {{"HEADER.NOTIFICATIONS.BOOK_INTERVIEW.DEADLINE" | translate}} {{notificationItem.createdAt}} </p>
     </div>
   </div>
 </div>
 
 <ng-template #doesNotHaveNotification>
-  <span class="empty-notification">Нет уведомлений </span>
+  <span class="empty-notification"> {{"HEADER.NOTIFICATIONS.NO_DATA" | translate}} </span>
 </ng-template>

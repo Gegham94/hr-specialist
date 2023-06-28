@@ -1,0 +1,19 @@
+<div class="prev-next" *ngIf="selectedTest">
+  <div class="prev-next-btns">
+    <button [disabled]="selectedTest.isFirst" [class.smooth]="selectedTest.isFirst" (click)="loadPreviousTest()">
+      <span>&#x3c; {{ "COMPILER.PREVIEW" | translate }}</span>
+    </button>
+    <button [disabled]="selectedTest.isLast" [class.smooth]="selectedTest.isLast" (click)="loadNextTest()">
+      <span>{{ "COMPILER.NEXT" | translate }} &#x3e;</span>
+    </button>
+  </div>
+
+  <hr-select-box
+    *ngIf="allTests.length > 0"
+    [items]="allTests"
+    [options]="selectBoxOptions"
+    [defaultSelectedTestIndex]="selectedTest.index"
+    (setSelectedTestByIndex)="setSelectedTestByIndex($event)"
+  >
+  </hr-select-box>
+</div>

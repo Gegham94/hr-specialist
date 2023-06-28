@@ -1,0 +1,76 @@
+<ng-container *ngIf="screenSize === 'DESKTOP'; else mobileCompilerTpl">
+  <div class="compiler-wrapper">
+    <ng-container *ngIf="!isContentLoading; else contentLoadingModel">
+      <div class="header">
+        <hr-compiler-header></hr-compiler-header>
+      </div>
+      <div class="body">
+        <div class="task-details">
+          <hr-compiler-task-details></hr-compiler-task-details>
+          <hr-compiler-footer></hr-compiler-footer>
+        </div>
+        <div class="editor">
+          <hr-compiler-editor></hr-compiler-editor>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #contentLoadingModel>
+      <div class="compiler-loader-container">
+        <div class="compiler-loader"></div>
+      </div>
+    </ng-template>
+  </div>
+</ng-container>
+
+<ng-template #mobileCompilerTpl>
+  <ng-container *ngIf="!isContentLoading; else contentLoadingModel">
+    <div class="mobile-wrapper" [style.height.px]="mobilLayoutHeight">
+      <div class="header">
+        <hr-compiler-header></hr-compiler-header>
+      </div>
+      <div class="editor-wrapper">
+        <div class="editor__header" (click)="toggleTaskDrawer()">
+          <p>{{ "COMPILER.TEST" | translate }} >></p>
+        </div>
+        <app-drawer
+          [side]="'left'"
+          [width]="100"
+          [isOpen]="isTaskDrawerOpen"
+          [useBackdrop]="false"
+          [showCloseIcon]="true"
+          (drawerClosed)="toggleTaskDrawer()"
+        >
+          <div class="task-detail-drawer">
+            <hr-compiler-task-details></hr-compiler-task-details>
+            <hr-compiler-footer></hr-compiler-footer>
+          </div>
+        </app-drawer>
+        <div class="editor">
+          <hr-compiler-editor></hr-compiler-editor>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #contentLoadingModel>
+    <div class="compiler-loader-container">
+      <div class="compiler-loader"></div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<!-- <div class="test-info-wrapper">
+  <span class="testName-style">{{ displayTestName }}</span>
+  <span class="remainingFixedTime-style">{{ displayRemainingFixedTime | date: "HHч: mmм :ssс" }}</span>
+</div> -->
+
+<hr-modal [isOpen]="(isModalOpenFail | async) ?? false" (whenModalClose)="modalToggleFail($event)">
+  <div class="lose-tests-wrapper">
+    <p>{{ "COMPILER.DIDNT_COMPILED_TESTS_FAIL" | translate }}</p>
+    <br />
+    <p>{{ "COMPILER.EXIT" | translate }}</p>
+    <div class="lose-actions">
+      <button class="loseBtn lose-ok" (click)="isCanNavigate(true)">{{ "COMPILER.YES" | translate }}</button>
+      <button class="loseBtn lose-cancel" (click)="isCanNavigate(false)">{{ "COMPILER.CANCEL" | translate }}</button>
+    </div>
+  </div>
+</hr-modal>

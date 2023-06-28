@@ -9,36 +9,36 @@ import {
   ViewChild,
   ViewChildren,
 } from "@angular/core";
-import {HeaderTypeEnum} from "../../root-modules/app/constants/header-type.enum";
-import {NavigateButtonInterface, NavigationButton} from "../../root-modules/app/interfaces/navigateButton.interface";
-import {NavigateButtonFacade} from "../../ui-kit/navigate-button/navigate-button.facade";
-import {HomeLayoutState} from "./home-layout.state";
-import {BehaviorSubject, combineLatest, map, Observable, of, switchMap, takeUntil} from "rxjs";
-import {EmployeeInfoFacade} from "../profile/components/utils/employee-info.facade";
-import {NavigateButton} from "./home-layout.interface";
-import {AuthService} from "../auth/auth.service";
-import {ChatFacade} from "../chat/chat.facade";
-import {Helper, IEmployee} from "../../root-modules/app/interfaces/employee.interface";
-import {LocalStorageService} from "../../root-modules/app/services/local-storage.service";
-import {RobotHelperService} from "../../root-modules/app/services/robot-helper.service";
-import {RobotHelper} from "../../root-modules/app/interfaces/robot-helper.interface";
-import {Unsubscribe} from "../../shared-modules/unsubscriber/unsubscribe";
-import {ModalService} from "src/app/root-modules/app/services/modal.service";
-import {IModal} from "src/app/root-modules/app/interfaces/modal.interface";
-import {base64ToFile, Dimensions, ImageCroppedEvent, ImageTransform, LoadedImage} from "ngx-image-cropper";
-import {DomSanitizer, SafeStyle} from "@angular/platform-browser";
-import {ToastsService} from "src/app/root-modules/app/services/toasts.service";
-import {NavigationEnd, Router} from "@angular/router";
-import {ResumeRoutesEnum} from "../profile/components/utils/resume-routes.constant";
-import {MessageInterface} from "../chat/interface/chat.interface";
-import {IConversation} from "../chat/interface/conversations";
-import {ResumeStateService} from "../profile/components/utils/resume-state.service";
-import {ProfileFormControlService} from "../profile/components/profile-edit/profile-form-control.service";
-import {ShowLoaderService} from "../../ui-kit/hr-loader/show-loader.service";
-import {NavigateButtonState} from "../../ui-kit/navigate-button/navigate-button.state";
-import {SocketService} from "../chat/socket.service";
-import {WindowNotificationService} from "../service/window-notification.service";
-import {ChatState} from "../chat/chat.state";
+import { NavigateButtonFacade } from "../../ui-kit/navigate-button/navigate-button.facade";
+import { HomeLayoutState } from "./home-layout.state";
+import { BehaviorSubject, combineLatest, map, Observable, of, switchMap, takeUntil, tap } from "rxjs";
+import { NavigateButton } from "./home-layout.interface";
+import { ChatFacade } from "../chat/services/chat.facade";
+import { Unsubscribe } from "../../shared/unsubscriber/unsubscribe";
+import { base64ToFile, Dimensions, ImageCroppedEvent, ImageTransform, LoadedImage } from "ngx-image-cropper";
+import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
+import { NavigationEnd, Router } from "@angular/router";
+import { IMessage, Message } from "../chat/interface/messages.interface";
+import { Conversation, IConversation } from "../chat/interface/conversations.interface";
+import { ShowLoaderService } from "../../ui-kit/hr-loader/show-loader.service";
+import { NavigateButtonState } from "../../ui-kit/navigate-button/navigate-button.state";
+import { SocketService } from "../chat/services/socket.service";
+import { WindowNotificationService } from "../service/window-notification.service";
+import { ResumeStateService } from "../profile/services/resume-state.service";
+import { ResumeRoutesEnum } from "../profile/constants/resume-routes.constant";
+import { AuthService } from "../auth/service/auth.service";
+import { EmployeeInfoFacade } from "../profile/services/employee-info.facade";
+import { ProfileFormControlService } from "../profile/components/profile-edit/service/profile-form-control.service";
+import { HeaderTypeEnum } from "src/app/shared/constants/header-type.enum";
+import { INavigateButton, NavigationButton } from "src/app/shared/interfaces/navigateButton.interface";
+import { RobotHelper } from "src/app/shared/interfaces/robot-helper.interface";
+import { Helper, IEmployee } from "src/app/shared/interfaces/employee.interface";
+import { LocalStorageService } from "src/app/shared/services/local-storage.service";
+import { RobotHelperService } from "src/app/shared/services/robot-helper.service";
+import { ToastsService } from "src/app/shared/services/toasts.service";
+import { ScreenSizeService } from "src/app/shared/services/screen-size.service";
+import { ModalService } from "src/app/shared/services/modal.service";
+import { IModalOld } from "src/app/shared/interfaces/modal.interface";
 
 @Component({
   selector: "hr-home-layout",
@@ -49,7 +49,7 @@ import {ChatState} from "../chat/chat.state";
 export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestroy {
   public headerTypeProps: HeaderTypeEnum = HeaderTypeEnum.company;
   public navigateButtons$ = this._navigateButtonFacade.getShowedNavigationsMenu$();
-  public navigateButtons!: NavigateButtonInterface[];
+  public navigateButtons!: INavigateButton[];
   public isRobotOpen$: Observable<boolean> = this._robotHelperService.isRobotOpen;
   public robotSettings$: Observable<RobotHelper> = this._robotHelperService.getRobotSettings();
   public robotMapInfo: string = "";
@@ -61,7 +61,6 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
   public scale: number = 1;
   public croppedImage: string = "";
   public croppedTemporaryImage: string = "";
-  public notificationCount: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   public isCropperLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   @ViewChildren("slickItem") slickItem!: QueryList<ElementRef<HTMLDivElement>>;
   @ViewChild("cropperActionsWrapper")
@@ -109,7 +108,7 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
     }
   }
 
-  public get modal$(): Observable<IModal | null> {
+  public get modal$(): Observable<IModalOld | null> {
     return this._modalService.modalContent;
   }
 
@@ -127,6 +126,10 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
     return this.scale === 0.1;
   }
 
+  get mobileCompilerPage(): boolean {
+    return this._screenSizeService.calcScreenSize !== "DESKTOP" && this._router.url.includes("compiler-test");
+  }
+
   constructor(
     private readonly _authService: AuthService,
     private readonly _navigateButtonFacade: NavigateButtonFacade,
@@ -136,9 +139,8 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
     private readonly _chatFacade: ChatFacade,
     private readonly _localStorage: LocalStorageService,
     private readonly _robotHelperService: RobotHelperService,
-    private readonly cdr: ChangeDetectorRef,
+    private readonly _cdr: ChangeDetectorRef,
     private readonly sanitizer: DomSanitizer,
-    private readonly _modalService: ModalService,
     private readonly _toastService: ToastsService,
     private readonly _router: Router,
     private readonly _resumeState: ResumeStateService,
@@ -146,7 +148,8 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
     private readonly _showLoaderService: ShowLoaderService,
     private readonly _socketService: SocketService,
     private readonly _windowNotificationService: WindowNotificationService,
-    private readonly _chatState: ChatState
+    private readonly _screenSizeService: ScreenSizeService,
+    public readonly _modalService: ModalService
   ) {
     super();
     this._windowNotificationService.askPermission();
@@ -197,22 +200,7 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
           takeUntil(this.ngUnsubscribe),
           switchMap((resume) => {
             // this switchMap is used for initializing resume forms in indexedDB
-            return this._chatFacade
-              .emitGetConversationsRequest(resume).pipe(map((conversations) => {
-                if (conversations?.length) {
-                  const unreadConversations = conversations.filter(
-                    (item: { last_message: { messageStatus: boolean } }) => !item?.last_message?.messageStatus
-                  );
-                  if (unreadConversations.length) {
-                    this._chatFacade.setUnreadMessagesCount$(unreadConversations.length);
-                  } else {
-                    this._chatFacade.setUnreadMessagesCount$(0);
-                  }
-                  this._windowNotificationService.createNotification("", unreadConversations.length);
-                }
-                return resume;
-              })
-            );
+            return this._chatFacade.emitGetConversationsRequest(resume).pipe(map(() => resume));
           }),
           switchMap((resume) => {
             // this switchMap is used for initializing resume forms in indexedDB
@@ -251,76 +239,18 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
               this._router.navigateByUrl("/employee/resume/edit/info");
             }
           }
-          this.cdr.detectChanges();
+          this._cdr.detectChanges();
         });
 
       this._chatFacade
         .getMessageFromCompanyToEmployeeHandler$()
         .pipe(
           takeUntil(this.ngUnsubscribe),
-          switchMap((message: MessageInterface) => {
-            const conversations: IConversation[] | null = this._chatFacade.getConversations();
-            if (conversations?.length) {
-              const index = conversations?.findIndex(
-                (item) => item.last_message?.conversationUuid === message.conversationUuid
-              );
-              if (index > -1) {
-                const unread_conversation = { ...conversations[index] };
-                conversations?.splice(index, 1);
-                conversations.unshift(unread_conversation);
-
-                conversations[0].last_message.messageStatus = false;
-                conversations[0].last_message.messageUuid = message?.uuid;
-                conversations[0].last_message.conversationUuid = message.conversationUuid;
-                conversations[0].last_message.message = message?.message;
-              } else {
-                return this._employeeFacade
-                  .getResume()
-                  .pipe(
-                    takeUntil(this.ngUnsubscribe),
-                    switchMap((resume) => {
-                      return this._chatFacade
-                        .emitGetConversationsRequest(resume);
-                    }));
-              }
-              this._chatState.setChatMessage(message);
-              return of(conversations as IConversation[] | null);
-            } else {
-              return this._employeeFacade
-                .getResume()
-                .pipe(
-                  takeUntil(this.ngUnsubscribe),
-                  switchMap((resume) => {
-                    return this._chatFacade
-                      .emitGetConversationsRequest(resume);
-                  }));
-            }
+          tap((message: IMessage) => {
+            this.setMessage(message);
           })
         )
-        .subscribe((conversations: IConversation[] | null) => {
-          if (conversations?.length) {
-            const unreadConversations = conversations.filter(
-              (item: { last_message: { messageStatus: boolean } }) => !item?.last_message?.messageStatus
-            );
-            if (unreadConversations.length) {
-              this._chatFacade.setUnreadMessagesCount$(unreadConversations.length);
-            } else {
-              this._chatFacade.setUnreadMessagesCount$(0);
-            }
-            this._windowNotificationService.createNotification(
-              conversations[0]?.last_message?.message,
-              unreadConversations.length
-            );
-            this._chatFacade.setConversations(conversations);
-          }
-        });
-
-      this._chatFacade
-        .getUnreadMessagesCount$()
-        .pipe(takeUntil(this.ngUnsubscribe))
-        .subscribe((data) => {
-          this.notificationCount.next(data);
-        });
+        .subscribe();
 
       this._homeLayoutState
         .isNavigationButtonsUpdate()
@@ -339,10 +269,54 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
                 button.status = page["hidden"];
               }
             });
-            this.cdr.detectChanges();
+            this._cdr.detectChanges();
           }
         });
     }
+  }
+
+  public setMessage(message: IMessage): void {
+    const conversations = this._chatFacade.getConversations();
+    const conversation = conversations?.find(
+      (item) => item.last_message?.conversationUuid === message.conversationUuid
+    );
+    if (conversation) {
+      conversation
+        .setUpdateLastMessage(
+          message.senderUuid ?? "",
+          message.message,
+          message.uuid as string,
+          message.createdAt,
+          false
+        )
+        .setUpdateStatus(true);
+
+      const rearrangedConversations = this._chatFacade.rearrangeConversation(conversations);
+      if (rearrangedConversations) {
+        this._chatFacade.setConversations(rearrangedConversations);
+      }
+
+      const newMessage = new Message(message).setPosition(false);
+
+      const selectedConversation = this._chatFacade.getSelectedConversation();
+      if (conversation.last_message.conversationUuid === selectedConversation?.last_message.conversationUuid) {
+        this._chatFacade.addChatMessage(newMessage);
+      }
+    } else {
+      this.getConversations(this.employee$)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((res) => {
+          this.setMessage(message);
+        });
+    }
+    this._cdr.markForCheck();
+  }
+
+  public get notificationCount() {
+    const conversations = this._chatFacade.getConversations();
+    const unreadConversations = conversations.filter((item) => item.hasUpdate);
+    this._windowNotificationService.createNotification("", unreadConversations.length);
+    return unreadConversations.length;
   }
 
   private generateNavigationButtons(helpers: Helper[]): void {
@@ -361,11 +335,10 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
     this._navigateButtonFacade.setShowedNavigationsMenu$(navButtonsForDisplay);
   }
 
-  public getConversations(employee: IEmployee) {
-    this._chatFacade
-      .emitGetConversationsRequest(employee)
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((conversations) => {
+  public getConversations(employee: IEmployee): Observable<Conversation[]> {
+    return this._chatFacade.emitGetConversationsRequest(employee).pipe(
+      takeUntil(this.ngUnsubscribe),
+      tap((conversations) => {
         if (conversations?.length) {
           const unreadConversations = conversations.filter(
             (item: { last_message: { messageStatus: boolean } }) => !item?.last_message?.messageStatus
@@ -376,7 +349,8 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
             this._chatFacade.setUnreadMessagesCount$(0);
           }
         }
-      });
+      })
+    );
   }
 
   public get isLogged(): boolean {
@@ -415,7 +389,7 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
   }
 
   submitCroppedImage(): void {
-    document.body.style.overflow = "auto";
+    document.body.style.overflowY = "auto";
     this._modalService.submitCroppedFile.next(this.test);
   }
 
@@ -483,7 +457,7 @@ export class HomeLayoutComponent extends Unsubscribe implements OnInit, OnDestro
 
   public closeModal(): void {
     this.resetImage();
-    document.body.style.overflow = "auto";
+    document.body.style.overflowY = "auto";
     this._modalService.resetFileInput.next();
   }
 

@@ -8,9 +8,9 @@ import {
 } from "@angular/core";
 import {SafeHtml} from "@angular/platform-browser";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {ChatFacade} from "../../modules/chat/chat.facade";
-import {ObjectType} from "../../shared-modules/types/object.type";
-import {EmployeeInfoFacade} from "../../modules/profile/components/utils/employee-info.facade";
+import {ChatFacade} from "../../modules/chat/services/chat.facade";
+import {ObjectType} from "../../shared/types/object.type";
+import {EmployeeInfoFacade} from "../../modules/profile/services/employee-info.facade";
 
 @Component({
   selector: "hr-slider",

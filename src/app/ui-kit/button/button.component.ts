@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {ButtonTypeEnum} from "../../root-modules/app/constants/button-type.enum";
+import {ButtonTypeEnum} from "../../shared/constants/button-type.enum";
 
 @Component({
   selector: "hr-button",

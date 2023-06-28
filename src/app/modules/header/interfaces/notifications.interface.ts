@@ -1,29 +1,14 @@
-export type NotificationOrNull = Notifications | null;
+export type NotificationsOrNull = INotifications | null;
 
-export interface Notifications {
+export interface INotifications {
   count: number;
-  notificationData: NotificationItem[];
-}
-
-export interface NotificationItem {
-  logo: string | null;
-  fullName: string;
-  description?: string;
-  message?: string;
-  date: Date;
-  status: boolean;
-}
-
-
-export interface GlobalNotification {
-  count: number;
-  result: GlobalNotificationItem[];
+  result: INotification[];
   unviewedCount: number;
 }
 
-export interface GlobalNotificationItem {
+export interface INotification {
   createdAt: string;
-  info: NotificationInfo;
+  info: INotificationInfo;
   recipientUuid: string;
   type: string;
   updatedAt: Date;
@@ -31,22 +16,6 @@ export interface GlobalNotificationItem {
   viewed: boolean;
 }
 
-export interface NotificationInfo {
+export interface INotificationInfo {
   content: string;
-}
-
-export interface AddedNewVacancyNotificationItem {
-  createdAt: string;
-  info: NotificationInfo;
-  recipientUuid: string;
-  type: string;
-  updatedAt: Date;
-  uuid: string;
-  viewed: boolean;
-}
-
-export interface AddedNewVacancyNotification {
-  count: number;
-  result: AddedNewVacancyNotificationItem[];
-  unviewedCount: number;
 }

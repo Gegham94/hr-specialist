@@ -1,98 +1,91 @@
 <div class="padding-wrapper">
   <div class="content-wrapper" #contentWrapper>
     <div class="education-header">
-      <img [src]="EDUCATION_ICON"/>
+      <img [src]="EDUCATION_ICON" />
       <h3>{{ "PROFILE.EDUCATION.EDUCATION" | translate }}</h3>
     </div>
     <div class="education-content">
       <form [formGroup]="educationForm">
         <div *ngIf="!savedEducation?.length || addMoreActive" [@slideInOut]>
-            <div class="form"
-                 [ngClass]="{'education-content--disable': !this.savedEducation.length &&
-                 getFormControlByName('hasNoEducation').value}">
-              <div>
-                <hr-search-select
-                  [dataInputAsString]="true"
-                  [label]="'PROFILE.EDUCATION.EDUCATION_INSTITUTION' | translate"
-                  [options]="universities$ | async"
-                  [formControlName]="'education_id'"
-                  [valid]="
-                    getFormControlByName('education_id').touched
-                      ? getFormControlByName('education_id').valid
-                      : undefined
-                  "
-                >
-                </hr-search-select>
-              </div>
-              <div>
-                <hr-search-select
-                  [dataInputAsString]="true"
-                  [label]="'PROFILE.EDUCATION.FACULTY' | translate"
-                  [options]="faculties"
-                  [formControlName]="'faculty'"
-                  [valid]="
-                    getFormControlByName('faculty').touched
-                      ? getFormControlByName('faculty').valid
-                      : undefined
-                  "
-                >
-                </hr-search-select>
-              </div>
-              <div>
-                <hr-search-select
-                  [label]="'PROFILE.EDUCATION.FORM_OF_STUDY' | translate"
-                  [options]="educationFormats"
-                  [formControlName]="'trainingFormat'"
-                  [valid]="
-                    getFormControlByName('trainingFormat').touched
-                      ? getFormControlByName('trainingFormat').valid
-                      : undefined
-                  "
-                >
-                </hr-search-select>
-              </div>
-              <div>
-                <label class="datepicker_label">{{ "PROFILE.EDUCATION.GRADUATED_DATE" | translate }} </label>
-                <hr-datepicker
-                  [default_date]="getFormControlByName('graduate_date').value"
-                  (selectDate)="selectDateByControlName($event, 'graduate_date')"
-                  [valid]="dateValidity"
-                >
-                </hr-datepicker>
-              </div>
+          <div
+            class="form"
+            [ngClass]="{
+              'education-content--disable': !this.savedEducation.length && getFormControlByName('hasNoEducation').value
+            }"
+          >
+            <div>
+              <hr-search-select
+                [dataInputAsString]="true"
+                [label]="'PROFILE.EDUCATION.EDUCATION_INSTITUTION' | translate"
+                [options]="universities$ | async"
+                [formControlName]="'education_id'"
+                [valid]="
+                  getFormControlByName('education_id').touched ? getFormControlByName('education_id').valid : undefined
+                "
+              >
+              </hr-search-select>
             </div>
-            <div class="education-content__wrapper-checkbox" *ngIf="!savedEducation.length">
-              <hr-checkbox
-                [label-text]="'Не имеет образования'"
-                [checked]="getFormControlByName('hasNoEducation').value"
-                [formControl]="getFormControlByName('hasNoEducation')"
-                (changes)="updateHasNoEducation($event)"
-              ></hr-checkbox>
+            <div>
+              <hr-search-select
+                [dataInputAsString]="true"
+                [label]="'PROFILE.EDUCATION.FACULTY' | translate"
+                [options]="faculties"
+                [formControlName]="'faculty'"
+                [valid]="getFormControlByName('faculty').touched ? getFormControlByName('faculty').valid : undefined"
+              >
+              </hr-search-select>
             </div>
-            <div class="submit">
-              <button class="cancel" *ngIf="savedEducation.length" (click)="cancelAddition()">
-                {{ "Cancel" | translate }}
+            <div>
+              <hr-search-select
+                [label]="'PROFILE.EDUCATION.FORM_OF_STUDY' | translate"
+                [options]="educationFormats"
+                [formControlName]="'trainingFormat'"
+                [valid]="
+                  getFormControlByName('trainingFormat').touched
+                    ? getFormControlByName('trainingFormat').valid
+                    : undefined
+                "
+              >
+              </hr-search-select>
+            </div>
+            <div>
+              <label class="datepicker_label">{{ "PROFILE.EDUCATION.GRADUATED_DATE" | translate }} </label>
+              <hr-datepicker
+                [default_date]="getFormControlByName('graduate_date').value"
+                (selectDate)="selectDateByControlName($event, 'graduate_date')"
+                [valid]="dateValidity"
+              >
+              </hr-datepicker>
+            </div>
+          </div>
+          <div class="education-content__wrapper-checkbox" *ngIf="!savedEducation.length">
+            <hr-checkbox
+              [label-text]="'PROFILE.EDUCATION.NO_EDUCATION' | translate"
+              [checked]="getFormControlByName('hasNoEducation').value"
+              [formControl]="getFormControlByName('hasNoEducation')"
+              (changes)="updateHasNoEducation()"
+            ></hr-checkbox>
+          </div>
+          <div class="submit">
+            <button class="cancel" *ngIf="savedEducation.length" (click)="cancelAddition()">
+              {{ "Cancel" | translate }}
+            </button>
+            <ng-container *ngIf="!isActivatedEditMode.value; else editModeTpl">
+              <button
+                class="save-btn pointer"
+                [disabled]="!educationForm.valid || getFormControlByName('hasNoEducation').value"
+                (click)="saveEducation()"
+              >
+                <img [src]="ORANGE_PLUS" />
+                {{ "Add to resume" | translate }}
               </button>
-              <ng-container *ngIf="!isActivatedEditMode.value; else editModeTpl">
-                <button
-                  class="save-btn pointer"
-                  [disabled]="!educationForm.valid || getFormControlByName('hasNoEducation').value"
-                  (click)="saveEducation()"
-                >
-                  <img [src]="ORANGE_PLUS"/>
-                  {{ "Add to resume" | translate }}
-                </button>
-              </ng-container>
-              <ng-template #editModeTpl>
-                <button
-                  class="save-btn pointer"
-                  [disabled]="!educationForm.valid"
-                  (click)="saveEditedEducation()"
-                >
-                  {{ "Save changes" | translate }}
-                </button>
-              </ng-template>
-            </div>
+            </ng-container>
+            <ng-template #editModeTpl>
+              <button class="save-btn pointer" [disabled]="!educationForm.valid" (click)="saveEditedEducation()">
+                {{ "Save changes" | translate }}
+              </button>
+            </ng-template>
+          </div>
         </div>
       </form>
 
@@ -100,7 +93,7 @@
         <button class="add-more-btn pointer" (click)="activateAddMore()">
           <span class="label">{{ "Add more" | translate }}</span>
           <span class="img">
-            <img [src]="ORANGE_PLUS"/>
+            <img [src]="ORANGE_PLUS" />
           </span>
         </button>
       </div>
@@ -125,15 +118,17 @@
     <div class="bottom_buttons">
       <div class="prev">
         <p (click)="goToUrl(ResumeRoutesEnum.INFO)">
-          <img [src]="PREV_ICON" alt="prev">
-          назад
+          <img [src]="PREV_ICON" alt="prev" />
+          {{ "PROFILE.EDUCATION.BACK" | translate }}
         </p>
       </div>
-      <div class="next"
-           [ngClass]="{'disable':(!savedEducation.length && !getFormControlByName('hasNoEducation').value)}">
-        <p (click)="goToUrl(ResumeRoutesEnum.EXPERIENCE)" >
-          далее
-          <img [src]="NEXT_ICON" alt="next">
+      <div
+        class="next"
+        [ngClass]="{ disable: !savedEducation.length && !getFormControlByName('hasNoEducation').value }"
+      >
+        <p (click)="goToUrl(ResumeRoutesEnum.EXPERIENCE)">
+          {{ "PROFILE.EDUCATION.NEXT" | translate }}
+          <img [src]="NEXT_ICON" alt="next" />
         </p>
       </div>
     </div>
@@ -144,8 +139,8 @@
   <div class="table">
     <div class="table-header">
       <div class="actions">
-        <img [src]="EDIT_ICON" alt="edit" (click)="edit(education.id)">
-        <img [src]="DELETE_ICON" alt="delete" (click)="delete(education.id)">
+        <img [src]="EDIT_ICON" alt="edit" (click)="edit(education.id)" />
+        <img [src]="DELETE_ICON" alt="delete" (click)="delete(education.id)" />
       </div>
     </div>
     <div class="table-content">
@@ -168,7 +163,7 @@
       <div class="table-cell">
         <div class="label">{{ "PROFILE.EDUCATION.GRADUATED_DATE" | translate }}</div>
         <div class="value">
-          {{ formatToString(education.graduate_date) | date : "dd-MM-YYYY" }}
+          {{ formatToString(education.graduate_date) | date: "dd-MM-YYYY" }}
         </div>
       </div>
     </div>
@@ -179,8 +174,8 @@
   <div class="card">
     <div class="card-header">
       <div class="actions">
-        <img [src]="EDIT_ICON" alt="edit" (click)="edit(education.id)">
-        <img [src]="DELETE_ICON" alt="delete" (click)="delete(education.id)">
+        <img [src]="EDIT_ICON" alt="edit" (click)="edit(education.id)" />
+        <img [src]="DELETE_ICON" alt="delete" (click)="delete(education.id)" />
       </div>
     </div>
     <div class="card-content">
@@ -201,7 +196,7 @@
       <div class="row">
         <div class="label">{{ "PROFILE.EDUCATION.GRADUATED_DATE" | translate }}:</div>
         <div class="value">
-          {{ formatToString(education.graduate_date) | date : "dd-MM-YYYY" }}
+          {{ formatToString(education.graduate_date) | date: "dd-MM-YYYY" }}
         </div>
       </div>
     </div>

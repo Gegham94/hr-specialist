@@ -48,6 +48,7 @@
             <div class="languages_container">
               <div>
                 <hr-search-select
+                  [updateEveryTime]="true"
                   [options]="languages"
                   [isMultiSelect]="true"
                   [formControlName]="'languages'"
@@ -65,7 +66,7 @@
       <div class="prev">
         <p (click)="goToUrl(ResumeRoutesEnum.EXPERIENCE)">
           <img [src]="PREV_ICON" alt="prev" />
-          назад
+          {{ "PROFILE.SKILLS_LANGUAGES.BACK" | translate }}
         </p>
       </div>
       <div class="next"></div>

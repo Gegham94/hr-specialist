@@ -1,45 +1,16 @@
 @import "src/app/modules/header/notifications/notifications.scss";
 @import "src/assets/variables/variables";
+@import "src/assets/mixins/util/util";
 
 .wrapper {
-  position: relative;
-
   .side-menu {
     display: none;
-    position: absolute;
     width: 100%;
-    height: 100vh;
-    z-index: 99991;
-    left: -100%;
-    transition: all 0.5s ease-in-out;
-
-    &__open {
-      transition: all 0.5s ease-in-out;
-      left: 0;
-    }
-
-    &__overlay {
-      position: fixed;
-      width: 100vw;
-      height: 100%;
-      background: rgba(85, 91, 102, 0.5);
-      top: 0;
-      left: 0;
-      z-index: 5;
-    }
 
     &__content {
       transition: ease 1000ms;
-      left: 0;
-      width: 70%;
-      height: 100vh;
+      right: 0;
       background: white;
-      z-index: 99993;
-      position: absolute;
-
-      @media screen and (max-width: 500px) {
-        width: 100%;
-      }
 
       &-element {
         display: flex;
@@ -64,25 +35,26 @@
         margin-top: 30px;
       }
 
-      &-employe {
+      &-employee {
         display: flex;
         align-items: flex-start;
         flex-direction: column;
+        height: 100%;
 
         &__header {
           display: flex;
           justify-content: space-between;
           width: 100%;
-          cursor: pointer;
 
           &-block {
-            padding: 24px;
+            padding: 30px;
             width: 100%;
           }
 
           img {
             width: 15px;
             height: 15px;
+            cursor: pointer;
           }
         }
 
@@ -93,13 +65,17 @@
           flex-direction: column;
           align-items: center;
           margin-top: 18px;
-          margin-bottom: 55px;
 
           img {
             width: 108px;
             border-radius: 50px;
             height: 108px;
             object-fit: cover;
+          }
+
+          &-center {
+            @include flex-center;
+            flex-direction: column;
           }
         }
 
@@ -121,7 +97,7 @@
           line-height: 16px;
           color: $black;
           cursor: pointer;
-          margin-top: 12px;
+          margin-top: 20px;
           text-align: center;
         }
 
@@ -142,7 +118,6 @@
       width: 108px;
       height: 108px;
       border-radius: 50%;
-      overflow: hidden;
 
       img {
         width: 100%;
@@ -367,7 +342,7 @@
 @media screen and (max-width: 350px) {
   .side-menu {
     &__content {
-      &-employe {
+      &-employee {
         &-title {
           font-size: $text-base !important
         }

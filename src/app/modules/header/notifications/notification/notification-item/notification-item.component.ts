@@ -1,13 +1,14 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { GlobalNotificationItem } from "../../../interfaces/notifications.interface";
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@angular/core";
+import {INotification} from "../../../interfaces/notifications.interface";
 
 @Component({
   selector: "hr-notification-item",
   templateUrl: "./notification-item.component.html",
   styleUrls: ["./notification-item.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationItemComponent {
-  @Input("item") notificationItem!: GlobalNotificationItem;
+  @Input("item") notificationItem!: INotification;
   @Input("hasNotification") hasNotification!: number;
   @Output() selectedNotification: EventEmitter<string> = new EventEmitter();
   public end = new Date();

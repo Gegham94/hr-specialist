@@ -1,29 +1,27 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { NavigateButtonInterface } from "../../root-modules/app/interfaces/navigateButton.interface";
 import { environment } from "../../../environments/environment";
+import { INavigateButton } from "src/app/shared/interfaces/navigateButton.interface";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class NavigateButtonService {
+  constructor(public http: HttpClient) {}
 
-  constructor(public http: HttpClient) {
-  }
-
-  public getButton(): Observable<NavigateButtonInterface[]> {
+  public getButton(): Observable<INavigateButton[]> {
     const fullUrl = `${environment.jsonUrl}/navigateButtons`;
-    return this.http.get<NavigateButtonInterface[]>(fullUrl);
+    return this.http.get<INavigateButton[]>(fullUrl);
   }
 
-  public getButtonId(id: number): Observable<NavigateButtonInterface> {
+  public getButtonId(id: number): Observable<INavigateButton> {
     const fullUrl = `${environment.jsonUrl}/navigateButtons/${id}`;
-    return this.http.get<NavigateButtonInterface>(fullUrl);
+    return this.http.get<INavigateButton>(fullUrl);
   }
 
-  public editButton(id: number, status: NavigateButtonInterface): Observable<NavigateButtonInterface> {
+  public editButton(id: number, status: INavigateButton): Observable<INavigateButton> {
     const fullUrl = `${environment.jsonUrl}/navigateButtons/${id}`;
-    return this.http.put<NavigateButtonInterface>(fullUrl, status);
+    return this.http.put<INavigateButton>(fullUrl, status);
   }
 }

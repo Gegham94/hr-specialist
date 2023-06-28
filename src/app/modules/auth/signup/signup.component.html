@@ -1,6 +1,6 @@
-<hr-loader *ngIf="!!(loader$ | async)"></hr-loader>
+<hr-loader *ngIf="loader$ | async"></hr-loader>
 
-<hr-header [header-type]="headerTypeProps"></hr-header>
+<hr-header></hr-header>
 <section class="register">
   <form class="register__form">
     <div class="register__wrapper">
@@ -30,14 +30,14 @@
             !!(userDoesNotExistsError | async)
               ? ('AUTHORIZATION.SIGN_UP.ERROR' | translate: { prefix: prefix, phone: signUpPhoneControl.value | phone })
               : signUpPasswordControl.touched
-              ? signUpForm.getError('validPassword') || signUpForm.getError('emptyField')
+              ? signUpPasswordControl.getError('validPassword') || signUpPasswordControl.getError('emptyField')
               : ' '
           "
           [error-status]="
             signUpPasswordControl.touched &&
             (!!(userDoesNotExistsError | async) ||
-              signUpForm.getError('validPassword') ||
-              signUpForm.getError('emptyField'))
+            signUpPasswordControl.getError('validPassword') ||
+            signUpPasswordControl.getError('emptyField'))
               ? inputStatusList.invalid
               : inputStatusList.valid
           "
@@ -50,15 +50,15 @@
           [formControl]="signUpPrivacyPolicyControl"
         ></hr-checkbox>
         <span class="register__privacy-policy__checkbox__label-text" (click)="changeSignUpPrivacyPolicy()">
-          Соглашаюсь с
+          {{ "AUTHORIZATION.SIGN_UP.AGREE" | translate }}
           <a
             (click)="changeSignUpPrivacyPolicy($event)"
             href="https://hrhunt.ru/user-agreement"
             style="color: green"
             target="_blank"
-            >пользовательским соглашением
+            >{{ "AUTHORIZATION.SIGN_UP.AGREEMENT" | translate }}
           </a>
-          об обработке личных данных
+          {{ "AUTHORIZATION.SIGN_UP.PERSONAL_DATA" | translate }}
         </span>
       </div>
       <div class="register__button">

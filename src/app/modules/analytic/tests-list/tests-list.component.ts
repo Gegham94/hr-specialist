@@ -1,8 +1,8 @@
 import {Component} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TestLevel, TestLevelEnum} from "../constants/tests-level.enum";
-import {LocalStorageService} from "../../../root-modules/app/services/local-storage.service";
-import {ObjectType} from "../../../shared-modules/types/object.type";
+import {LocalStorageService} from "../../../shared/services/local-storage.service";
+import {ObjectType} from "../../../shared/types/object.type";
 import {TestCategory} from "../constants/tests.enum";
 import { TestItemInterface } from "../../create-test/enum/test-item.interface";
 

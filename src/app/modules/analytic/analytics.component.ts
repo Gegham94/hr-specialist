@@ -1,13 +1,13 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit,} from "@angular/core";
 import {EChartsOption} from "echarts/types/dist/echarts";
 import {BehaviorSubject, filter, map, Observable, of, takeUntil} from "rxjs";
-import {Unsubscribe} from "../../shared-modules/unsubscriber/unsubscribe";
-import {LocalStorageService} from "../../root-modules/app/services/local-storage.service";
-import {RobotHelperService} from "../../root-modules/app/services/robot-helper.service";
-import {IEmployee} from "../../root-modules/app/interfaces/employee.interface";
+import {Unsubscribe} from "../../shared/unsubscriber/unsubscribe";
+import {LocalStorageService} from "../../shared/services/local-storage.service";
+import {RobotHelperService} from "../../shared/services/robot-helper.service";
+import {IEmployee} from "../../shared/interfaces/employee.interface";
 import {AnalyticsEnum} from "./constants/analytics.enum";
 import {QuestionsAnswersInterface, SpecialistListsInterface, Tests} from "./interfaces/tests.interface";
-import {ObjectType} from "../../shared-modules/types/object.type";
+import {ObjectType} from "../../shared/types/object.type";
 import {AnalyticService} from "./analytic.service";
 import {Router} from "@angular/router";
 

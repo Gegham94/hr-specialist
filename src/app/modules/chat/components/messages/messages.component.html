@@ -1,0 +1,125 @@
+<div class="chat-messages chat-messages--show" >
+  <ng-container>
+    <div class="show-in-mobile">
+      <img src="./assets/img/icon/chat-back-icon.svg" alt="back"/>
+    </div>
+    <div #chat class="chat-messages__block" (scroll)="scroll($event)">
+      <ng-container *ngIf="!isLoading && messages$.value.length; else LoadDataTmpl">
+        <div
+          class="search-results"
+          #infiniteScroll
+          infiniteScroll
+          [infiniteScrollUpDistance]="1.5"
+          [infiniteScrollThrottle]="50"
+          [scrollWindow]="false"
+          (scrolledUp)="onScrollUp()"
+        >
+          <ng-container>
+            <ng-container>
+              <div *ngFor="let message of messages$.value">
+                <div
+                  class="chat-messages__wrapper"
+                  *ngIf="!message?.isMyMessage"
+                >
+                  <div class="chat-messages__img">
+                    <img
+                      [src]="getLogo(selectedConversation?.company?.image ?? '')"
+                      alt="specialist"
+                    />
+                  </div>
+                  <div class="chat-messages__content">
+                    <p [innerText]="message?.message"></p>
+                    <div class="chat-messages__date">
+                      <span>{{ message?.createdAt | date: "dd/MM/yy HH:mm" }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="chat-messages__wrapper--right"
+                  *ngIf="message?.isMyMessage"
+                >
+                  <div class="chat-messages__content--right">
+                    <p [innerText]="message?.message"></p>
+                    <div class="chat-messages__date">
+                      <span>{{ message?.createdAt | date: "dd/MM/yy HH:mm" }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #notMsgTmpl>
+              <div class="chat-messages__no-data">
+                <img
+                  [src]="getLogo(selectedConversation?.company?.image ?? '')"
+                  alt="company"
+                />
+                <p> {{selectedConversation?.company?.name}} </p>
+                <p> {{"CHAT.NO_MESSAGES" | translate}} </p>
+              </div>
+            </ng-template>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <div class="chat-item"
+         *ngIf="selectedConversation?.hasUpdate">
+      <p class="is-unread-msg" (click)="chatOpen()">
+        {{"CHAT.IS_UNREAD_MESSAGE" | translate}}
+      </p>
+    </div>
+    <div class="chat-item">
+      <div class="chat-input" *ngIf="isAllowSendMsg.value">
+        <div class="chat-input__text">
+                <textarea
+                  #textarea
+                  (input)="auto_grow()"
+                  (keydown)="onKeydown($event)"
+                  [(ngModel)]="message"
+                  placeholder="Напишите что нибудь"
+                ></textarea>
+        </div>
+        <button
+          class="chat-input__button chat-input_send-button"
+          [class.active]="!!msgLength()"
+          (click)="sendMessageAction()"
+        >
+          <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M10.5002 17.342L10.5002 3.65783"
+              stroke="#555B66"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M5.36851 8.7894L10.5001 3.65782L15.6317 8.7894"
+              stroke="#555B66"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #LoadDataTmpl>
+    <ng-container *ngIf="isLoading; else NoDataTmpl">
+      <div class="loader-content">
+        <div class="loader"></div>
+      </div>
+    </ng-container>
+
+    <ng-template #NoDataTmpl>
+      <div class="chat-messages__no-data">
+        <img
+          [src]="getLogo(selectedConversation?.company?.image ?? '')"
+          alt="company"
+        />
+        <p> {{selectedConversation?.company?.name}} </p>
+        <p> {{"CHAT.NO_MESSAGES" | translate}} </p>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

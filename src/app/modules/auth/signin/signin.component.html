@@ -1,6 +1,7 @@
 <hr-loader *ngIf="!!(loader$ | async)"></hr-loader>
 
-<hr-header [header-type]='headerTypeProps'></hr-header>
+<hr-header></hr-header>
+
 <section class='login' *ngLet="userDoesNotExistsError | async as returnedError">
   <form class='login__form'>
     <div class='login__wrapper'>
@@ -26,13 +27,20 @@
           [label-text]='"AUTHORIZATION.PASSWORD" | translate '
           [formControl]='signInPasswordControl'
           [valid]='signInPasswordControl.touched ? signInPasswordControl.valid : undefined'
-          [feedback-text]='
-          !!(signInPasswordControl.touched && returnedError===errorMessageEnum.INVALID_LOGIN )
-           ? ("AUTHORIZATION.SIGN_IN.ERROR" | translate:
-          { prefix: prefix, phone: (signInPhoneNumberControl.value | phone)})  : returnedError ? returnedError  :
-           ""'
-          [error-status]='!!returnedError  ?
-          inputStatusList.invalid : inputStatusList.valid'
+          [feedback-text]="!!returnedError
+            ? ('AUTHORIZATION.SIGN_IN.ERROR' | translate: { prefix: prefix, phone: signInPhoneNumberControl.value | phone })
+            : signInPasswordControl.touched
+            ? signInPasswordControl.getError('validPassword') || signInPasswordControl.getError('emptyField')
+            : ' '
+        "
+           [error-status]="
+           signInPasswordControl.touched &&
+           (!!returnedError ||
+           signInPasswordControl.getError('validPassword') ||
+           signInPasswordControl.getError('emptyField'))
+             ? inputStatusList.invalid
+             : inputStatusList.valid
+         "
           [show-password]="true"
         ></hr-input>
       </div>
@@ -51,7 +59,7 @@
       <p class="error-message" *ngIf="getErrorMessage$ | async">{{getErrorMessage$ | async}}</p>
       <div class='login__button'>
         <hr-button
-          [disabled]='signin.invalid'
+          [disabled]="!!(getErrorMessage$ | async)"
           [text]='"ACTIONS.SIGN_IN" | translate'
           [type]='buttonType.outlineGreen'
           (click)='signIn(signin)'

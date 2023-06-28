@@ -1,13 +1,13 @@
 import {Injectable} from "@angular/core";
 import {Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild} from "@angular/router";
-import {AuthService} from "../../modules/auth/auth.service";
-import {EmployeeInfoFacade} from "../../modules/profile/components/utils/employee-info.facade";
-import {LocalStorageService} from "../../root-modules/app/services/local-storage.service";
-import {ResumeRoutesEnum} from "../../modules/profile/components/utils/resume-routes.constant";
-import {ProfileFormControlService} from "../../modules/profile/components/profile-edit/profile-form-control.service";
+import {AuthService} from "../../modules/auth/service/auth.service";
+import {EmployeeInfoFacade} from "../../modules/profile/services/employee-info.facade";
+import {LocalStorageService} from "../services/local-storage.service";
+import {ResumeRoutesEnum} from "../../modules/profile/constants/resume-routes.constant";
+import {ProfileFormControlService} from "../../modules/profile/components/profile-edit/service/profile-form-control.service";
 import {BehaviorSubject, takeUntil} from "rxjs";
-import {RobotHelperService} from "../../root-modules/app/services/robot-helper.service";
-import {Unsubscribe} from "../../shared-modules/unsubscriber/unsubscribe";
+import {RobotHelperService} from "../services/robot-helper.service";
+import {Unsubscribe} from "../unsubscriber/unsubscribe";
 
 @Injectable({providedIn: "root"})
 export class EditProfileGuard extends Unsubscribe implements CanActivateChild {
@@ -17,9 +17,6 @@ export class EditProfileGuard extends Unsubscribe implements CanActivateChild {
 
   constructor(
     private readonly _router: Router,
-    private readonly _authService: AuthService,
-    private readonly _localStorage: LocalStorageService,
-    private readonly _employeeFacade: EmployeeInfoFacade,
     private readonly _profileFormControlService: ProfileFormControlService,
     private readonly _robotHelperService: RobotHelperService,
   ) {

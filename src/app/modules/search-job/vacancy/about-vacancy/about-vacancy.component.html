@@ -1,37 +1,43 @@
-<ng-container *ngIf="getVacancyInfo$ | async">
+<ng-container *ngIf="(getVacancyInfo$ | async); else loaderModel">
   <section class="about_vacancy" *ngLet="getVacancyInfo$ | async as vacancy">
     <div class="about_vacancy__card">
       <div class="about_vacancy__card__title">{{vacancy?.name}}</div>
-      <div class="about_vacancy__card__salary"> От {{vacancy?.salary}} до вычета налогов</div>
-      <div class="about_vacancy__card__info"><span> Полная занятость: </span> {{vacancy?.searchedSettings.wayOfWorking}}
-        <div class="about_vacancy__card__info"><span> Рабочее место: </span> {{vacancy?.searchedSettings.workPlace}}
+      <div class="about_vacancy__card__salary"
+           *ngIf="vacancy?.salary"
+      > От {{vacancy?.salary}} до вычета налогов
+      </div>
+      <div class="about_vacancy__card__info"><span> {{"SEARCH_JOB.VACANCY.FULL" | translate}}: </span> {{vacancy?.searchedSettings.wayOfWorking}}
+        <div class="about_vacancy__card__info"><span> {{"SEARCH_JOB.VACANCY.WORKPLACE" | translate}}: </span> {{vacancy?.searchedSettings.workplace}}
         </div>
-        <div class="about_vacancy__card__info"><span> Уровень: </span> {{vacancy?.searchedSettings.vacancyLevel}}</div>
-        <div class="about_vacancy__card__info"><span> Крайний срок: </span>{{vacancy?.deadlineDate}} </div>
+        <div class="about_vacancy__card__info"><span> {{"SEARCH_JOB.VACANCY.LEVEL" | translate}}: </span> {{ProgrammingLevelEnum[vacancy?.searchedSettings.vacancyLevel]}}</div>
+        <div class="about_vacancy__card__info">
+          <span> {{"SEARCH_JOB.VACANCY.DEADLINE" | translate}}: </span>{{vacancy?.deadlineDate | date: DateFormatEnum.dateForHtml}} </div>
       </div>
       <div class="about_vacancy__card__apply">
-        <button [ngClass]="{'about_vacancy__card__apply--disabled': isResumeApplied$.value || vacancy?.jobRequestSent}" (click)="applyResume()">Откликнуться</button>
+          <button [ngClass]="{'about_vacancy__card__apply--disabled': isResumeApplied$.value || vacancy?.jobRequestSent}"
+                  (click)="applyResume()">{{"SEARCH_JOB.VACANCY.RESPOND" | translate}}
+          </button>
       </div>
     </div>
     <div class="about_vacancy__description">
       <div class="block">
-        <p class="block__title"> Описание</p>
-        <p class="block__text"> {{vacancy?.description}} </p>
+        <p class="block__title"> {{"SEARCH_JOB.VACANCY.DESCRIPTION" | translate}}</p>
+        <p class="block__text" [innerHTML]="vacancy?.description"></p>
       </div>
 
       <div class="block">
-        <p class="block__title"> Обязанности </p>
-        <p class="block__text"> {{vacancy?.responsibility}} </p>
+        <p class="block__title"> {{"SEARCH_JOB.VACANCY.RESPONSIBILITIES" | translate}} </p>
+        <p class="block__text" [innerHTML]="vacancy?.responsibility"></p>
       </div>
 
       <div class="block">
-        <p class="block__title"> Условия </p>
-        <p class="block__text"> {{vacancy?.conditions}} </p>
+        <p class="block__title"> {{"SEARCH_JOB.VACANCY.CONDITIONS" | translate}} </p>
+        <p class="block__text" [innerHTML]="vacancy?.conditions"></p>
       </div>
 
       <div class="block" *ngIf="vacancy?.questions">
-        <p class="block__title"> Вопросы </p>
-        <p class="block__text"> {{vacancy.questions}} </p>
+        <p class="block__title"> {{"SEARCH_JOB.VACANCY.QUESTIONS" | translate}} </p>
+        <p class="block__text" [innerHTML]="vacancy.questions"></p>
       </div>
     </div>
   </section>
@@ -39,10 +45,11 @@
   <section class="apply">
     <hr-modal
       [isOpen]="(isModal | async) ?? false"
+      (whenModalClose)="isModal.next(false)"
     >
       <div class="apply-modal">
         <div class="apply-modal__title">
-          <span>Внимание!</span>
+          <span>{{"SEARCH_JOB.VACANCY.ATTENTION" | translate}}!</span>
         </div>
         <div class="apply-modal__description">
           <span> Lorem Ipsum является текст-заполнитель обычно </span>
@@ -50,16 +57,22 @@
         <div class="apply-modal__button">
           <button
             class="apply-modal__button__cancel"
-            (click)="cancel()">Отменить
+            (click)="cancel()">{{"SEARCH_JOB.VACANCY.CANCEL" | translate}}
           </button>
 
           <button class="apply-modal__button__pass"
-                  (click)="send()">Отправить
+                  (click)="send()">{{"SEARCH_JOB.VACANCY.SEND" | translate}}
           </button>
         </div>
       </div>
     </hr-modal>
   </section>
 </ng-container>
+
+<ng-template #loaderModel>
+  <div class="loader-wrapper">
+    <div class="loader"></div>
+  </div>
+</ng-template>
 
 

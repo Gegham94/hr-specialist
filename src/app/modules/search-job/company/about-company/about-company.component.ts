@@ -1,33 +1,31 @@
-import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
-import {map, Observable, takeUntil} from "rxjs";
-import {SearchCompanyInterface} from "../../../../root-modules/app/interfaces/search-company.interface";
-import {SearchInterface} from "../../../../root-modules/app/interfaces/searc.interface";
-import {StatusTypeEnum} from "../../../../root-modules/app/constants/status-type.enum";
-import {Unsubscribe} from "../../../../shared-modules/unsubscriber/unsubscribe";
-import {CompanyService} from "../company-service";
-import {LocalStorageService} from "../../../../root-modules/app/services/local-storage.service";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { map, Observable, takeUntil } from "rxjs";
+import { Unsubscribe } from "../../../../shared/unsubscriber/unsubscribe";
+import { LocalStorageService } from "../../../../shared/services/local-storage.service";
+import { CompanyFacade } from "../services/company.facade";
+import { ISearchCompany } from "src/app/shared/interfaces/search-company.interface";
+import { ISearch } from "src/app/shared/interfaces/searc.interface";
 
 @Component({
   selector: "hr-about-company",
   templateUrl: "./about-company.component.html",
-  styleUrls: ["./about-company.component.scss"]
+  styleUrls: ["./about-company.component.scss"],
 })
-
-export class AboutCompanyComponent extends Unsubscribe implements OnInit {
-
-  public getCompanyInfo$!: Observable<SearchCompanyInterface>;
-  public getCompanyAllVacancy$!: Observable<SearchCompanyInterface[]>;
+export class AboutCompanyComponent extends Unsubscribe implements OnInit, OnDestroy {
+  public companyInfo$!: Observable<ISearchCompany>;
+  public companyAllVacancy$!: Observable<ISearchCompany[]>;
   public vacanciesCount!: number;
   public uuid!: string;
-  private statusTypeEnum = StatusTypeEnum;
   public todayDateString = new Date().toISOString().slice(0, 10);
-  public searchParams: SearchInterface = {skip: 0, take: 0, from: this.todayDateString };
+  public searchParams: ISearch = { skip: 0, take: 0, from: this.todayDateString };
 
-  constructor(private activeRoute: ActivatedRoute,
-              private companyService: CompanyService,
-              private localStorageService: LocalStorageService,
-              private route: Router) {
+  constructor(
+    private _activeRoute: ActivatedRoute,
+    private _localStorageService: LocalStorageService,
+    private _companyFacade: CompanyFacade,
+    private _route: Router
+  ) {
     super();
   }
 
@@ -42,19 +40,13 @@ export class AboutCompanyComponent extends Unsubscribe implements OnInit {
   }
 
   private getCompanyInfo(): void {
-    this.activeRoute.queryParams.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params) => {
+    this._activeRoute.queryParams.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params) => {
       if (params["uuid"]) {
         this.uuid = params["uuid"];
-        this.route.navigate(["/employee/search/company/about-company"],
-          {queryParams: {uuid: this.uuid}});
-        this.getCompanyInfo$ = this.companyService.getCompanyInfo(this.uuid);
-        this.getCompanyAllVacancy$ = this.companyService.getCompanyAllVacancy(
-          this.uuid, "", {from: this.todayDateString})
-          .pipe(
-            map((vacancy) => {
-              this.vacanciesPagesCount(vacancy.count);
-              return vacancy.result;
-            }));
+        this._route.navigate(["/employee/search/company/about-company"], { queryParams: { uuid: this.uuid } });
+        this.companyInfo$ = this._companyFacade.getCompanyInfo$(this.uuid);
+
+        this.companyAllVacancy$ = this.getCompanyAllVacancy$(this.uuid, "", { from: this.todayDateString });
       }
     });
   }
@@ -65,34 +57,35 @@ export class AboutCompanyComponent extends Unsubscribe implements OnInit {
     this.searchParams.take = limit;
     this.searchParams.from = this.todayDateString;
 
-    this.getCompanyAllVacancy$ = this.companyService.getCompanyAllVacancy(this.uuid, "", this.searchParams)
-      .pipe(
-        takeUntil(this.ngUnsubscribe),
-        map((vacancies) => {
-          this.vacanciesPagesCount(vacancies.count);
-          return vacancies.result;
-        }));
+    this.companyAllVacancy$ = this.getCompanyAllVacancy$(this.uuid, "", this.searchParams);
   }
 
-  public getCompanyLogo(logo: string): string {
-    return this.companyService.getCompanyLogo(logo);
-  }
-
-  public changeStatus(status: boolean): string {
-    return status ? this.statusTypeEnum.OPEN : this.statusTypeEnum.CLOSE;
-  }
-
-  public navigate(companyId: string | undefined, vacancyId: string | undefined): void {
-    this.route.navigate(["/employee/search/vacancy/about-vacancy"],
-      {
-        queryParams: {companyUuid: companyId, vacancyUuid: vacancyId}
-      }
+  private getCompanyAllVacancy$(
+    companyUuId: string,
+    vacancyUuid: string,
+    searchParam: ISearch
+  ): Observable<ISearchCompany[]> {
+    return this._companyFacade.getCompanyAllVacancy$(companyUuId, vacancyUuid, searchParam).pipe(
+      takeUntil(this.ngUnsubscribe),
+      map((vacancies) => {
+        this.vacanciesPagesCount(vacancies.count);
+        return vacancies.result;
+      })
     );
   }
 
-  ngOnDestroy(): void {
-    this.localStorageService.removeData("company-uuid");
-    this.unsubscribe();
+  public getCompanyLogo(logo: string): string {
+    return this._companyFacade.getCompanyLogo(logo);
   }
 
+  public navigate(companyId: string | undefined, vacancyId: string | undefined): void {
+    this._route.navigate(["/employee/search/vacancy/about-vacancy"], {
+      queryParams: { companyUuid: companyId, vacancyUuid: vacancyId },
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._localStorageService.removeData("company-uuid");
+    this.unsubscribe();
+  }
 }

@@ -1,4 +1,4 @@
-export interface BookInterviewInterface {
+export interface IBookInterview {
   hour: string;
   isBooked: boolean;
   isSelected: boolean;

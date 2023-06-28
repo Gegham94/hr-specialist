@@ -9,13 +9,13 @@ import {
   Output,
   ViewChild,
 } from "@angular/core";
-import {Unsubscribe} from "../../shared-modules/unsubscriber/unsubscribe";
-import {Subscription} from "rxjs";
+import { Unsubscribe } from "../../shared/unsubscriber/unsubscribe";
+import { Subscription } from "rxjs";
 
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
-import {InputTypeEnum} from "../../root-modules/app/constants/input-type.enum";
-import {InputStatusEnum} from "../../root-modules/app/constants/input-status.enum";
-import {OnlyLettersRegExp} from "../../shared-modules/constants/const-varibale";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { OnlyLettersRegExp } from "../../shared/constants/const-varibale";
+import { InputStatusEnum } from "src/app/shared/constants/input-status.enum";
+import { InputTypeEnum } from "src/app/shared/constants/input-type.enum";
 
 @Component({
   selector: "hr-input",
@@ -81,8 +81,10 @@ export class InputComponent extends Unsubscribe implements ControlValueAccessor,
 
   public onInput(event: Event): void {
     if (event && this.onlyLetters) {
-      (event.target as HTMLInputElement).value =
-        (event?.target as HTMLInputElement).value.replace(OnlyLettersRegExp, "");
+      (event.target as HTMLInputElement).value = (event?.target as HTMLInputElement).value.replace(
+        OnlyLettersRegExp,
+        ""
+      );
     }
     if (this.inputValue) {
       this.inputValue = this.inputValue.toString().trim();

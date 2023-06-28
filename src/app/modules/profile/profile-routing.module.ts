@@ -9,7 +9,7 @@ const routes: Routes = [
   },
   {
     path: "edit",
-    loadChildren: () => import("./components/profile-edit/profile-edit.module").then(m => m.ProfileEditModule)
+    loadChildren: () => import("./components/profile-edit/modules/profile-edit.module").then(m => m.ProfileEditModule)
   },
 ];
 

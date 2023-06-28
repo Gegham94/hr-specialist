@@ -4,8 +4,8 @@
     <p class="logo">HR-hunt</p>
 
     <button class="resume__header__downloadPdf" (click)="downloadPdf()">
-      <span>{{ "PROFILE.EDIT.DOWNLOAD_PDF" | translate }}</span>
-      <img src="./assets/img/icon/download-pdf.svg" alt="icon" />
+      <span *ngIf="screenSizeType.value !== ScreenSizeEnum.EXTRA_SMALL">{{ "PROFILE.EDIT.DOWNLOAD_PDF" | translate }}</span>
+      <img src="./assets/img/icon/download-pdf.svg" alt="icon"/>
     </button>
   </div>
 
@@ -13,14 +13,14 @@
     <div class="header">
       <div class="profile">
         <div class="profile-img-border">
-          <img class="profile-img" src="{{ specialistInfo?.image }}" />
+          <img class="profile-img" src="{{ specialistInfo?.image }}"/>
         </div>
       </div>
     </div>
     <div class="content">
       <div class="title">
         <span>{{ specialistInfo?.name }} {{ specialistInfo?.surname }} </span>
-        <div><img (click)="editResume()" src="./assets/img/icon/editIcon.svg" alt="icon" /></div>
+        <div><img (click)="editResume()" src="./assets/img/icon/editIcon.svg" alt="icon"/></div>
       </div>
       <div class="blocks-content">
         <div class="blocks">
@@ -208,29 +208,29 @@
             </div>
             <div class="block-info languages">
               <hr-tag *ngFor="let programmingLangItem of programmingLang"
-                [type]="tagTypesList.outline"
-                [delete]="false"
+                      [type]="tagTypesList.outline"
+                      [delete]="false"
               >
-              {{programmingLangItem | titlecase}}
-            </hr-tag>
+                {{programmingLangItem | titlecase}}
+              </hr-tag>
             </div>
 
             <div class="block-info languages">
               <hr-tag *ngFor="let programmingFrameItem of programmingFrame"
-                [type]="tagTypesList.outline"
-                [delete]="false">
-              {{programmingFrameItem}}
-            </hr-tag>
+                      [type]="tagTypesList.outline"
+                      [delete]="false">
+                {{programmingFrameItem}}
+              </hr-tag>
             </div>
 
             <div class="block-info languages">
               <hr-tag *ngFor="let language of specialistInfo?.languages"
-                [type]="tagTypesList.outline"
-                [delete]="false">
+                      [type]="tagTypesList.outline"
+                      [delete]="false">
                 {{language.displayName}}
-            </hr-tag>
+              </hr-tag>
             </div>
-            
+
           </div>
         </div>
       </div>

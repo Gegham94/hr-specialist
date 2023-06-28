@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { Observable, delay, map, of, switchMap, take, tap, timer } from "rxjs";
-import { IEmployee } from "../../root-modules/app/interfaces/employee.interface";
+import { IEmployee } from "../../shared/interfaces/employee.interface";
 import { HomeLayoutState } from "./home-layout.state";
-import { LocalStorageService } from "../../root-modules/app/services/local-storage.service";
-import { RobotHelperService } from "../../root-modules/app/services/robot-helper.service";
+import { LocalStorageService } from "../../shared/services/local-storage.service";
+import { RobotHelperService } from "../../shared/services/robot-helper.service";
 import { Router } from "@angular/router";
-import { EmployeeInfoFacade } from "../profile/components/utils/employee-info.facade";
-import { ResumeRoutesEnum } from "../profile/components/utils/resume-routes.constant";
+import { EmployeeInfoFacade } from "../profile/services/employee-info.facade";
+import { ResumeRoutesEnum } from "../profile/constants/resume-routes.constant";
 
 @Injectable({
   providedIn: "root",

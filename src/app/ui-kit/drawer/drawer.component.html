@@ -1,0 +1,13 @@
+<div class="backdrop" [class.backdrop-increaseIndex]="isHeaderDrawer" *ngIf="isOpen && useBackdrop" (click)="close()"></div>
+<div
+  class="drawer custom-scrollbar"
+  [class.drawer-increaseIndex]="isHeaderDrawer"
+  [class.is-not-scroll]="!isScroll"
+  [ngStyle]="drawerStyle"
+
+>
+  <div class="body-wrapper" [style.padding.px]="padding">
+    <p class="close" *ngIf="showCloseIcon" (click)="close()" [class.position]="side === 'left'">X</p>
+    <ng-content></ng-content>
+  </div>
+</div>

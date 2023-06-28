@@ -1,15 +1,15 @@
 import {Injectable} from "@angular/core";
-import {EmployeeInfoFacade} from "../profile/components/utils/employee-info.facade";
-import {DateFormatEnum} from "../employee-info/enums/date-format.enum";
+import {EmployeeInfoFacade} from "../profile/services/employee-info.facade";
+import {DateFormatEnum} from "../profile/enums/date-format.enum";
 import {formatDate} from "@angular/common";
 import {
   EducationsModel,
   EmployeeInterface,
   ExperienceModel
-} from "../../root-modules/app/interfaces/employee.interface";
+} from "../../shared/interfaces/employee.interface";
 import {UntypedFormGroup} from "@angular/forms";
 import {HelperService} from "./helper.service";
-import {SpecialistGenderEnum, SpecialistGenderTypeEnum} from "../employee-info/enums/specialist-gender.enum";
+import {SpecialistGenderEnum, SpecialistGenderTypeEnum} from "../profile/enums/specialist-gender.enum";
 
 @Injectable({
   providedIn: "root"

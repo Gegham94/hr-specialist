@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
 import {NavigateButtonState} from "./navigate-button.state";
-import {NavigationButton} from "../../root-modules/app/interfaces/navigateButton.interface";
+import { NavigationButton } from "src/app/shared/interfaces/navigateButton.interface";
 
 @Injectable({
     providedIn: "root"

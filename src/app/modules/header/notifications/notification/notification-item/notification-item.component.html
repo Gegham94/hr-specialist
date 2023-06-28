@@ -2,7 +2,7 @@
      *ngIf="hasNotification > 0 && notificationItem; else doesNotHaveNotification"
      (click)="selectNotification(notificationItem.uuid)"
      [ngClass]='{"company-notification-item--unread": !notificationItem.viewed }'>
-  <div class='notification-item-logo'> S</div>
+  <div class='notification-item-logo'> S </div>
   <div class='notification-item-description-content'>
     <div class='notification-item-description'>
       <p> {{notificationItem.info.content}}</p>
@@ -15,5 +15,7 @@
 
 
 <ng-template #doesNotHaveNotification>
-  <span class="empty-notification">Нет уведомлений </span>
+  <span class="empty-notification">
+    {{"HEADER.NOTIFICATIONS.NO_DATA" | translate}}
+  </span>
 </ng-template>

@@ -22,17 +22,25 @@
   &__header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
     &__downloadPdf {
       background: #08a652;
       color: white;
-      width: 172px;
+      padding: 5px 20px;
       height: 48px;
       border: 1px solid #08a652;
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: space-evenly;
+    }
+
+    img {
+      margin-left: 10px;
+      @media screen and (max-width: 500px) {
+        margin-left: 0;
+      }
     }
   }
 }
@@ -56,7 +64,6 @@
   font-size: 24px;
   line-height: 28px;
   color: #08a652;
-  padding-bottom: 40px;
 }
 
 .profile {

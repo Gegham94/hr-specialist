@@ -1,0 +1,20 @@
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <input class="radio" id="one" name="group" type="radio" checked />
+    <input class="radio" id="two" name="group" type="radio" />
+    <div class="tabs">
+      <label class="tab" id="one-tab" for="one">{{ "COMPILER.INSTRUCTIONS" | translate }}</label>
+      <label class="tab" id="two-tab" for="two">{{ "COMPILER.SAMPLES" | translate }}</label>
+    </div>
+    <div class="panels" *ngIf="selectedTest">
+      <div class="panel" id="one-panel">
+        <div>
+          <span [innerHTML]="selectedTest.task"></span>
+        </div>
+      </div>
+      <div class="panel" id="two-panel">
+        <div>{{ selectedTest.test }}</div>
+      </div>
+    </div>
+  </div>
+</div>

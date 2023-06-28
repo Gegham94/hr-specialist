@@ -10,28 +10,26 @@ import {
 import { FormControl, FormGroup } from "@angular/forms";
 import { Component } from "@angular/core";
 import { BehaviorSubject, debounceTime, filter, Observable, of, switchMap, takeUntil, tap } from "rxjs";
-
-import { SearchableSelectDataInterface } from "src/app/root-modules/app/interfaces/searchable-select-data.interface";
 import {
   specialistPosition,
   citizenShips,
   employments,
   genders,
   price,
-} from "src/app/modules/employee-info/mock/specialist-mock";
-import { ProfileFormControlService } from "../../profile-form-control.service";
-import { Unsubscribe } from "src/app/shared-modules/unsubscriber/unsubscribe";
-import { EmployeeInfoFacade } from "../../../utils/employee-info.facade";
-import { NEXT_ICON, PREV_ICON } from "../../../../../../shared/constants/images.constant";
+} from "src/app/modules/profile/mock/specialist-mock";
+import { Unsubscribe } from "src/app/shared/unsubscriber/unsubscribe";
+import { EmployeeInfoFacade } from "../../../../services/employee-info.facade";
+import { NEXT_ICON } from "../../../../../../shared/constants/images.constant";
 import { Router } from "@angular/router";
-import { ResumeRoutesEnum } from "../../../utils/resume-routes.constant";
-import { IEmployee } from "../../../../../../root-modules/app/interfaces/employee.interface";
-import { RobotHelperService } from "../../../../../../root-modules/app/services/robot-helper.service";
-import { LocalStorageService } from "../../../../../../root-modules/app/services/local-storage.service";
-import { RobotHelper } from "../../../../../../root-modules/app/interfaces/robot-helper.interface";
-import { InputStatusEnum } from "../../../../../../root-modules/app/constants/input-status.enum";
-import { ScreenSizeService } from "src/app/root-modules/app/services/screen-size.service";
+import { ResumeRoutesEnum } from "../../../../constants/resume-routes.constant";
+import { RobotHelperService } from "../../../../../../shared/services/robot-helper.service";
+import { LocalStorageService } from "../../../../../../shared/services/local-storage.service";
+import { ScreenSizeService } from "src/app/shared/services/screen-size.service";
 import { NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
+import { ProfileEditFacade } from "../../service/profile-edit.facade";
+import { ISearchableSelectData } from "src/app/shared/interfaces/searchable-select-data.interface";
+import { RobotHelper } from "src/app/shared/interfaces/robot-helper.interface";
+import { InputStatusEnum } from "src/app/shared/constants/input-status.enum";
 
 @Component({
   selector: "app-user-info",
@@ -40,55 +38,49 @@ import { NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild("contentWrapper") contentWrapper!: ElementRef<HTMLDivElement>;
+
   // field options
-  public searchListCountry$: Observable<SearchableSelectDataInterface[] | null> = this.employeeFacade
+  public searchListCountry$: Observable<ISearchableSelectData[] | null> = this._employeeFacade
     .getVacancyLocationCountriesRequest$()
     .pipe(tap(() => this.countryLoader$.next(false)));
-  public searchListCity$: Observable<SearchableSelectDataInterface[] | null> = this.employeeFacade
+  public searchListCity$: Observable<ISearchableSelectData[] | null> = this._employeeFacade
     .getVacancyLocationCitiesRequest$()
     .pipe(tap(() => this.cityLoader$.next(false)));
-  public price: SearchableSelectDataInterface[] = price;
-  public genders: SearchableSelectDataInterface[] = genders;
-  public employments: SearchableSelectDataInterface[] = employments;
-  public citizenShips: SearchableSelectDataInterface[] = citizenShips;
-  public specialistPosition: SearchableSelectDataInterface[] = specialistPosition;
+  public price: ISearchableSelectData[] = price;
+  public genders: ISearchableSelectData[] = genders;
+  public employments: ISearchableSelectData[] = employments;
+  public citizenShips: ISearchableSelectData[] = citizenShips;
+  public specialistPosition: ISearchableSelectData[] = specialistPosition;
 
   // loaders
   public countryLoader$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   public cityLoader$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-
   public datepickerValidity!: boolean;
-
-  public PREV_ICON = PREV_ICON;
   public NEXT_ICON = NEXT_ICON;
   public ResumeRoutesEnum = ResumeRoutesEnum;
-
-  public isRobotOpen$: Observable<boolean> = this.robotHelperService.isRobotOpen;
-  public robotSettings$: Observable<RobotHelper> = this.robotHelperService.getRobotSettings();
+  public isRobotOpen$: Observable<boolean> = this._robotHelperService.isRobotOpen;
+  public robotSettings$: Observable<RobotHelper> = this._robotHelperService.getRobotSettings();
   public salary = price;
-  private resizeObserver!: ResizeObserver;
-  private selectedCountryId: string = "";
-
-  @ViewChild("contentWrapper") contentWrapper!: ElementRef<HTMLDivElement>;
-
-  get infoForm(): FormGroup {
-    return this.profileFormControlService.infoForm;
-  }
-
-  public employeeInfo!: Observable<IEmployee | null>;
   public isLogo: BehaviorSubject<boolean | undefined> = new BehaviorSubject<boolean | undefined>(undefined);
   public inputStatusList = InputStatusEnum;
 
-  public readonly formFieldsNumber = Object.keys(this.infoForm.controls).length;
+  private resizeObserver!: ResizeObserver;
+  private selectedCountryId: string = "";
+  private readonly formFieldsNumber = Object.keys(this.infoForm.controls).length;
+
+  public get infoForm(): FormGroup {
+    return this._profileEditFacade.getInfoForm();
+  }
 
   constructor(
-    private profileFormControlService: ProfileFormControlService,
-    private employeeFacade: EmployeeInfoFacade,
-    private robotHelperService: RobotHelperService,
-    private localStorage: LocalStorageService,
-    private screenSizeService: ScreenSizeService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
+    private _profileEditFacade: ProfileEditFacade,
+    private _employeeFacade: EmployeeInfoFacade,
+    private _robotHelperService: RobotHelperService,
+    private _localStorage: LocalStorageService,
+    private _screenSizeService: ScreenSizeService,
+    private _router: Router,
+    private _cdr: ChangeDetectorRef
   ) {
     super();
   }
@@ -96,7 +88,7 @@ export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy,
   ngOnInit(): void {
     this.isRobot();
     this.countryChange();
-    this.employeeFacade.setLocationCountriesRequest$().pipe(takeUntil(this.ngUnsubscribe)).subscribe();
+    this._employeeFacade.setLocationCountriesRequest$().pipe(takeUntil(this.ngUnsubscribe)).subscribe();
     this.infoForm.valueChanges
       .pipe(
         // debounceTime prevents city field being reset
@@ -105,7 +97,7 @@ export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy,
         switchMap((form) => {
           // if statement is reqired to skip valueChanges with no data, to avoid reseting the form
           if (this.infoForm.value.phone) {
-            return this.profileFormControlService.storeInfoForm(form);
+            return this._profileEditFacade.storeInfoForm(form);
           }
           return of(null);
         })
@@ -114,7 +106,7 @@ export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy,
     this.getFormControlByName("image")
       .valueChanges.pipe(
         takeUntil(this.ngUnsubscribe),
-        tap((data) => {
+        tap(() => {
           this.isLogo.next(true);
         })
       )
@@ -124,17 +116,26 @@ export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy,
       .pipe(
         takeUntil(this.ngUnsubscribe),
         tap(() => {
-          if (this.getValidFieldLength() === (this.formFieldsNumber - 1)
-            && this.infoForm.get("image")?.invalid) {
+          if (this.getValidFieldLength() === this.formFieldsNumber - 1 && this.infoForm.get("image")?.invalid) {
             this.isLogo.next(false);
           }
         })
-      ).subscribe();
+      )
+      .subscribe();
+  }
+
+  public ngAfterViewInit(): void {
+    this.initContentSizeObserver();
+  }
+
+  public ngOnDestroy(): void {
+    this.unsubscribe();
+    this.resizeObserver.unobserve(this.contentWrapper.nativeElement);
   }
 
   public getValidFieldLength() {
     const validFormData: boolean[] = [];
-    Object.keys(this.infoForm.controls).forEach(key => {
+    Object.keys(this.infoForm.controls).forEach((key) => {
       const control = this.infoForm.get(key);
       if (control && control.valid) {
         validFormData.push(true);
@@ -143,17 +144,8 @@ export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy,
     return validFormData.length;
   }
 
-  ngAfterViewInit(): void {
-    this.initContentSizeObserver();
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe();
-    this.resizeObserver.unobserve(this.contentWrapper.nativeElement);
-  }
-
   private isRobot() {
-    this.localStorage.resume$
+    this._localStorage.resume$
       .pipe(
         takeUntil(this.ngUnsubscribe),
         filter((data) => !!data)
@@ -169,7 +161,7 @@ export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy,
               (item: { link: string }) => item.link === "/employee/employee-info/isActive"
             ) ?? -1;
 
-          this.robotHelperService.setRobotSettings({
+          this._robotHelperService.setRobotSettings({
             content: ["step1", "step2", "step3", "step4"],
             navigationItemId: null,
             isContentActive: true,
@@ -177,14 +169,14 @@ export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy,
           });
 
           if (resume?.robot_helper && employeeInfo && !employeeInfo?.hidden && employeeIsActiveIndex >= 0) {
-            this.robotHelperService.setRobotSettings({
+            this._robotHelperService.setRobotSettings({
               content: ["step1", "step2", "step3", "step4"],
               navigationItemId: null,
               isContentActive: true,
               uuid: employeeInfo.uuid,
             });
 
-            this.robotHelperService.isRobotOpen$.next(true);
+            this._robotHelperService.isRobotOpen$.next(true);
           }
         }
       });
@@ -195,7 +187,7 @@ export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy,
       this.isLogo.next(false);
       return;
     }
-    this.router.navigateByUrl(url);
+    this._router.navigateByUrl(url);
   }
 
   public getFormControlByName(controlName: string): FormControl {
@@ -221,7 +213,7 @@ export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy,
       ?.valueChanges.pipe(
         debounceTime(300),
         takeUntil(this.ngUnsubscribe),
-        switchMap((selectedCountry: SearchableSelectDataInterface[] | string) => {
+        switchMap((selectedCountry: ISearchableSelectData[] | string) => {
           if (typeof this.infoForm.get("city")?.value !== "string" && this.infoForm.get("country")?.touched) {
             this.infoForm.get("city")?.setValue("");
           }
@@ -231,13 +223,13 @@ export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy,
             }
             const uuId = selectedCountry[0].id as string;
             this.selectedCountryId = selectedCountry[0].id as string;
-            return this.employeeFacade.setLocationCitiesRequest$({ countryId: uuId });
+            return this._employeeFacade.setLocationCitiesRequest$({ countryId: uuId });
           }
           return of(null);
         })
       )
       .subscribe(() => {
-        this.cdr.detectChanges();
+        this._cdr.markForCheck();
       });
   }
 
@@ -245,7 +237,7 @@ export class UserInfoComponent extends Unsubscribe implements OnInit, OnDestroy,
     this.resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         const contentRect = entry.contentRect;
-        this.screenSizeService.setProfilEditLayoutSize(contentRect.height + 120);
+        this._screenSizeService.setProfilEditLayoutSize(contentRect.height + 120);
       }
     });
     this.resizeObserver.observe(this.contentWrapper.nativeElement);

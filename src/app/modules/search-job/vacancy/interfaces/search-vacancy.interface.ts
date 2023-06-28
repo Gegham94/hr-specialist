@@ -1,9 +1,9 @@
-export interface SearchVacancyResultInterface {
+export interface ISearchVacancyResult {
   count: number;
-  data: SearchVacancyInterface[];
+  data: ISearchVacancy[];
 }
 
-export interface SearchVacancyInterface {
+export interface ISearchVacancy {
   city: string;
   companyAddress: string;
   companyCity: string;
@@ -23,7 +23,7 @@ export interface SearchVacancyInterface {
   companyUuid: string;
 }
 
-export interface VacancyInterface {
+export interface IVacancy {
   companyUuid: string;
   name: string;
   description: string;
@@ -35,7 +35,7 @@ export interface VacancyInterface {
   searchedSettings: {
     vacancyLevel: string;
     wayOfWorking: string;
-    workPlace: string;
+    workplace: string;
   };
   jobRequestSent?: boolean;
 }

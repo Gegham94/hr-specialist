@@ -1,18 +1,15 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {BehaviorSubject, takeUntil} from "rxjs";
-import {NavigationEnd, Router} from "@angular/router";
-import {LocalStorageService} from "../../root-modules/app/services/local-storage.service";
-import {ITabs} from "../../root-modules/app/interfaces/tab-filter.interface";
-import {Unsubscribe} from "../../shared-modules/unsubscriber/unsubscribe";
-
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
+import { LocalStorageService } from "../../shared/services/local-storage.service";
+import { ITabs } from "src/app/shared/interfaces/tab-filter.interface";
 
 @Component({
   selector: "hr-filter-tabs",
   templateUrl: "./filter-tabs.component.html",
   styleUrls: ["./filter-tabs.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterTabsComponent extends Unsubscribe implements OnInit {
+export class FilterTabsComponent implements OnInit {
   @Input("tabs") tabs!: ITabs[];
   @Input("localSaveName") localSaveName!: string;
   @Input("defaultActiveTab") defaultActiveTab?: string | null;
@@ -20,15 +17,10 @@ export class FilterTabsComponent extends Unsubscribe implements OnInit {
 
   public activeTab: BehaviorSubject<string> = new BehaviorSubject<string>("");
 
-  constructor(
-    private readonly router: Router,
-    private readonly localStorageService: LocalStorageService
-  ) {
-    super();
-  }
+  constructor(private readonly localStorageService: LocalStorageService) {}
 
   ngOnChanges() {
-    if(this.defaultActiveTab) {
+    if (this.defaultActiveTab) {
       this.changeTab(this.defaultActiveTab);
     }
   }
@@ -48,9 +40,4 @@ export class FilterTabsComponent extends Unsubscribe implements OnInit {
     this.localStorageService.setItem(this.localSaveName, JSON.stringify(this.activeTab.value));
     this.selectedTab.emit(tab);
   }
-
-  public ngOnDestroy(): void {
-    this.unsubscribe();
-  }
-
 }

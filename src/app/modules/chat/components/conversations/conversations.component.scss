@@ -1,0 +1,242 @@
+@import 'src/assets/variables/variables';
+@import "src/assets/mixins/util/util";
+
+.chat {
+  min-height: calc(100vh - 723px);
+
+  &-wrapper {
+    height: calc(100vh - 300px);
+    min-height: 600px;
+    width: 78.6%;
+    max-width: 1132px;
+    margin: 0 auto 25px;
+    background: $white;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    display: flex;
+  }
+
+  &-company {
+    width: 360px;
+    height: 100%;
+    min-width: 360px;
+    max-width: 360px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-right: 1px solid #E5E5E5;
+
+    &--show {
+      display: block;
+    }
+
+    &--hide {
+      display: block;
+    }
+
+    @media screen and (max-width: 1024px) {
+      min-width: 200px;
+      width: 100%;
+      transition: width 1s;
+    }
+
+    @media screen and (max-width: 800px) {
+      width: 100%;
+      min-width: 100%;
+      &--hide {
+        display: none;
+      }
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #E5E5E5;
+      border-radius: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: #E5E5E5;
+    }
+
+    &::-webkit-scrollbar {
+      width: 3px;
+      background-color: #E5E5E5;
+    }
+
+    &__list {
+      cursor: pointer;
+      width: 100%;
+
+      &--no-data {
+        padding: 40px 20px;
+
+        p {
+          color: $light-gray;
+          font-size: 16px;
+          line-height: 21px;
+        }
+      }
+    }
+
+    &__item {
+      padding: 35px 25px 27px 33px;
+      border-bottom: 1px solid #E2E8F0;
+      background-color: white;
+      overflow-x: auto;
+      min-height: 150px;
+
+      &::-webkit-scrollbar-thumb {
+        background-color: $light-gray;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: #E5E5E5;
+      }
+
+      &::-webkit-scrollbar {
+        width: 2px;
+        height: 3px;
+        background-color: #E5E5E5;
+      }
+
+      > div {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      p {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 16px;
+        color: #979797;
+        margin-top: 11px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+
+        &.chat-company__not-read {
+          font-weight: 500;
+          font-size: 14px;
+        }
+      }
+    }
+
+    &__info {
+      display: flex;
+
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+      }
+
+      div {
+        p {
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 16px;
+          color: $black;
+          white-space: normal;
+          overflow-wrap: break-word;
+        }
+
+        span {
+          font-style: normal;
+          font-weight: 300;
+          font-size: 12px;
+          line-height: 14px;
+          margin-top: 11px;
+          color: $black;
+        }
+      }
+    }
+
+    &__active,
+    &__inactive {
+      width: 12px;
+      height: 12px;
+      min-width: 12px;
+      min-height: 12px;
+      border-radius: 50%;
+    }
+
+    &__active {
+      background: $green;
+    }
+
+    &__inactive {
+      background: $gray;
+    }
+
+    &__not-read {
+      background-color: #F5F5F5;
+    }
+  }
+}
+
+.active {
+  svg {
+    path {
+      stroke: $white;
+    }
+  }
+
+  background: $green;
+  border-color: $green;
+}
+
+.show-in-mobile {
+  display: none;
+  cursor: pointer;
+  @media screen and (max-width: 800px) {
+    display: block;
+    position: sticky;
+    top: 0;
+    background: white;
+    padding-bottom: 10px;
+  }
+}
+
+
+.company-item,
+.message-item {
+  width: auto;
+  height: auto;
+  margin: auto;
+  border: 1px solid #eaeaea;
+  padding: 10px;
+}
+
+.gravatar {
+  display: flex;
+  justify-content: center;
+  width: 100px;
+  height: 50px;
+}
+
+.gravatar-title {
+  width: 500px;
+  padding: 10px;
+  height: 90px;
+}
+
+.section-wrapper {
+  display: inline-flex;
+  width: 100%;
+  height: auto;
+  flex: 1;
+}
+
+.wrapper {
+  width: 100%;
+  flex: 1;
+}
+
+.chat-company__isActive {
+  background-color: $light-green;
+
+  img {
+    border: 3px solid $green;
+  }
+}

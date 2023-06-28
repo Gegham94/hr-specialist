@@ -12,13 +12,13 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { BehaviorSubject, filter, takeUntil } from "rxjs";
 
-import { Unsubscribe } from "src/app/shared-modules/unsubscriber/unsubscribe";
-import { ButtonTypeEnum } from "../../root-modules/app/constants/button-type.enum";
-import { ScreenSizeService } from "../../root-modules/app/services/screen-size.service";
-import { ToastsService } from "../../root-modules/app/services/toasts.service";
+import { Unsubscribe } from "src/app/shared/unsubscriber/unsubscribe";
+import { ButtonTypeEnum } from "../../shared/constants/button-type.enum";
+import { ScreenSizeService } from "../../shared/services/screen-size.service";
+import { ToastsService } from "../../shared/services/toasts.service";
 import { EDIT_ICON, PROFILE_PLACEHOLDER } from "../../shared/constants/images.constant";
-import { ModalService } from "src/app/root-modules/app/services/modal.service";
-import { InputStatusEnum } from "../../root-modules/app/constants/input-status.enum";
+import { ModalService } from "src/app/shared/services/modal.service";
+import { InputStatusEnum } from "src/app/shared/constants/input-status.enum";
 
 export interface ImageProps {
   width: string;

@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
 import { MessageTimeService } from "./message-time/message-time.service";
-import { Unsubscribe } from "../../../shared-modules/unsubscriber/unsubscribe";
+import { Unsubscribe } from "../../../shared/unsubscriber/unsubscribe";
 import { Observable, takeUntil } from "rxjs";
-import { ErrorMsg } from "../error-message.type";
+import { ErrorMsgType } from "../error-message.type";
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
-import { InputStatusEnum } from "../../../root-modules/app/constants/input-status.enum";
-import { SignInFacade } from "../signin/signin.facade";
-import { InputTypeEnum } from "../../../root-modules/app/constants/input-type.enum";
-import { phone_number_prefix } from "../../../shared-modules/constants/const-varibale";
-import { formFieldsMustBeNumber } from "../../../root-modules/app/validators/field-number";
-import { CustomValidatorForPassword } from "../../../root-modules/app/validators/custom-validator-for-password";
+import { SignInFacade } from "../signin/services/signin.facade";
+import { PHONE_NUMBER_PREFIX } from "../../../shared/constants/const-varibale";
+import { formFieldsMustBeNumber } from "../../../shared/validators/field-number";
+import { CustomValidatorForPassword } from "../../../shared/validators/custom-validator-for-password";
+import { InputTypeEnum } from "src/app/shared/constants/input-type.enum";
+import { InputStatusEnum } from "src/app/shared/constants/input-status.enum";
 
 @Component({
   selector: "hr-message-code",
@@ -23,8 +23,8 @@ export class MessageCodeComponent extends Unsubscribe implements OnDestroy {
   @Output() sendPhone: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() isResetPassword: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  public errorMessage$!: Observable<ErrorMsg | string>;
-  public prefix = phone_number_prefix;
+  public errorMessage$!: Observable<ErrorMsgType | string>;
+  public prefix = PHONE_NUMBER_PREFIX;
   public inputForm!: UntypedFormGroup;
   public confirmForm!: UntypedFormGroup;
   public inputTypeProps: InputTypeEnum = InputTypeEnum.password;
@@ -32,9 +32,9 @@ export class MessageCodeComponent extends Unsubscribe implements OnDestroy {
   public inputStatusList = InputStatusEnum;
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
+    private _formBuilder: UntypedFormBuilder,
     private _facade: SignInFacade,
-    private messageTimeService: MessageTimeService
+    private _messageTimeService: MessageTimeService
   ) {
     super();
   }
@@ -45,7 +45,7 @@ export class MessageCodeComponent extends Unsubscribe implements OnDestroy {
   }
 
   private initialForm(): void {
-    this.inputForm = this.formBuilder.group(
+    this.inputForm = this._formBuilder.group(
       {
         inputCodeFirst: [null, [Validators.required, Validators.maxLength(1)]],
         inputCodeSecond: [null, [Validators.required, Validators.maxLength(1)]],
@@ -59,7 +59,7 @@ export class MessageCodeComponent extends Unsubscribe implements OnDestroy {
       }
     );
 
-    this.confirmForm = this.formBuilder.group(
+    this.confirmForm = this._formBuilder.group(
       {
         password: [null, [Validators.required, Validators.minLength(8)]],
         re_password: [null, [Validators.required, Validators.minLength(8)]],
@@ -72,7 +72,7 @@ export class MessageCodeComponent extends Unsubscribe implements OnDestroy {
 
   public sendCodeAgain(): void {
     this.sendPhone.emit(true);
-    this.messageTimeService.setNewCode();
+    this._messageTimeService.setNewCode();
     this.inputForm.reset();
     this._facade.clearErrorMessage();
   }

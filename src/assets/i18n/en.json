@@ -41,6 +41,23 @@
       "SEARCH_COMPANY": "Search company",
       "MY_CHAT": "My Chats",
       "PASS_TESTS": "Pass the tests"
+    },
+    "LOGO": "HR-Hunt",
+    "TESTS_WILL_FAIL": {
+      "TEXT_1": "Tests you fail will fail.",
+      "TEXT_2": "Are you sure you want to exit?",
+      "OK": "Yes",
+      "CANCEL": "Cancel"
+    },
+    "NOTIFICATIONS": {
+      "LOADING": "Loading data...",
+      "NO_DATA": "No notifications",
+      "BOOK_INTERVIEW": {
+        "TITLE": "Book a date for an interview",
+        "DEADLINE": "Deadline:",
+        "YES": "YES",
+        "NO": "NO"
+      }
     }
   },
   "AUTHORIZATION": {
@@ -64,12 +81,22 @@
         "2" : "You have successfully registered on our platform. ",
         "3" : "Please sign in to your account.",
         "4" : "We wish you good luck!"
-      }
+      },
+      "AGREE": "I agree with the",
+      "AGREEMENT": "user agreement",
+      "PERSONAL_DATA": "on the processing of personal data"
     },
     "RESET_PASSWORD": {
       "TITLE": "Password Recovery",
       "TEXT": "Please enter your phone number and we will send a link to reset your password.",
-      "PLACEHOLDER": "phone number"
+      "PLACEHOLDER": "phone number",
+      "SEND_AGAIN": "Send code again?",
+      "SECURITY_CODE": "Enter security code",
+      "CONFIRM": "Confirm",
+      "PLACEHOLDER_PASSWORD": "Password",
+      "NEW_PASSWORD": "New password",
+      "REPEAT_PASSWORD": "Repeat password",
+      "ERROR_CODE": "Invalid confirmation code"
     }
   },
   "NAVIGATION": {
@@ -123,6 +150,9 @@
     "CITY": "City",
     "EMPLOYMENT": "Employment",
     "PLACEHOLDER": "Fill in the field",
+    "INCOME_PER_MONTH": "Income per month",
+    "CURRENCY": "Currency",
+    "NEXT": "next",
     "WORK_EXPERIENCE": {
       "WORK_EXPERIENCE": "Work Experience",
       "COMPANY": "Company",
@@ -132,21 +162,28 @@
       "WORK_YET": "Work yet",
       "PERIOD": "Period",
       "DURATION": "Duration",
-      "STILL_WORKING": "Still working"
+      "STILL_WORKING": "Still working",
+      "NO_EXPERIENCE": "Doesn't have experience",
+      "BACK": "back",
+      "NEXT": "next"
     },
     "EDUCATION": {
       "EDUCATION": "Education",
       "EDUCATION_INSTITUTION": "Education institution",
       "FACULTY": "Faculty",
       "GRADUATED_DATE": "Graduated date",
-      "FORM_OF_STUDY": "Form of study"
+      "FORM_OF_STUDY": "Form of study",
+      "NO_EDUCATION": "Doesn't have education",
+      "BACK": "back",
+      "NEXT": "next"
     },
     "SKILLS_LANGUAGES": {
       "SKILLS_LANGUAGES": "Skills and languages",
       "SKILLS": "Skills",
       "LANGUAGES": "Languages",
       "PROGRAMMING_LANGUAGES": "Programming languages",
-      "FRAMEWORKS": "Frameworks"
+      "FRAMEWORKS": "Frameworks",
+      "BACK": "back"
     },
     "EDIT": {
       "EDIT": "Edit",
@@ -246,7 +283,80 @@
       }
     }
   },
+  "COMPILER": {
+    "TEST": "Test",
+    "DIDNT_COMPILED_TESTS_FAIL": "Tests that you don't compile will fail.",
+    "EXIT": "Are you sure you want to exit?",
+    "YES": "Yes",
+    "CANCEL": "Cancel",
+    "CODE": "Code",
+    "RESULT": "Result",
+    "LOAD_RESULT": "Loading result",
+    "PREVIEW":"Prev.",
+    "NEXT": "Nex.",
+    "LIGHT": "Light",
+    "DARK": "Dark",
+    "COMPILE": "Compile",
+    "TIME_IS_OVER":"Time is over !",
+    "PASSED_TESTS": "You passed tests -",
+    "OK": "Ok",
+    "INSTRUCTIONS": "Instructions",
+    "SAMPLES": "Samples"
+  },
+  "CREATE_TESTS": {
+    "QUIZ_TESTS": "Start quiz tests",
+    "COMPILER_TESTS": "Start compiler tests",
+    "TEST_TIME": "Test time",
+    "QUESTIONS_COUNT": "Questions count:",
+    "START_TEST": "Начать тест"
+  },
+  "TESTS_RULES": {
+    "ATTENTION": "Attention, tests rules:",
+    "RULE_CONFIRM": "By clicking on ",
+    "RULE_YES": "YES",
+    "RULE_START": " the tests page will open and the countdown will begin.",
+    "RULE_NAVIGATION": "When you will navigate to other pages on your profile, you will be notified about tests actions.",
+    "READY": "Ready to start ?",
+    "CANCEL": "Cancel",
+    "YES": "Yes"
+  },
   "Add to resume": "Add to resume",
   "Add more": "Add more",
-  "Cancel": "Cancel"
+  "Cancel": "Cancel",
+
+  "FOOTER": {
+    "CONTACTS": "Contacts",
+    "TERMS": "Terms of use",
+    "PRIVACY": "Privacy Policy",
+    "RIGHTS": "All rights reserved"
+  },
+
+  "SEARCH_JOB": {
+    "COMPANY": {
+      "SEARCH_COMPANY": "Search company",
+      "SHOW_COMPANY": "Show companies that have open vacancies",
+      "FOUND_COMPANY": "company found",
+      "ACTIVE_VACANCIES": "Active vacancies",
+      "ABOUT_COMPANY": "More about the company",
+      "ACTIVE_VACANCIES_COMPANY": "Company active vacancies",
+      "COMPANY_DESCRIPTION": "Company Description",
+      "MORE": "More"
+    },
+    "VACANCY": {
+      "SEARCH_VACANCY": "Search vacancies",
+      "ABOUT_VACANCY": "More about the vacancy",
+      "FULL": "Full employment",
+      "WORKPLACE": "Workplace",
+      "LEVEL": "Level",
+      "RESPOND": "Respond",
+      "DESCRIPTION": "Description",
+      "RESPONSIBILITIES": "Responsibilities",
+      "CONDITIONS": "Conditions",
+      "QUESTIONS": "Questions",
+      "ATTENTION": "Attention",
+      "CANCEL": "Cancel",
+      "SEND": "Send",
+      "DEADLINE": "Deadline"
+    }
+  }
 }

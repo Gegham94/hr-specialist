@@ -5,11 +5,15 @@ export interface ICompilerTestRequest {
   }[];
 }
 
-export interface ICompilerTestResponseSettings {
-  remainingTime: string;
-  remainingFixedTime: string;
-  displayTestName: string;
-  testsLengthCounter: number;
+export interface ICompilerTestsDb {
+  id: number;
+  data: CompilerTest[];
+  settings: ICompilerTestSettings;
+}
+
+export interface ICompilerTestSettings {
+  dateTimeTestStarted: Date;
+  combinedTestTime: number;
 }
 
 export interface ICompilerTestResponse {
@@ -17,7 +21,11 @@ export interface ICompilerTestResponse {
   task: string;
   time: number;
   codeExample: string;
-  success: boolean | null;
+  defaultName: string;
+  ext: string;
+  joinedName: string;
+  monacoEditorKey: string;
+  test: string;
 }
 
 export interface ICompilerTestOutput {
@@ -37,7 +45,15 @@ export class CompilerTest implements ICompilerTestResponse {
   currentExample!: string;
   monacoEditorKey!: string;
   test!: string;
-  success!: boolean | null;
+  isFirst: boolean = false;
+  isLast: boolean = false;
+  defaultName!: string;
+  ext!: string;
+  joinedName!: string;
+  result!: {
+    success: boolean | null;
+    resultMessage: string;
+  };
 
   constructor(compilerTestResponse: ICompilerTestResponse) {
     Object.assign(this, compilerTestResponse);
@@ -53,8 +69,17 @@ export class CompilerTest implements ICompilerTestResponse {
     return this;
   }
 
-  setTestSuccess(success: boolean | null): this {
-    this.success = success;
+  setPosition(index: number, lenght: number): this {
+    this.isFirst = index === 0;
+    this.isLast = index === lenght - 1;
+    return this;
+  }
+
+  setResult(result: ICompilerTestOutput): this {
+    this.result = {
+      resultMessage: result.data || result.success ? "Success" : "Failure",
+      success: result.success,
+    };
     return this;
   }
 }

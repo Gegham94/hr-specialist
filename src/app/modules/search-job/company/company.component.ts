@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import {
   BehaviorSubject,
   catchError,
@@ -13,27 +13,26 @@ import {
   tap,
   throwError,
 } from "rxjs";
-import {
-  SearchCompanyInterface,
-  SearchCompanyResultInterface,
-} from "../../../root-modules/app/interfaces/search-company.interface";
-import {Router} from "@angular/router";
-import {SearchInterface} from "../../../root-modules/app/interfaces/searc.interface";
-import {LocalStorageService} from "../../../root-modules/app/services/local-storage.service";
-import {RobotHelperService} from "../../../root-modules/app/services/robot-helper.service";
-import {IEmployee} from "../../../root-modules/app/interfaces/employee.interface";
-import {Unsubscribe} from "../../../shared-modules/unsubscriber/unsubscribe";
-import {SearchParams} from "../../employee-info/interface/search-params";
-import {CompanyService} from "./company-service";
+
+import { Router } from "@angular/router";
+import { LocalStorageService } from "../../../shared/services/local-storage.service";
+import { RobotHelperService } from "../../../shared/services/robot-helper.service";
+import { IEmployee } from "../../../shared/interfaces/employee.interface";
+import { Unsubscribe } from "../../../shared/unsubscriber/unsubscribe";
+import { SearchParams } from "../../profile/interfaces/search-params";
+import { CompanyFacade } from "./services/company.facade";
+import { ISearchCompany, ISearchCompanyResult } from "src/app/shared/interfaces/search-company.interface";
+import { ISearch } from "src/app/shared/interfaces/searc.interface";
 
 @Component({
   selector: "hr-company-search",
   templateUrl: "./company.component.html",
   styleUrls: ["./company.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompanyComponent extends Unsubscribe implements OnInit, OnDestroy {
   public countCompany$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  public countResult$!: Observable<SearchCompanyInterface[]>;
+  public countResult$!: Observable<ISearchCompany[]>;
   public employee$!: Observable<IEmployee>;
   public loader$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public hasAllCompanyActiveVacancy: boolean = false;
@@ -42,7 +41,7 @@ export class CompanyComponent extends Unsubscribe implements OnInit, OnDestroy {
 
   private limit: number = 10;
 
-  private searchParam: SearchInterface = {
+  private searchParam: ISearch = {
     take: 0,
     skip: 0,
     activeVacancy: false,
@@ -51,11 +50,11 @@ export class CompanyComponent extends Unsubscribe implements OnInit, OnDestroy {
   private sendValueChangeEvent$: BehaviorSubject<SearchParams | null> = new BehaviorSubject<SearchParams | null>(null);
 
   constructor(
-    private companyService: CompanyService,
+    private _companyFacade: CompanyFacade,
     private _localStorage: LocalStorageService,
     private _robotHelperService: RobotHelperService,
     private _cdr: ChangeDetectorRef,
-    private route: Router
+    private _route: Router
   ) {
     super();
   }
@@ -116,19 +115,18 @@ export class CompanyComponent extends Unsubscribe implements OnInit, OnDestroy {
 
   public navigate(uuid?: string): void {
     this._localStorage.setItem("company-uuid", JSON.stringify(uuid));
-    this.route.navigate(["/employee/search/company/about-company"],
-      {queryParams: {uuid: uuid}});
+    this._route.navigate(["/employee/search/company/about-company"], { queryParams: { uuid: uuid } });
   }
 
   public getCompanyLogo(logo: string): string {
-    return this.companyService.getCompanyLogo(logo);
+    return this._companyFacade.getCompanyLogo(logo);
   }
 
   private vacanciesPagesCount(count: number): void {
     this.vacanciesCount = Math.ceil(count / this.limit);
   }
 
-  public searchDate(searchParams: SearchInterface): void {
+  public searchDate(searchParams: ISearch): void {
     this.loader$.next(true);
     searchParams.activeVacancy = this.hasAllCompanyActiveVacancy;
     this.searchParam = searchParams;
@@ -142,34 +140,22 @@ export class CompanyComponent extends Unsubscribe implements OnInit, OnDestroy {
     this.searchParam.skip = (pageNumber - 1) * this.limit;
     this.searchParam.take = this.limit;
 
-    this.companyService
-      .getAllCompany$(this.searchParam)
-      .pipe(
-        takeUntil(this.ngUnsubscribe),
-        catchError(() => throwError(new Error("request failed"))),
-        retry(5),
-        tap((company) => {
-          if (company.result?.length) {
-            this.countCompany$.next(company.count);
-            this.vacanciesPagesCount(company.count);
-          } else {
-            this.countCompany$.next(0);
-            this.vacanciesPagesCount(0);
-          }
-          this.countResult$ = of(company.result);
-        }),
-        finalize(() => this.loader$.next(false))
-      )
+    this.getAllCompanies$()
+      .pipe(finalize(() => this.loader$.next(false)))
       .subscribe();
   }
 
-  private getValuesByFilter(pageNumber: number): Observable<SearchCompanyResultInterface> {
+  private getValuesByFilter(pageNumber: number): Observable<ISearchCompanyResult> {
     this.currentPage = pageNumber;
     this.searchParam.skip = (pageNumber - 1) * this.limit;
     this.searchParam.take = this.limit;
-    return this.companyService.getAllCompany$(this.searchParam).pipe(
+    return this.getAllCompanies$();
+  }
+
+  private getAllCompanies$() {
+    return this._companyFacade.getAllCompany$(this.searchParam).pipe(
       takeUntil(this.ngUnsubscribe),
-      catchError(() => throwError(new Error("request failed"))),
+      catchError(() => throwError(() => new Error("request failed"))),
       retry(5),
       tap((company) => {
         if (company.result?.length) {
@@ -192,7 +178,7 @@ export class CompanyComponent extends Unsubscribe implements OnInit, OnDestroy {
     this.getSelectedPaginationValue(1);
   }
 
-  public emptyPagination(): void {
+  private emptyPagination(): void {
     if (this.searchParam.activeVacancy) {
       this.searchParam.skip = 0;
       this.searchParam.take = 10;

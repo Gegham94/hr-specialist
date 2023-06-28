@@ -1,17 +1,18 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { ButtonTypeEnum } from "../../../root-modules/app/constants/button-type.enum";
+import { ButtonTypeEnum } from "../../../shared/constants/button-type.enum";
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
-import { HeaderTypeEnum } from "../../../root-modules/app/constants/header-type.enum";
-import { InputTypeEnum } from "../../../root-modules/app/constants/input-type.enum";
-import { SignUpFacade } from "./signup.facade";
+import { SignUpFacade } from "./services/signup.facade";
 import { BehaviorSubject, takeUntil } from "rxjs";
-import { InputStatusEnum } from "../../../root-modules/app/constants/input-status.enum";
-import { SignUpState } from "./signup.state";
-import { ValidateForPassword } from "../../../root-modules/app/validators/signup-password-validator";
-import { Unsubscribe } from "src/app/shared-modules/unsubscriber/unsubscribe";
+import { SignUpState } from "./services/signup.state";
+import { ValidateForPassword } from "../../../shared/validators/signup-password-validator";
+import { Unsubscribe } from "src/app/shared/unsubscriber/unsubscribe";
 import { Router } from "@angular/router";
-import { ToastsService } from "../../../root-modules/app/services/toasts.service";
+import { ToastsService } from "../../../shared/services/toasts.service";
 import { TranslateService } from "@ngx-translate/core";
+import { PHONE_NUMBER_PREFIX } from "src/app/shared/constants/const-varibale";
+import { HeaderTypeEnum } from "src/app/shared/constants/header-type.enum";
+import { InputTypeEnum } from "src/app/shared/constants/input-type.enum";
+import { InputStatusEnum } from "src/app/shared/constants/input-status.enum";
 
 @Component({
   selector: "hr-signup",
@@ -25,7 +26,7 @@ export class SignupComponent extends Unsubscribe implements OnInit, OnDestroy {
   public inputTypeProps: InputTypeEnum = InputTypeEnum.password;
   public userDoesNotExistsError = this._signUpFacade.getErrorMessage();
   public inputStatusList = InputStatusEnum;
-  public prefix = "+7";
+  public prefix = PHONE_NUMBER_PREFIX;
 
   constructor(
     private readonly _formBuilder: UntypedFormBuilder,
@@ -33,7 +34,7 @@ export class SignupComponent extends Unsubscribe implements OnInit, OnDestroy {
     private readonly _signupState: SignUpState,
     private readonly _router: Router,
     private readonly _toastService: ToastsService,
-    private readonly _translateService: TranslateService,
+    private readonly _translateService: TranslateService
   ) {
     super();
   }
@@ -46,43 +47,37 @@ export class SignupComponent extends Unsubscribe implements OnInit, OnDestroy {
   }
 
   public initSignUpForm(): void {
-    this.signUpForm = this._formBuilder.group(
-      {
-        phone: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-        password: [null, [Validators.required]],
-        privacy_policy: [false, [Validators.required]],
-      },
-      {
-        validators: ValidateForPassword,
-      }
-    );
+    this.signUpForm = this._formBuilder.group({
+      phone: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+      password: [null, [Validators.required, ValidateForPassword]],
+      privacy_policy: [false, [Validators.required]],
+    });
   }
 
   public signUpCompleted(form: UntypedFormGroup): void {
     this._signUpFacade.setUpdating(false);
     if (form.valid) {
-      const sendFormValue = [form.value].map((value) => {
-        if (typeof value?.privacy_policy == "boolean") {
-          return {
-            ...form.value,
-            privacy_policy: String(value?.privacy_policy),
-          };
-        }
-      });
+      const sendFormValue = {
+        ...form.value,
+        privacy_policy: String(form.value.privacy_policy),
+      };
 
-      this._signUpFacade.signUp(sendFormValue[0]).pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
-        const message =
+      this._signUpFacade
+        .signUp(sendFormValue)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(() => {
+          const message =
             this._translateService.instant("AUTHORIZATION.SIGN_UP.SUCCESS_MESSAGE.1") +
             "\n" +
             this._translateService.instant("AUTHORIZATION.SIGN_UP.SUCCESS_MESSAGE.3");
           this._toastService.addToast({ title: message }, 6000);
-          this._router.navigateByUrl('/signIn');
-      });
+          this._router.navigateByUrl("/signIn");
+        });
     }
   }
 
   public navigateToLogin() {
-    this._router.navigateByUrl('/signIn');
+    this._router.navigateByUrl("/signIn");
   }
 
   get signUpPhoneControl(): UntypedFormControl {

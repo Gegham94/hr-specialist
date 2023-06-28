@@ -1,21 +1,21 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
-import { LocalStorageService } from "../../root-modules/app/services/local-storage.service";
-import { Unsubscribe } from "../../shared-modules/unsubscriber/unsubscribe";
-import { ITabs } from "../../root-modules/app/interfaces/tab-filter.interface";
+import { LocalStorageService } from "../../shared/services/local-storage.service";
+import { Unsubscribe } from "../../shared/unsubscriber/unsubscribe";
 import { Subject, takeUntil } from "rxjs";
-
+import { ITabs } from "src/app/shared/interfaces/tab-filter.interface";
 @Component({
   selector: "app-create-test",
   templateUrl: "./create-test.component.html",
   styleUrls: ["./create-test.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateTestComponent extends Unsubscribe implements OnInit, OnDestroy {
   public readonly localSaveName = "test-type";
   public activeTab: Subject<string> = new Subject<string>();
-  public readonly tabs: ITabs[] = [
-    { value: "quiz", displayName: "Начать теоретический тест" },
-    { value: "compiler", displayName: "Начать тест компилятора" },
+  public tabs: ITabs[] = [
+    { value: "quiz", displayName: "CREATE_TESTS.QUIZ_TESTS" },
+    { value: "compiler", displayName: "CREATE_TESTS.COMPILER_TESTS" },
   ];
 
   constructor(private readonly _localStorageService: LocalStorageService, private router: Router) {
@@ -28,12 +28,16 @@ export class CreateTestComponent extends Unsubscribe implements OnInit, OnDestro
         if (this.router.url === "/employee/create-test/quiz") {
           this._localStorageService.setItem(this.localSaveName, JSON.stringify(this.tabs[0].value));
           this.activeTab.next(this.tabs[0].value);
-        } else {
+        } else if (this.router.url === "/employee/create-test/compiler") {
           this._localStorageService.setItem(this.localSaveName, JSON.stringify(this.tabs[1].value));
           this.activeTab.next(this.tabs[1].value);
         }
       }
     });
+  }
+
+  public ngOnDestroy(): void {
+    this.unsubscribe();
   }
 
   public changeTab(tab: string) {
@@ -42,9 +46,5 @@ export class CreateTestComponent extends Unsubscribe implements OnInit, OnDestro
     } else {
       this.router.navigateByUrl("/employee/create-test/compiler");
     }
-  }
-
-  public ngOnDestroy(): void {
-    this.unsubscribe();
   }
 }

@@ -13,7 +13,7 @@ const routes: Routes = [
       },
       {
         path: "search",
-        loadChildren: () => import("./search-job/search.module").then(m => m.SearchModule)
+        loadChildren: () => import("./search-job/modules/search.module").then(m => m.SearchModule)
       },
       {
         path: "analytics",
@@ -21,19 +21,19 @@ const routes: Routes = [
       },
       {
         path: "chat",
-        loadChildren: () => import("../modules/chat/chat.module").then(m => m.ChatModule)
+        loadChildren: () => import("./chat/modules/chat.module").then(m => m.ChatModule)
       },
       {
         path: "create-test",
-        loadChildren: () => import("../modules/create-test/create-test.module").then(m => m.CreateTestModule)
+        loadChildren: () => import("./create-test/modules/create-test.module").then(m => m.CreateTestModule)
       },
       {
         path: "create-test/compiler-test",
-        loadChildren: () => import("../modules/create-test/compiler/compiler.module").then((m) => m.CompilerModule),
+        loadChildren: () => import("./compiler/modules/compiler.module").then((m) => m.CompilerModule),
       },
       {
         path: "create-test/quiz-test",
-        loadChildren: () => import("../modules/create-test/quiz/quiz.module").then((m) => m.QuizModule),
+        loadChildren: () => import("../modules/quiz/quiz.module").then((m) => m.QuizModule),
       },
     ]
   }

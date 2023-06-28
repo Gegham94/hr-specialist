@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
-import {LocalStorageService} from "../../root-modules/app/services/local-storage.service";
+import {LocalStorageService} from "../services/local-storage.service";
 
 @Pipe({
   name: "dateDifference",

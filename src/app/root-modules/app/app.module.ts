@@ -11,12 +11,13 @@ import { DBConfig, NgxIndexedDBModule } from "ngx-indexed-db";
 import * as Hammer from "hammerjs";
 
 import { UiKitViewModule } from "../../ui-kit-view/ui-kit-view.module";
-import { OldSharedModule } from "../../shared-modules/shared.module";
 import { AppComponent } from "./component/app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { UiModule } from "../../ui-kit/ui.module";
 import { SharedModule } from "src/app/shared/shared.module";
 import { MonacoEditorModule } from "@materia-ui/ngx-monaco-editor";
+import { EmployeeModule } from "../../modules/employee.module";
+import { ModalComponent } from "../../modules/modal/modal.component";
 
 @Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
@@ -57,18 +58,17 @@ const dbConfig: DBConfig = {
       store: "quizTests",
       storeConfig: { keyPath: "id", autoIncrement: true },
       storeSchema: [{ name: "id", keypath: "id", options: { unique: true } }],
-    }
+    },
   ],
 };
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ModalComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     UiModule,
-    OldSharedModule,
     ReactiveFormsModule,
     FormsModule,
     UiKitViewModule,
@@ -85,6 +85,7 @@ const dbConfig: DBConfig = {
     }),
     NgxIndexedDBModule.forRoot(dbConfig),
     MonacoEditorModule,
+    EmployeeModule,
   ],
   bootstrap: [AppComponent],
   providers: [

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import {
   BehaviorSubject,
   catchError,
@@ -12,48 +12,43 @@ import {
   tap,
   throwError,
 } from "rxjs";
-import {Unsubscribe} from "../../../shared-modules/unsubscriber/unsubscribe";
-import {IEmployee} from "../../../root-modules/app/interfaces/employee.interface";
-import {SearchInterface} from "../../../root-modules/app/interfaces/searc.interface";
-import {RobotHelperService} from "../../../root-modules/app/services/robot-helper.service";
-import {Router} from "@angular/router";
-import {VacancyFacade} from "./vacancy.facade";
-import {SearchVacancyInterface, SearchVacancyResultInterface} from "./interfaces/search-vacancy.interface";
-import {CompanyService} from "../company/company-service";
-import {LocalStorageService} from "../../../root-modules/app/services/local-storage.service";
+import { Unsubscribe } from "../../../shared/unsubscriber/unsubscribe";
+import { RobotHelperService } from "../../../shared/services/robot-helper.service";
+import { Router } from "@angular/router";
+import { VacancyFacade } from "./services/vacancy.facade";
+import { ISearchVacancy, ISearchVacancyResult } from "./interfaces/search-vacancy.interface";
+import { LocalStorageService } from "../../../shared/services/local-storage.service";
+import { DateFormatEnum } from "../../profile/enums/date-format.enum";
+import { ISearch } from "src/app/shared/interfaces/searc.interface";
 
 @Component({
   selector: "hr-vacancy-search",
   templateUrl: "./vacancy.component.html",
   styleUrls: ["./vacancy.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VacancyComponent extends Unsubscribe implements OnInit {
   public countVacancies$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  public vacancies$!: Observable<SearchVacancyInterface[]>;
-  public vacancies!: Observable<SearchVacancyInterface[]>;
+  public vacancies$!: Observable<ISearchVacancy[]>;
   public loader$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public pagesCount: number = 0;
-  public employee$!: Observable<IEmployee>;
   public currentPage: number = 1;
 
-  private limit: number = 10;
+  public DateFormatEnum = DateFormatEnum;
 
-  private searchParam: SearchInterface = {
-    take: 0,
+  private searchParam: ISearch = {
+    take: 10,
     skip: 0,
   };
 
-  private sendValueChangeEvent$: BehaviorSubject<SearchInterface | null> = new BehaviorSubject<SearchInterface | null>(
-    null
-  );
+  private sendValueChangeEvent$: BehaviorSubject<ISearch | null> = new BehaviorSubject<ISearch | null>(null);
 
   constructor(
     private _vacancyFacade: VacancyFacade,
-    private _companyService: CompanyService,
     private _robotHelperService: RobotHelperService,
     private _cdr: ChangeDetectorRef,
     private _localStorageService: LocalStorageService,
-    private route: Router
+    private _route: Router
   ) {
     super();
   }
@@ -78,22 +73,22 @@ export class VacancyComponent extends Unsubscribe implements OnInit {
   }
 
   public getCompanyLogo(logo: string): string {
-    return this._companyService.getCompanyLogo(logo);
+    return this._vacancyFacade.getCompanyLogo$(logo);
   }
 
   public navigate(companyId: string, vacancyId: string): void {
-      this._localStorageService.setItem("company-uuid", JSON.stringify(companyId));
-      this._localStorageService.setItem("vacancy-uuid", JSON.stringify(vacancyId));
-      this.route.navigate(["/employee/search/vacancy/about-vacancy"], {
-        queryParams: {companyUuid: companyId, vacancyUuid: vacancyId},
-      });
+    this._localStorageService.setItem("company-uuid", JSON.stringify(companyId));
+    this._localStorageService.setItem("vacancy-uuid", JSON.stringify(vacancyId));
+    this._route.navigate(["/employee/search/vacancy/about-vacancy"], {
+      queryParams: { companyUuid: companyId, vacancyUuid: vacancyId },
+    });
   }
 
   private vacanciesPagesCount(count: number): void {
-    this.pagesCount = Math.ceil(count / this.limit);
+    this.pagesCount = Math.ceil(count / this.searchParam.take!);
   }
 
-  public searchDate(searchParams: SearchInterface): void {
+  public searchDate(searchParams: ISearch): void {
     this.loader$.next(true);
     this.searchParam = searchParams;
     this.emptyPagination();
@@ -103,8 +98,7 @@ export class VacancyComponent extends Unsubscribe implements OnInit {
   public getSelectedPaginationValue(pageNumber: number): void {
     this.currentPage = pageNumber;
     this.loader$.next(true);
-    this.searchParam.skip = (pageNumber - 1) * this.limit;
-    this.searchParam.take = this.limit;
+    this.searchParam.skip = (pageNumber - 1) * this.searchParam.take!;
     this._vacancyFacade
       .getAllVacancies$(this.searchParam)
       .pipe(
@@ -121,10 +115,9 @@ export class VacancyComponent extends Unsubscribe implements OnInit {
       .subscribe();
   }
 
-  private getValuesByFilter(pageNumber: number): Observable<SearchVacancyResultInterface> {
+  private getValuesByFilter(pageNumber: number): Observable<ISearchVacancyResult> {
     this.currentPage = pageNumber;
-    this.searchParam.skip = (pageNumber - 1) * this.limit;
-    this.searchParam.take = this.limit;
+    this.searchParam.skip = (pageNumber - 1) * this.searchParam.take!;
     return this._vacancyFacade.getAllVacancies$(this.searchParam).pipe(
       takeUntil(this.ngUnsubscribe),
       catchError(() => throwError(() => new Error("request failed"))),

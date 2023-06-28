@@ -1,5 +1,5 @@
 import {BehaviorSubject} from "rxjs";
-import {AddedNewVacancyNotification} from "../../interfaces/notifications.interface";
+import {INotifications} from "../../interfaces/notifications.interface";
 
 export interface BookedDate{
   date: string;
@@ -8,8 +8,9 @@ export interface BookedDate{
 
 export const BookedDates: BookedDate[] = [
   {
-    "date": "2023-05-22",
+    "date": "2023-06-23",
     "bookedHours": [
+      "10:00",
       "10:30",
       "11:00",
       "11:30",
@@ -30,18 +31,17 @@ export const BookedDates: BookedDate[] = [
     ]
   },
   {
-    "date": "2023-05-23",
+    "date": "2023-06-24",
     "bookedHours": [
       "10:00",
       "10:30",
       "11:00",
       "11:30",
       "12:00",
+      "12:30",
       "13:00",
       "13:30",
-      "14:00",
       "15:00",
-      "15:30",
       "16:00",
       "16:30",
       "17:00",
@@ -52,17 +52,17 @@ export const BookedDates: BookedDate[] = [
     ]
   },
   {
-    "date": "2023-05-24",
+    "date": "2023-06-26",
     "bookedHours": ["11:00", "14:00", "16:00"]
   },
   {
-    "date": "2023-05-25",
+    "date": "2023-06-27",
     "bookedHours": ["9:00", "13:00", "15:00"]
   }
 ];
 
-export const NotificationData: BehaviorSubject<AddedNewVacancyNotification> =
-  new BehaviorSubject<AddedNewVacancyNotification>({
+export const NotificationData: BehaviorSubject<INotifications> =
+  new BehaviorSubject<INotifications>({
   count: 1,
   result: [
     {
@@ -70,10 +70,10 @@ export const NotificationData: BehaviorSubject<AddedNewVacancyNotification> =
       info: {
         content: "Создал новую вакансию на позицию...",
       },
-      recipientUuid: "xxxxxxxxxxxxxxx",
+      recipientUuid: "270025e2-31d7-4999-bd32-7ba071d08530",
       type: "job-request",
       updatedAt: new Date("2023.05.17"),
-      uuid: "yyyyyyyyyyyyyy",
+      uuid: "23cb4a97-846b-4e3e-9f2c-9067f5302cee",
       viewed: false,
     }
   ],

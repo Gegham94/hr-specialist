@@ -1,8 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {Observable} from "rxjs";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {ToastsService} from "../../root-modules/app/services/toasts.service";
-import {ToastInterface} from "../../root-modules/app/interfaces/toast.interface";
+import {ToastsService} from "../../shared/services/toasts.service";
+import { ToastInterface } from "src/app/shared/interfaces/toast.interface";
 
 @Component({
   selector: "hr-toasts",
@@ -14,10 +14,11 @@ import {ToastInterface} from "../../root-modules/app/interfaces/toast.interface"
         "in",
         style({
           opacity: 1,
+          transform: "translateX(0)",
         })
       ),
-      transition("void => *", [style({ opacity: 0 }), animate(200)]),
-      transition("* => void", [animate(500, style({ opacity: 0, transform: "translateX(-600px)" }))]),
+      transition("void => *", [style({ opacity: 0, transform: "translateX(600px)" }), animate(300)]),
+      transition("* => void", [animate(500, style({ opacity: 0, transform: "translateX(600px)" }))]),
     ]),
   ],
 })

@@ -1,18 +1,18 @@
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-
 import { Observable, startWith, takeUntil, combineLatest, switchMap, BehaviorSubject } from "rxjs";
-
-import { ErrorMessageEnum } from "../../../root-modules/app/interfaces/error-message-enum";
-import { InputStatusEnum } from "../../../root-modules/app/constants/input-status.enum";
-import { ButtonTypeEnum } from "../../../root-modules/app/constants/button-type.enum";
-import { HeaderTypeEnum } from "../../../root-modules/app/constants/header-type.enum";
-import { InputTypeEnum } from "../../../root-modules/app/constants/input-type.enum";
-import { Unsubscribe } from "../../../shared-modules/unsubscriber/unsubscribe";
-import { AuthService } from "../auth.service";
-import { SignInFacade } from "./signin.facade";
-import { ResumeStateService } from "../../profile/components/utils/resume-state.service";
+import { ButtonTypeEnum } from "../../../shared/constants/button-type.enum";
+import { Unsubscribe } from "../../../shared/unsubscriber/unsubscribe";
+import { AuthService } from "../service/auth.service";
+import { SignInFacade } from "./services/signin.facade";
+import { PHONE_NUMBER_PREFIX } from "src/app/shared/constants/const-varibale";
+import { ValidateForPassword } from "src/app/shared/validators/signup-password-validator";
+import { ResumeStateService } from "../../profile/services/resume-state.service";
+import { InputTypeEnum } from "src/app/shared/constants/input-type.enum";
+import { HeaderTypeEnum } from "src/app/shared/constants/header-type.enum";
+import { InputStatusEnum } from "src/app/shared/constants/input-status.enum";
+import { ErrorMessageEnum } from "src/app/shared/interfaces/error-message-enum";
 
 @Component({
   selector: "hr-signin",
@@ -27,7 +27,7 @@ export class SigninComponent extends Unsubscribe implements OnInit, OnDestroy {
   public signin!: UntypedFormGroup;
   public sendPhoneForm!: UntypedFormGroup;
   public getErrorMessage$!: Observable<string>;
-  public prefix = "+7";
+  public prefix = PHONE_NUMBER_PREFIX;
   public resetPsw: boolean = false;
   public inputStatusList = InputStatusEnum;
   public errorMessageEnum = ErrorMessageEnum;
@@ -89,7 +89,7 @@ export class SigninComponent extends Unsubscribe implements OnInit, OnDestroy {
           takeUntil(this.ngUnsubscribe),
           switchMap(() => this._signInFacade.signIn(form.value, this.isRememberUser))
         )
-        .subscribe(()=>{
+        .subscribe(() => {
           this._authService.logInEvent();
         });
     }
@@ -116,7 +116,7 @@ export class SigninComponent extends Unsubscribe implements OnInit, OnDestroy {
               this.isPasswordModalOpen = !this.isPasswordModalOpen;
             }
           },
-          error: (error) => {
+          error: () => {
             this.isError = true;
           },
         });
@@ -146,7 +146,7 @@ export class SigninComponent extends Unsubscribe implements OnInit, OnDestroy {
   private _initializeValue(): void {
     this.signin = this._formBuilder.group({
       phone: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-      password: [null, [Validators.required, Validators.minLength(8)]],
+      password: [null, [Validators.required, Validators.minLength(8), ValidateForPassword]],
     });
     this.sendPhoneForm = this._formBuilder.group({
       phone: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],

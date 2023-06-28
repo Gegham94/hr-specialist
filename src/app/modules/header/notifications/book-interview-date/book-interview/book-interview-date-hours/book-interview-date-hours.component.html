@@ -1,7 +1,6 @@
-<div #hourContainer class="book-interview-date__modal--hours scrollbar-green">
+<div class="book-interview-date__modal--hours scrollbar-green">
   <div *ngFor="let hour of interviewHours; let i = index">
     <p
-      class="{{'' + uniqueId}}"
       [ngClass]="
                   {
                   'hour-element': true,

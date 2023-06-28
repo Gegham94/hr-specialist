@@ -1,6 +1,12 @@
 @import 'src/app/modules/header/notifications/notifications.scss';
 
+.header__drop-menu-notification__block {
+  position: relative;
+}
+
 .loader-container {
+  position: absolute;
+  top: 35%;
   width: 100%;
   height: 70px;
   display: flex;

@@ -12,7 +12,7 @@
     <input
       #input
       [type]="inputTypeProps ? inputTypeProps : 'text'"
-      autocomplete="new-password"
+      autocomplete="off"
       [placeholder]="placeholderTextProps ? placeholderTextProps : ''"
       (input)="onInput($event)"
       [(ngModel)]="inputValue"

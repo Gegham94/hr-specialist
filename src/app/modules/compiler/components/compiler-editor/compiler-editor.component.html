@@ -1,0 +1,34 @@
+<div class="compiler-editor">
+  <div class="editor">
+    <div class="editor__header">
+      <p>{{ "COMPILER.CODE" | translate }} :</p>
+    </div>
+    <div class="editor__body" *ngIf="selectedTest">
+      <ngx-monaco-editor
+        [options]="editorOptions"
+        (init)="onMonacoInit()"
+        [(ngModel)]="selectedTest.currentExample"
+        (ngModelChange)="onEditorValueChanges($event)"
+      ></ngx-monaco-editor>
+    </div>
+  </div>
+  <div class="test-results" [class.collapsed]="!showResults">
+    <div class="test-results__header">
+      <p>{{ "COMPILER.RESULT" | translate }} :</p>
+      <button *ngIf="isCollapse()" (click)="toggleResultsCollapse()">Collapse</button>
+    </div>
+    <div class="test-results__body">
+      <ng-container *ngIf="!(testResultsLoader$ | async); else loaderModel">
+        <p class="success" [class.error]="!selectedTest?.result?.success">
+          <span *ngIf="selectedTest?.result?.resultMessage">{{ selectedTest?.result?.resultMessage }}</span>
+        </p>
+      </ng-container>
+      <ng-template #loaderModel>
+        <div class="loader-container">
+          <div class="loader"></div>
+          <p class="loader_text">{{ "COMPILER.LOAD_RESULT" | translate }}...</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { NavigationEnd, NavigationStart, Router, Scroll } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
-import { resumeRoutesArray, ResumeRoutesEnum } from "src/app/modules/profile/components/utils/resume-routes.constant";
-import { LocalStorageService } from "../../root-modules/app/services/local-storage.service";
+import { resumeRoutesArray, ResumeRoutesEnum } from "src/app/modules/profile/constants/resume-routes.constant";
+import { LocalStorageService } from "../../shared/services/local-storage.service";
 
 @Injectable({
   providedIn: "root",

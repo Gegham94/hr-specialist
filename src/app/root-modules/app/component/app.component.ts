@@ -5,8 +5,8 @@ import { TranslateService } from "@ngx-translate/core";
 import { Observable, of, takeUntil } from "rxjs";
 
 import { ShowLoaderService } from "../../../ui-kit/hr-loader/show-loader.service";
-import { Unsubscribe } from "../../../shared-modules/unsubscriber/unsubscribe";
-import { LocalStorageService } from "../services/local-storage.service";
+import { Unsubscribe } from "../../../shared/unsubscriber/unsubscribe";
+import { LocalStorageService } from "../../../shared/services/local-storage.service";
 import { Languages, defaultLang } from "src/app/shared/constants/app-language.constants";
 import { NgxIndexedDBService } from "ngx-indexed-db";
 

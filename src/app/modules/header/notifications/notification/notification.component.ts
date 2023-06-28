@@ -1,49 +1,48 @@
-import { Unsubscribe } from "../../../../shared-modules/unsubscriber/unsubscribe";
+import {Unsubscribe} from "../../../../shared/unsubscriber/unsubscribe";
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
   Input,
-  ViewChild,
+  OnDestroy,
+  OnInit,
+  ViewChild
 } from "@angular/core";
-import { NotificationsFacade } from "../notifications.facade";
-import { HeaderFacade } from "../../header.facade";
-import { HeaderDropdownsEnum } from "../../constants/header-dropdowns.enum";
-import { NotificationsService } from "../notifications.service";
-import { InfiniteScrollDirective } from "ngx-infinite-scroll";
-import { BehaviorSubject, distinctUntilChanged, filter, takeUntil } from "rxjs";
-import { SearchParams } from "../../../employee-info/interface/search-params";
-import { GlobalNotificationItem } from "../../interfaces/notifications.interface";
-import { AuthService } from "../../../auth/auth.service";
-import { ScreenSizeService } from "src/app/root-modules/app/services/screen-size.service";
-import { ScreenSizeType } from "src/app/root-modules/app/interfaces/screen-size.type";
+import {NotificationsFacade} from "../services/notifications.facade";
+import {HeaderFacade} from "../../services/header.facade";
+import {HeaderDropdownsEnum} from "../../constants/header-dropdowns.enum";
+import {InfiniteScrollDirective} from "ngx-infinite-scroll";
+import {BehaviorSubject, distinctUntilChanged, takeUntil, tap} from "rxjs";
+import {INotification, INotifications} from "../../interfaces/notifications.interface";
+import {ScreenSizeService} from "src/app/shared/services/screen-size.service";
+import { AuthService } from "src/app/modules/auth/service/auth.service";
+import { SearchParams } from "src/app/modules/profile/interfaces/search-params";
+import { ScreenSizeType } from "src/app/shared/interfaces/screen-size.type";
 
 @Component({
   selector: "hr-notification",
   templateUrl: "./notification.component.html",
   styleUrls: ["./notification.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationComponent extends Unsubscribe implements OnDestroy {
-  @Input("isMenuOpen") mobile: boolean = false;
+export class NotificationComponent extends Unsubscribe implements OnInit, OnDestroy {
   @ViewChild(InfiniteScrollDirective) infiniteScroll!: InfiniteScrollDirective;
+  @Input("isMenuOpen") mobile: boolean = false;
 
-  public notificationData: BehaviorSubject<GlobalNotificationItem[]> = new BehaviorSubject<GlobalNotificationItem[]>([]);
+  public notifications!: INotification[];
   public count!: number;
   public hasNotification: number = 0;
-  public isDropdownOpen$ = this._headerFacade.getStateDropdown$(
-    HeaderDropdownsEnum.notifications
-  );
-  public notificationCount: number = 0;
-  public currentPage: number = 0;
-  public pagination: SearchParams = { take: 0, skip: 0 };
-  public limit: number = 100;
-  public loadingMoreNotifications$: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
+  public isDropdownOpen$ = this._headerFacade.getStateDropdown$(HeaderDropdownsEnum.notifications);
+  public loadingMoreNotifications$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+
+  private currentPage: number = 0;
+  private pagination: SearchParams = {take: 0, skip: 0};
+  private limit: number = 100;
   private requestCount: number = 0;
-  public currentStepNote: GlobalNotificationItem[] = [];
+  private currentStepNote: INotification[] = [];
 
   get screenSize(): ScreenSizeType {
-    return this.screenSizeService.calcScreenSize;
+    return this._screenSizeService.calcScreenSize;
   }
 
   get virtualContainerHeight(): number {
@@ -55,18 +54,28 @@ export class NotificationComponent extends Unsubscribe implements OnDestroy {
   }
 
   constructor(
-    private _notificationFacade: NotificationsFacade,
-    private _headerFacade: HeaderFacade,
-    private service: NotificationsService,
-    private authService: AuthService,
-    private cdr: ChangeDetectorRef,
-    private screenSizeService: ScreenSizeService
+    private readonly _notificationFacade: NotificationsFacade,
+    private readonly _headerFacade: HeaderFacade,
+    private readonly _authService: AuthService,
+    private readonly _cdr: ChangeDetectorRef,
+    private readonly _screenSizeService: ScreenSizeService
   ) {
     super();
   }
 
+  public ngOnInit(): void {
+    this._notificationFacade.getNotifications$()
+      .pipe(
+        takeUntil(this.ngUnsubscribe),
+        tap(notifications => {
+          this.notifications = notifications;
+        })).subscribe(() => {
+      this._cdr.markForCheck();
+    });
+  }
+
   public getNextBatch(index: number): void {
-    if (this.currentStepNote.length > 25  && index > this.notificationData.value.length - 25) {
+    if (this.currentStepNote.length > 25 && index > this.notifications.length - 25) {
       if (this.requestCount === 0) {
         this.loadingMoreNotifications$.next(true);
         this.currentPage++;
@@ -77,26 +86,26 @@ export class NotificationComponent extends Unsubscribe implements OnDestroy {
   }
 
   public getSelectedPaginationValue(pageNumber: number): void {
-    const limit = 100;
-    const end = pageNumber * limit;
-    const start = end - limit;
-
-    this.pagination.skip = start;
+    const end = pageNumber * this.limit;
+    this.pagination.skip = end - this.limit;
     this.pagination.take = this.limit;
-    if (this.authService.getToken) {
-      this.service
-        .getGlobalNotification$(this.pagination)
+    if (this._authService.getToken) {
+      this._notificationFacade.getNotificationsRequest$(this.pagination)
         .pipe(takeUntil(this.ngUnsubscribe), distinctUntilChanged())
-        .subscribe((note) => {
-          this.requestCount = 0;
-          this.currentStepNote = note.result;
-          this.notificationData.next([...this.notificationData.value, ...note.result]);
-          this.count = note?.unviewedCount ?? null;
-          this.hasNotification = note.count;
+        .subscribe((notifications) => {
+          this.setShowedNotificationsData(notifications);
           this.loadingMoreNotifications$.next(false);
-          this.cdr.detectChanges();
+          this._cdr.detectChanges();
         });
     }
+  }
+
+  private setShowedNotificationsData(notifications: INotifications): void {
+    this.requestCount = 0;
+    this.currentStepNote = notifications.result;
+    this.count = notifications?.unviewedCount ?? null;
+    this.hasNotification = notifications.count;
+    this._notificationFacade.setNotifications$([...this.notifications, ...notifications.result]);
   }
 
   // open / close notification menu
@@ -106,7 +115,7 @@ export class NotificationComponent extends Unsubscribe implements OnDestroy {
       HeaderDropdownsEnum.notifications,
       state
     );
-    this.notificationData.next([]);
+    this._notificationFacade.setNotifications$([]);
     this.loadingMoreNotifications$.next(true);
     if (!state) {
       this.getSelectedPaginationValue(1);
@@ -123,28 +132,23 @@ export class NotificationComponent extends Unsubscribe implements OnDestroy {
 
   // handle notification select
   public selectNotification(uuid: string): void {
-    this.service
-      .updateViewedNotification$(uuid)
-      .pipe(
-        takeUntil(this.ngUnsubscribe),
-        filter((viewNot) => viewNot["affected"] >= 1)
-      )
+    this._notificationFacade.updateViewedNotification$(uuid)
+      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(() => {
-        this.notificationData.value.map((not) => {
-          if (not.uuid === uuid) {
-            not.viewed = true;
-            this.count--;
-          }
-        });
-        // this.cdr.detectChanges();
+        this.changeNotificationStatusByUuid(uuid);
+        this._cdr.markForCheck();
       });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribe();
+  private changeNotificationStatusByUuid(uuid: string): void {
+    const notification = this.notifications.find((not) => not.uuid === uuid);
+    if (notification) {
+      notification.viewed = true;
+      this.count--;
+    }
   }
 
-  private vacanciesPagesCount(count: number): void {
-    this.notificationCount = Math.ceil(count / this.limit);
+  public ngOnDestroy(): void {
+    this.unsubscribe();
   }
 }

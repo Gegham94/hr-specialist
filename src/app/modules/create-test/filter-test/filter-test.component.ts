@@ -1,12 +1,12 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
-import {SearchableSelectDataInterface} from "../../../root-modules/app/interfaces/searchable-select-data.interface";
-import {EmployeeInfoFacade} from "../../profile/components/utils/employee-info.facade";
-import {debounceTime, filter, Observable, takeUntil} from "rxjs";
-import {SearchParams} from "../../employee-info/interface/search-params";
-import {specialistPosition} from "../../employee-info/mock/specialist-mock";
-import {SearchTypeEnum} from "../../../root-modules/app/interfaces/search-type.enum";
-import {FormBuilder, FormControl} from "@angular/forms";
-import {Unsubscribe} from "src/app/shared-modules/unsubscriber/unsubscribe";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import { EmployeeInfoFacade } from "../../profile/services/employee-info.facade";
+import { debounceTime, filter, Observable, takeUntil } from "rxjs";
+import { specialistPosition } from "../../profile/mock/specialist-mock";
+import { FormBuilder, FormControl } from "@angular/forms";
+import { Unsubscribe } from "src/app/shared/unsubscriber/unsubscribe";
+import { SearchParams } from "../../profile/interfaces/search-params";
+import { SearchTypeEnum } from "src/app/shared/interfaces/search-type.enum";
+import { ISearchableSelectData } from "src/app/shared/interfaces/searchable-select-data.interface";
 
 @Component({
   selector: "hr-filter-test",
@@ -36,7 +36,7 @@ export class FilterTestComponent extends Unsubscribe implements OnInit, OnDestro
     skip: 0,
   };
 
-  public searchListProgrammingLanguages$!: Observable<SearchableSelectDataInterface[]>;
+  public searchListProgrammingLanguages$!: Observable<ISearchableSelectData[]>;
 
   public filterForm = this.fb.group({
     languages: new FormControl([]),
@@ -56,18 +56,18 @@ export class FilterTestComponent extends Unsubscribe implements OnInit, OnDestro
   }
 
   ngOnInit(): void {
-    this._employeeFacade.setAllProgrammingLanguagesRequest$()
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe();
+    this._employeeFacade.setAllProgrammingLanguagesRequest$().pipe(takeUntil(this.ngUnsubscribe)).subscribe();
 
     this.searchListProgrammingLanguages$ = this._employeeFacade.getAllProgrammingLanguages();
     this.getSelectedPaginationValue(this.currentPage, this.selectTypeEnum.programmingLanguage, true);
-    this.searchListProgrammingLanguages$.pipe(
-      takeUntil(this.ngUnsubscribe),
-      filter(data => !!data.length)
-    ).subscribe((languages) => {
-      this.getAllPagesCount(languages[0]?.count || 0);
-    });
+    this.searchListProgrammingLanguages$
+      .pipe(
+        takeUntil(this.ngUnsubscribe),
+        filter((data) => !!data.length)
+      )
+      .subscribe((languages) => {
+        this.getAllPagesCount(languages[0]?.count || 0);
+      });
 
     this._employeeFacade
       .getEmployee$()
@@ -112,9 +112,9 @@ export class FilterTestComponent extends Unsubscribe implements OnInit, OnDestro
     const objectForSearchValue = {};
     if (value.length > 0) {
       if (type === this.filterType.LANGUAGEUUIDS) {
-        objectForSearchValue[type] = value.map((options: SearchableSelectDataInterface) => options.id);
+        objectForSearchValue[type] = value.map((options: ISearchableSelectData) => options.id);
       } else if (type === this.filterType.LANGUAGE) {
-        objectForSearchValue[type] = value.map((options: SearchableSelectDataInterface) => options.value);
+        objectForSearchValue[type] = value.map((options: ISearchableSelectData) => options.value);
       }
     } else {
       objectForSearchValue[type] = value.value;

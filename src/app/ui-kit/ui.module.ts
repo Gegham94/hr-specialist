@@ -20,9 +20,8 @@ import {ImageCropperModule} from "ngx-image-cropper";
 import {NgxMaskModule} from "ngx-mask";
 import {CheckboxComponent} from "./checkbox/checkbox.component";
 import {RouterModule} from "@angular/router";
-import {IconsModule} from "../shared-modules/icons/icons.module";
+import {IconsModule} from "../shared/icons/icons.module";
 import {InfiniteScrollModule} from "ngx-infinite-scroll";
-
 
 import {ShowPasswordComponent} from "../modules/auth/show-password/show-password.component";
 import {HrLoaderComponent} from "./hr-loader/hr-loader.component";
@@ -38,6 +37,9 @@ import {EmptyContentComponent} from "./empty-content/empty-content.component";
 import {SharedModule} from "../shared/shared.module";
 import {FilterTabsComponent} from "./filter-tabs/filter-tabs.component";
 import {GoBackComponent} from "./go-back/go-back.component";
+import { DrawerComponent } from "./drawer/drawer.component";
+import { TranslateModule } from '@ngx-translate/core';
+import { FilterComponent } from "./filter/filter.component";
 
 @NgModule({
   declarations: [
@@ -64,7 +66,9 @@ import {GoBackComponent} from "./go-back/go-back.component";
     FileInputComponent,
     EmptyContentComponent,
     FilterTabsComponent,
-    GoBackComponent
+    GoBackComponent,
+    DrawerComponent,
+    FilterComponent
   ],
   imports: [
     CommonModule,
@@ -80,7 +84,8 @@ import {GoBackComponent} from "./go-back/go-back.component";
     InfiniteScrollModule,
     TooltipModule,
     NgbDatepickerModule,
-    SharedModule
+    SharedModule,
+    TranslateModule
   ],
   exports: [
     ButtonComponent,
@@ -106,7 +111,9 @@ import {GoBackComponent} from "./go-back/go-back.component";
     FileInputComponent,
     EmptyContentComponent,
     FilterTabsComponent,
-    GoBackComponent
+    GoBackComponent,
+    DrawerComponent,
+    FilterComponent
   ],
 })
 export class UiModule {

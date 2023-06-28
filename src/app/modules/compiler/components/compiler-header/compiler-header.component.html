@@ -1,0 +1,53 @@
+<div class="header">
+  <div class="theme">
+    <span class="theme__text light">{{ "COMPILER.LIGHT" | translate }}</span>
+    <label class="toggle-switch">
+      <input type="checkbox" [(ngModel)]="darkModeActive" (click)="toggleThemeMode()" />
+      <div class="slider">
+        <div class="theme__icon-wrapper">
+          <img
+            class="theme__icon"
+            [src]="darkModeActive ? '/assets/img/icon/night-moon.svg' : '/assets/img/icon/day-sun.svg'"
+          />
+        </div>
+      </div>
+    </label>
+    <span class="theme__text dark">{{ "COMPILER.DARK" | translate }}</span>
+  </div>
+  <div class="timer">
+    <ng-container *ngIf="screenSize === 'DESKTOP'; else mobileTimerTpl">
+      <div class="loader_item">
+        <div class="radial_loader">
+          <div class="underline"></div>
+          <div class="outer seconds_outer"></div>
+          <div class="inner seconds_inner">{{ timerValue }}</div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #mobileTimerTpl>
+      <span class="mobile-timer">{{ timerValue }}</span>
+    </ng-template>
+  </div>
+  <div class="action">
+    <button
+      class="compile-btn"
+      [class.disabled]="!testInProgress"
+      [disabled]="!testInProgress"
+      (click)="compileCurrentTest()"
+    >
+      <img src="/assets/img/icon/compiler-run.svg" />
+      <span>{{ "COMPILER.COMPILE" | translate }}</span>
+    </button>
+  </div>
+</div>
+
+<hr-modal [isOpen]="timeOverModalOpen" (whenModalClose)="setTimeOverModalState(false)">
+  <div class="info-wrapper">
+    <p>{{ "COMPILER.TIME_IS_OVER" | translate }}</p>
+    <span>
+      {{ "COMPILER.PASSED_TESTS" | translate }}
+      {{ testResults }}
+    </span>
+    <button class="loseBtn confirm-ok" (click)="setTimeOverModalState(false)">{{ "COMPILER.OK" | translate }}</button>
+  </div>
+</hr-modal>

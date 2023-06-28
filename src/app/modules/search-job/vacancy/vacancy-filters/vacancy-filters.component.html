@@ -4,8 +4,6 @@
       class='filter__status-input'
       [placeholder-text]="'По имени'"
       [formControl]='vacancyFilterQueryControl'
-      [class.filter__input_close]='!isOpen'
-      [class.filter__input_open]='isOpen'
       (textInput)='sendValue($event,filterType.QUERY)'
     >
     </hr-input>
@@ -13,8 +11,6 @@
     <hr-search-select
       class='filter__status-input'
       [placeholder]="'По стране'"
-      [class.filter_close]='!isOpen'
-      [class.filter_open]='isOpen'
       [formControl]='vacancyFilterCountryControl'
       [options]='searchListCountry$ | async'
       (selectedOptionOutput)="sendValue($event,filterType.COUNTRY)"
@@ -25,8 +21,6 @@
       [isInputDisabled]="!vacancyFilterCountryControl.value"
       [isMultiSelect]="true"
       [placeholder]="'По городам'"
-      [class.filter_close]='!isOpen'
-      [class.filter_open]='isOpen'
       [formControl]='vacancyFilterCityControl'
       [options]='searchListCity$ | async'
       (selectedOptionsOutput)="sendValue($event,filterType.CITY)"
@@ -35,16 +29,10 @@
     <hr-search-select
       class='filter__status-input'
       [placeholder]="'Способ работы'"
-      [class.filter_close]='!isOpen'
-      [class.filter_open]='isOpen'
       [formControl]='vacancyFilterWayOfWorkingControl'
       [options]='employmentTypes$ | async'
       (selectedOptionOutput)="sendValue($event,filterType.WAYOFWORKING)"
     >
     </hr-search-select>
   </div>
-
-  <button class='filter__open-button' (click)='toggleFilter()'>
-    <img src="assets/img/icon/filter.svg">
-  </button>
 </div>

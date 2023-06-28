@@ -1,17 +1,18 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, OnDestroy, OnInit } from "@angular/core";
-import { BehaviorSubject, Observable, Subject, combineLatest, map, takeUntil } from "rxjs";
+import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from "@angular/core";
+import { BehaviorSubject, Observable, Subject, takeUntil } from "rxjs";
 import { Router } from "@angular/router";
-import { AuthService } from "../auth/auth.service";
-import { HeaderFacade } from "./header.facade";
+import { AuthService } from "../auth/service/auth.service";
+import { HeaderFacade } from "./services/header.facade";
 import { HeaderDropdownsEnum } from "./constants/header-dropdowns.enum";
-import { EmployeeInfoFacade } from "../profile/components/utils/employee-info.facade";
-import { IEmployee } from "../../root-modules/app/interfaces/employee.interface";
-import { ButtonTypeEnum } from "../../root-modules/app/constants/button-type.enum";
-import { LocalStorageService } from "../../root-modules/app/services/local-storage.service";
-import { Unsubscribe } from "src/app/shared-modules/unsubscriber/unsubscribe";
-import { ResumeStateService } from "../profile/components/utils/resume-state.service";
-import { QuizState } from "../create-test/quiz/quiz.state";
-import { CompilerState } from "../create-test/compiler/compiler.state";
+import { IEmployee } from "../../shared/interfaces/employee.interface";
+import { LocalStorageService } from "../../shared/services/local-storage.service";
+import { Unsubscribe } from "src/app/shared/unsubscriber/unsubscribe";
+import { ScreenSizeEnum } from "../../shared/constants/screen-size.enum";
+import { ScreenSizeService } from "../../shared/services/screen-size.service";
+import { QuizFacade } from "../quiz/quiz.facade";
+import { EmployeeInfoFacade } from "../profile/services/employee-info.facade";
+import { CompilerFacade } from "../compiler/services/compiler.facade";
+import { ScreenSizeType } from "src/app/shared/interfaces/screen-size.type";
 
 @Component({
   selector: "hr-header",
@@ -20,24 +21,27 @@ import { CompilerState } from "../create-test/compiler/compiler.state";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent extends Unsubscribe implements OnInit, OnDestroy {
-  @Input("notification-count") notificationCountProps?: number;
-  @Input("header-type") headerTypeProps!: string;
-  public logo!: string;
-  public buttonType = ButtonTypeEnum;
   public isDropdownOpen$ = this._headerFacade.getStateDropdown$(HeaderDropdownsEnum.menu);
-  public employee$!: Observable<IEmployee>;
+  public isModalOpen$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public screenSizeType$: BehaviorSubject<ScreenSizeType> = new BehaviorSubject<ScreenSizeType>(ScreenSizeEnum.DESKTOP);
+  public closeDrawer$: BehaviorSubject<"open" | "close" | null> = new BehaviorSubject<"open" | "close" | null>(null);
   public isMenuOpen: boolean = false;
+  public employee$!: Observable<IEmployee>;
 
-  public isModalOpen: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  public clickNotifier$: Subject<void> = new Subject<void>();
-  public navigationStatus$: Subject<boolean> = new Subject<boolean>();
+  private clickNotifier$: Subject<void> = new Subject<void>();
+  private navigationStatus$: Subject<boolean> = new Subject<boolean>();
+
+  private readonly ScreenSizeEnum = ScreenSizeEnum;
 
   @HostListener("window:resize", ["$event"])
   onResize() {
     if (this.isMenuOpen) {
       this.isMenuOpen = !this.isMenuOpen;
-      document.body.style.overflow = "auto";
     }
+  }
+
+  public get drawerWidth(): number {
+    return this.screenSizeType$.value == ScreenSizeEnum.EXTRA_SMALL ? 100 : 70;
   }
 
   constructor(
@@ -45,61 +49,44 @@ export class HeaderComponent extends Unsubscribe implements OnInit, OnDestroy {
     private readonly _router: Router,
     private readonly _authService: AuthService,
     private readonly _localStorageService: LocalStorageService,
-    public readonly _employeeFacade: EmployeeInfoFacade,
-    private readonly _resumeState: ResumeStateService,
-    private _quizState: QuizState,
-    private _compilerState: CompilerState,
+    private readonly _employeeFacade: EmployeeInfoFacade,
+    private readonly _quizFacade: QuizFacade,
+    private readonly _screenSizeService: ScreenSizeService,
+    private readonly _compilerFacade: CompilerFacade
   ) {
     super();
-    // this.selectedLang = this._localStorageService.getItem("language") ?? defaultLang;
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     if (this.isLogged) {
       this.employee$ = this._employeeFacade.getEmployee$();
+      this.screenSizeType$.next(this._screenSizeService.calcScreenSize);
+      this._screenSizeService.screenSize$
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((type: ScreenSizeType) => {
+          this.screenSizeType$.next(type);
+        });
     }
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribe();
+  public openMenu(): void {
+    this.isMenuOpen = true;
+    document.body.style.overflowY = "hidden";
   }
 
-  public logOut(): void {
-    console.log("xxxxxxxxxxxx");
-    let isInTests = localStorage.getItem('isInTests');
-    if (isInTests && isInTests === 'true') {
-      this.isModalOpen.next(true);
-      this._compilerState.setShouldDeactivate(false);
-      this._quizState.setShouldDeactivate(false);
-    } else {
-      this.isModalOpen.next(false);
-      this._compilerState.setShouldDeactivate(true);
-      this._quizState.setShouldDeactivate(true);
-      this.confirmNavigation(true);
-    }
-  }
-
-  public confirmNavigation(action: boolean) {
-    localStorage.removeItem('isInTests');
+  public confirmNavigation(action: boolean): void {
     this.clickNotifier$.next();
     this.navigationStatus$.next(action);
-    this._authService.logOut();
-    this._employeeFacade.removeEmployeeData();
+    if (action) {
+      this._authService.logOut();
+    } else {
+      this.isModalOpen$.next(false);
+    }
   }
 
-  public cancelNavigation(action: boolean) {
-    this.isModalOpen.next(false);
-    this.clickNotifier$.next();
-    this.navigationStatus$.next(action)
-  }
-
-  public canDeactivate(): boolean | Observable<boolean> {
-    this.isModalOpen.next(true);
-    return combineLatest([this.navigationStatus$, this.clickNotifier$]).pipe(map(([boolean, smth]) => boolean));
-  }
-
-  public modalToggle(val?: boolean) {
-    this.isModalOpen.next(val !== undefined ? val : !this.isModalOpen);
+  public modalToggle(val?: boolean): void {
+    this.isModalOpen$.next(val !== undefined ? val : !this.isModalOpen$);
   }
 
   public navigate(link: string): void {
@@ -118,6 +105,8 @@ export class HeaderComponent extends Unsubscribe implements OnInit, OnDestroy {
   public goToProfile(): void {
     if (this.isLogged && this._localStorageService.getItem("resume")) {
       const employee = JSON.parse(this._localStorageService.getItem("resume"));
+      this.isMenuOpen = false;
+      document.body.style.overflowY = "auto";
       if (employee.name) {
         this._router.navigateByUrl("/employee/resume").then();
         return;
@@ -126,24 +115,28 @@ export class HeaderComponent extends Unsubscribe implements OnInit, OnDestroy {
     }
   }
 
-  // public switchLang(index: number): void {
-  //   this._translate.use(Languages[index]);
-  //   this.selectedLang = Languages[index];
-  //   this._localStorageService.setItem("language", Languages[index]);
-  // }
-
   public isMenuOpenHandler(): void {
-    this.isMenuOpen = !this.isMenuOpen;
-    document.body.classList.toggle("active");
-    if (this.isMenuOpen) {
-      document.body.style.overflow = "hidden";
+    this.isMenuOpen = false;
+    document.body.style.overflowY = "auto";
+    this.closeDrawer$.next(null);
+  }
+
+  public close(event: Event): void {
+    event.stopPropagation();
+    this._headerFacade.resetDropdownsState(HeaderDropdownsEnum.menu, false);
+  }
+
+  public logOut(): void {
+    const shouldDeactivate = this._compilerFacade.getShouldDeactivate() && this._quizFacade.getShouldDeactivate();
+    if (!shouldDeactivate) {
+      this.isModalOpen$.next(true);
     } else {
-      document.body.style.overflow = "scroll";
+      this.isModalOpen$.next(false);
+      this.confirmNavigation(true);
     }
   }
 
-  public close(event: Event) {
-    event.stopPropagation();
-    this._headerFacade.resetDropdownsState(HeaderDropdownsEnum.menu, false);
+  public ngOnDestroy(): void {
+    this.unsubscribe();
   }
 }
